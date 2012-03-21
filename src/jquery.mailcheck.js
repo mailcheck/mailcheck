@@ -1,6 +1,9 @@
 (function($){
   $.fn.mailcheck = function(domains, opts) {
-    var result = Kicksend.mailcheck.suggest(this.val(), domains);
+    var force_lower = false;
+    if (opts.lowercase) 
+          force_lower = opts.lowercase
+    var result = Kicksend.mailcheck.suggest(this.val(), domains, force_lower);
     if (result) {
       if (opts.suggested) {
         opts.suggested(this, result);
@@ -17,7 +20,9 @@ var Kicksend = {
   mailcheck : {
     threshold: 2,
 
-    suggest: function(email, domains) {
+      suggest: function(email, domains, force_lower) {
+      if (force_lower) 
+          email = email.toLowerCase()
       var parts = email.split('@');
       if (parts < 2) {
         return false;
