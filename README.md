@@ -25,20 +25,18 @@ Usage
 -----
 First, include jQuery and Mailcheck into the page.
 
-    <script type="text/javascript" src="jquery.min.js"></script>
-    <script type="text/javascript" src="jquery.mailcheck.min.js"></script>
+    <script src="jquery.min.js"></script>
+    <script src="jquery.mailcheck.min.js"></script>
 
 Have a text field.
 
-    <form id="form">
-      <input id="email" name="email" type="text" />
-    </form>
+    <input id="email" name="email" type="text" />
 
 Now, attach Mailcheck to the text field. Remember to declare an array of domains you want to check against.
 
-    <script type="text/javascript">
+    <script>
       var domains = ['hotmail.com', 'gmail.com', 'aol.com'];
-      $('form').on('blur', 'input#email', function() {
+      $('#email').on('blur', function() {
         $(this).mailcheck({
           domains: domains,   // optional
           suggested: function(element, suggestion) {
