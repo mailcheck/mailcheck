@@ -1,5 +1,5 @@
 describe("mailcheck", function() {
-  var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'me.com', 'aol.com', 'mac.com'];
+    var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com'];
 
   describe("jquery.mailcheck", function () {
     var suggestedSpy, emptySpy;
@@ -18,7 +18,7 @@ describe("mailcheck", function() {
     });
 
     it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
-      $("#test-input").val('test@hotmail.co').mailcheck(domains, {
+      $("#test-input").val('test@hotmail.co').mailcheck({
         suggested: suggestedSpy,
         empty: emptySpy
       });
@@ -33,7 +33,7 @@ describe("mailcheck", function() {
     });
 
     it("calls the 'empty' callback with the element when there's no suggestion", function () {
-      $("#test-input").val('contact@kicksend.com').mailcheck(domains, {
+      $("#test-input").val('contact@kicksend.com').mailcheck({
         suggested: suggestedSpy,
         empty: emptySpy
       });
@@ -41,6 +41,44 @@ describe("mailcheck", function() {
       expect(suggestedSpy).not.toHaveBeenCalled();
 
       expect(emptySpy).toHaveBeenCalledWith($("#test-input"));
+    });
+
+    it("takes in an array of specified domains", function() {
+      $("#test-input").val('test@emaildomain.con').mailcheck({
+        suggested: suggestedSpy,
+        empty: emptySpy,
+        domains: domains
+      });
+
+      expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"), {
+        address: 'test',
+        domain: 'emaildomain.com',
+        full: 'test@emaildomain.com'
+      });
+    });
+
+    it("escapes the element's value", function() {
+      $("#test-input").val('<script>alert("a")</script>@emaildomain.con').mailcheck({
+        suggested:suggestedSpy,
+        empty:emptySpy,
+        domains:domains
+      });
+      expect(suggestedSpy.mostRecentCall.args[1].address).not.toMatch(/<script>/);
+    });
+
+    describe("backwards compatibility", function () {
+      it("takes in the same method signature as the first version", function () {
+        $("#test-input").val('test@emaildomain.con').mailcheck(domains, {
+          suggested: suggestedSpy,
+          empty: emptySpy
+        });
+
+        expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"), {
+          address: 'test',
+          domain: 'emaildomain.com',
+          full: 'test@emaildomain.com'
+        });
+      });
     });
   });
 
@@ -72,12 +110,15 @@ describe("mailcheck", function() {
     });
 
     describe("cases", function () {
-      it("passes", function () {
-        expect(mailcheck.suggest('test@hotmail.co', domains).domain).toEqual('hotmail.com');
+      it("pass", function () {
+        expect(mailcheck.suggest('test@emaildomain.co', domains).domain).toEqual('emaildomain.com');
         expect(mailcheck.suggest('test@gmail.con', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@gnail.con', domains).domain).toEqual('gmail.com');
+        expect(mailcheck.suggest('test@GNAIL.con', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toEqual(false);
-        expect(mailcheck.suggest('')).toEqual(false);
+        expect(mailcheck.suggest('', domains)).toEqual(false);
+        expect(mailcheck.suggest('test@', domains)).toEqual(false);
+        expect(mailcheck.suggest('test', domains)).toEqual(false);
       });
     });
   });

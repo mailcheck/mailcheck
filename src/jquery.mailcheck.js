@@ -1,6 +1,31 @@
+/*
+ * Mailcheck https://github.com/Kicksend/mailcheck
+ * Author
+ * Derrick Ko (@derrickko)
+ *
+ * License
+ * Copyright (c) 2012 Receivd, Inc.
+ *
+ * Licensed under the MIT License.
+ *
+ * v 1.0
+ */
+
 (function($){
-  $.fn.mailcheck = function(domains, opts) {
-    var result = Kicksend.mailcheck.suggest(this.val(), domains);
+  $.fn.mailcheck = function(opts, optsAlt) {
+    var defaultDomains = ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com", "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk"];
+
+    if (typeof opts === 'object' && optsAlt === undefined) {
+      // only opts is passed in
+      opts.domains = opts.domains || defaultDomains;
+    } else {
+      // domains are passed in as opts
+      var domains = opts;
+      opts = optsAlt;
+      opts.domains = domains || defaultDomains;
+    }
+
+    var result = Kicksend.mailcheck.suggest(encodeURI(this.val()), opts.domains);
     if (result) {
       if (opts.suggested) {
         opts.suggested(this, result);
@@ -18,8 +43,9 @@ var Kicksend = {
     threshold: 2,
 
     suggest: function(email, domains) {
+      email = email.toLowerCase();
       var parts = email.split('@');
-      if (parts < 2) {
+      if (parts === undefined || parts.length < 2) {
         return false;
       }
 
