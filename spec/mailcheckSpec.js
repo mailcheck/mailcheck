@@ -121,5 +121,26 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test', domains)).toEqual(false);
       });
     });
+
+    describe("mailcheck.splitEmail", function () {
+      it("returns a hash of the address and the domain", function () {
+        expect(mailcheck.splitEmail('test@example.com')).toEqual({
+          address:'test',
+          domain:'example.com'
+        });
+      });
+
+      it("splits RFC compliant emails", function () {
+        expect(mailcheck.splitEmail('"foo@bar"@example.com')).toEqual({
+          address:'"foo@bar"',
+          domain:'example.com'
+        });
+      });
+
+      it("returns false if email is invalid", function () {
+        expect(mailcheck.splitEmail('example.com')).toBeFalsy();
+      });
+    });
+
   });
 });

@@ -44,15 +44,13 @@ var Kicksend = {
 
     suggest: function(email, domains) {
       email = email.toLowerCase();
-      var parts = email.split('@');
-      if (parts === undefined || parts.length < 2) {
-        return false;
-      }
 
-      var closestDomain = this.findClosestDomain(parts[1], domains);
+      var emailParts = this.splitEmail(email);
+
+      var closestDomain = this.findClosestDomain(emailParts.domain, domains);
 
       if (closestDomain) {
-        return { address: parts[0], domain: closestDomain, full: parts[0] + "@" + closestDomain }
+        return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain }
       } else {
         return false;
       }
@@ -118,6 +116,19 @@ var Kicksend = {
         c++;
       }
       return (s1.length + s2.length) /2 - lcs;
+    },
+
+    splitEmail: function(email) {
+      var parts = email.split('@');
+
+      if (parts.length < 2) {
+        return false;
+      }
+
+      return {
+        domain: parts.pop(),
+        address: parts.join('@')
+      }
     }
   }
 };
