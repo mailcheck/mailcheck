@@ -1,7 +1,7 @@
 mailcheck.js
 =========
 
-A jQuery plugin that suggests a right domain when your users misspell it in an email address.
+The jQuery plugin that suggests a right domain when your users misspell it in an email address. We use it at Kicksend to [reduce sign up confirmation email bounces by 50%](http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-b).
 
 What does it do?
 ----------------
@@ -89,7 +89,9 @@ Contributing
 Let's make Mailcheck awesome. We're on the lookout for contributors.
 
 And do send in those pull requests! To get them accepted, please:
-- Test your code. Add test cases to `spec/mailcheckSpec.js`.
+
+- Test your code. Add test cases to `spec/mailcheckSpec.js`, and run it across browsers (yes, including IE).
+
 - Minify the plugin. [Google's Closure Compiler](http://closure-compiler.appspot.com/home) is a good one.
 
 Upcoming features, bugs and feature requests are managed in Issues.
@@ -98,7 +100,10 @@ Who's using Mailcheck?
 -----------------------
 
 - [Kicksend](http://kicksend.com/)
+- [Flotype](http://flotype.com/)
 - [Prispy](http://prispy.com/)
+- [SB Nation](http://sbnation.com/)
+- [Show Space](http://show-space.com/)
 - [The Verge](http://theverge.com/)
 
 Do you use Mailcheck? [Tweet me](http://twitter.com/derrickko) your link.
