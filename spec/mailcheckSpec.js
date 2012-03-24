@@ -178,6 +178,8 @@ describe("mailcheck", function() {
       it("returns false for email addresses that are not RFC compliant", function () {
         expect(mailcheck.splitEmail('example.com')).toBeFalsy();
         expect(mailcheck.splitEmail('abc.example.com')).toBeFalsy();
+        expect(mailcheck.splitEmail('@example.com')).toBeFalsy();
+        expect(mailcheck.splitEmail('test@')).toBeFalsy();
       });
     });
 
