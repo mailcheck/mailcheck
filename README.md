@@ -1,14 +1,14 @@
 mailcheck.js
 =========
 
-The jQuery plugin that suggests a right domain when your users misspell it in an email address. We use it at Kicksend to [reduce sign up confirmation email bounces by 50%](http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-b).
+The jQuery plugin that suggests a right domain when your users misspell it in an email address.
 
 What does it do?
 ----------------
 
 When your user types in "user@hotnail.con", Mailcheck will suggest "user@hotmail.com".
 
-At [Kicksend](http://kicksend.com), we use Mailcheck to help reduce typos in email addresses during sign ups.
+At [Kicksend](http://kicksend.com), we use Mailcheck to help reduce typos in email addresses during sign ups. It has [reduced our sign up confirmation email bounces by 50%](http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-b).
 
 ![diagram](http://github.com/Kicksend/mailcheck/raw/master/doc/example.png?raw=true)
 
@@ -86,7 +86,7 @@ Mailcheck is tested with [Jasmine](http://pivotal.github.com/jasmine/). Load `sp
 Contributing
 ------------
 
-Let's make Mailcheck awesome. We're on the lookout for contributors.
+Let's make Mailcheck awesome. We're on the lookout for maintainers and contributors.
 
 And do send in those pull requests! To get them accepted, please:
 
@@ -107,6 +107,13 @@ Who's using Mailcheck?
 - [The Verge](http://theverge.com/)
 
 Do you use Mailcheck? [Tweet me](http://twitter.com/derrickko) your link.
+
+Related links
+-------------
+
+- [Two ways to reduce bounced welcome emails](http://blog.postmarkapp.com/post/19685472721/two-ways-to-reduce-bounced-welcome-emails) by [Postmark](http://postmark.com)
+
+- [MooTools port](https://github.com/DimitarChristoff/mailcheck) by [Dimitar Christoff](https://github.com/DimitarChristoff)
 
 Author
 -------
