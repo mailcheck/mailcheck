@@ -67,7 +67,7 @@ Domains
 -------
 The Mailcheck jQuery plugin defaults to a list of top email domains if the `domain` option isn't provided. We still recommend supplying your own domains based on the distribution of your users.
 
-The included default domains are: yahoo.com, google.com, hotmail.com, gmail.com, me.com, aol.com, mac.com, live.com, comcast.net, googlemail.com, msn.com, hotmail.co.uk, yahoo.co.uk.
+The included default domains are: yahoo.com, google.com, hotmail.com, gmail.com, me.com, aol.com, mac.com, live.com, comcast.net, googlemail.com, msn.com, hotmail.co.uk, yahoo.co.uk, facebook.com, verizon.net, sbcglobal.net, att.net, gmx.com, and mail.com.
 
 Customization
 -------------

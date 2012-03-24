@@ -13,7 +13,9 @@
 
 (function($){
   $.fn.mailcheck = function(opts, optsAlt) {
-    var defaultDomains = ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com", "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk"];
+    var defaultDomains = ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com",
+                          "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk",
+                          "facebook.com", "verizon.net", "sbcglobal.net", "att.net", "gmx.com", "mail.com"];
 
     if (typeof opts === 'object' && optsAlt === undefined) {
       // only opts is passed in
@@ -126,6 +128,12 @@ var Kicksend = {
 
       if (parts.length < 2) {
         return false;
+      }
+      
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i] === '') {
+          return false;
+        }
       }
 
       return {
