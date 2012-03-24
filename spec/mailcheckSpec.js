@@ -1,5 +1,5 @@
 describe("mailcheck", function() {
-    var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com'];
+    var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com', 'comcast.net'];
 
   describe("jquery.mailcheck", function () {
     var suggestedSpy, emptySpy;
@@ -115,6 +115,10 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@gmail.con', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@gnail.con', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@GNAIL.con', domains).domain).toEqual('gmail.com');
+        expect(mailcheck.suggest('test@comcast.com', domains).domain).toEqual('comcast.net');
+        expect(mailcheck.suggest('test@homail.con', domains).domain).toEqual('hotmail.com');
+        expect(mailcheck.suggest('test@hotmail.co', domains).domain).toEqual('hotmail.com');
+        expect(mailcheck.suggest('test@yajoo.com', domains).domain).toEqual('yahoo.com');
         expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toEqual(false);
         expect(mailcheck.suggest('', domains)).toEqual(false);
         expect(mailcheck.suggest('test@', domains)).toEqual(false);

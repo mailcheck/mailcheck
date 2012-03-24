@@ -40,7 +40,7 @@
 
 var Kicksend = {
   mailcheck : {
-    threshold: 2,
+    threshold: 3,
 
     suggest: function(email, domains) {
       email = email.toLowerCase();
