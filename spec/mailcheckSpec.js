@@ -1,5 +1,5 @@
 describe("mailcheck", function() {
-    var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com', 'comcast.net'];
+  var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com', 'gmx.com'];
 
   describe("jquery.mailcheck", function () {
     var suggestedSpy, emptySpy;
@@ -119,6 +119,7 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@comcast.com', domains).domain).toEqual('comcast.net');
         expect(mailcheck.suggest('test@homail.con', domains).domain).toEqual('hotmail.com');
         expect(mailcheck.suggest('test@hotmail.co', domains).domain).toEqual('hotmail.com');
+        expect(mailcheck.suggest('test@fabecook.com', domains).domain).toEqual('facebook.com');
         expect(mailcheck.suggest('test@yajoo.com', domains).domain).toEqual('yahoo.com');
         expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toBeFalsy();
         expect(mailcheck.suggest('', domains)).toBeFalsy();
@@ -177,6 +178,13 @@ describe("mailcheck", function() {
       it("returns false for email addresses that are not RFC compliant", function () {
         expect(mailcheck.splitEmail('example.com')).toBeFalsy();
         expect(mailcheck.splitEmail('abc.example.com')).toBeFalsy();
+      });
+    });
+
+    describe("mailcheck.findClosestDomain", function () {
+      it("returns the most similar domain", function () {
+        expect(mailcheck.findClosestDomain('gms.com', domains)).toEqual('gmx.com');
+        expect(mailcheck.findClosestDomain('gmsn.com', domains)).toEqual('msn.com');
       });
     });
   });
