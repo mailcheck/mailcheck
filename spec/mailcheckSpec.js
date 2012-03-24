@@ -115,14 +115,15 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@gmail.con', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@gnail.con', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@GNAIL.con', domains).domain).toEqual('gmail.com');
+        expect(mailcheck.suggest('test@#gmail.com', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@comcast.com', domains).domain).toEqual('comcast.net');
         expect(mailcheck.suggest('test@homail.con', domains).domain).toEqual('hotmail.com');
         expect(mailcheck.suggest('test@hotmail.co', domains).domain).toEqual('hotmail.com');
         expect(mailcheck.suggest('test@yajoo.com', domains).domain).toEqual('yahoo.com');
-        expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toEqual(false);
-        expect(mailcheck.suggest('', domains)).toEqual(false);
-        expect(mailcheck.suggest('test@', domains)).toEqual(false);
-        expect(mailcheck.suggest('test', domains)).toEqual(false);
+        expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toBeFalsy();
+        expect(mailcheck.suggest('', domains)).toBeFalsy();
+        expect(mailcheck.suggest('test@', domains)).toBeFalsy();
+        expect(mailcheck.suggest('test', domains)).toBeFalsy();
       });
     });
 
@@ -138,13 +139,45 @@ describe("mailcheck", function() {
         expect(mailcheck.splitEmail('"foo@bar"@example.com')).toEqual({
           address:'"foo@bar"',
           domain:'example.com'
+        });   
+        expect(mailcheck.splitEmail('containsnumbers1234567890@example.com')).toEqual({
+          address:'containsnumbers1234567890',
+          domain:'example.com'
+        });        
+        expect(mailcheck.splitEmail('contains+symbol@example.com')).toEqual({
+          address:'contains+symbol',
+          domain:'example.com'
+        });    
+        expect(mailcheck.splitEmail('contains-symbol@example.com')).toEqual({
+          address:'contains-symbol',
+          domain:'example.com'
+        });      
+        expect(mailcheck.splitEmail('contains.symbol@domain.contains.symbol')).toEqual({
+          address:'contains.symbol',
+          domain:'domain.contains.symbol'
+        });
+        expect(mailcheck.splitEmail('"contains.and\ symbols"@example.com')).toEqual({
+          address:'"contains.and\ symbols"',
+          domain:'example.com'
+        });        
+        expect(mailcheck.splitEmail('"contains.and.@.symbols.com"@example.com')).toEqual({
+          address:'"contains.and.@.symbols.com"',
+          domain:'example.com'
+        });       
+        expect(mailcheck.splitEmail('"()<>[]:;@,\\\"!#$%&\'*+-/=?^_`{}|\ \ \ \ \ ~\ \ \ \ \ \ \ ?\ \ \ \ \ \ \ \ \ \ \ \ ^_`{}|~.a"@allthesymbols.com')).toEqual({
+          address:'"()<>[]:;@,\\\"!#$%&\'*+-/=?^_`{}|\ \ \ \ \ ~\ \ \ \ \ \ \ ?\ \ \ \ \ \ \ \ \ \ \ \ ^_`{}|~.a"',
+          domain:'allthesymbols.com'
+        });
+        expect(mailcheck.splitEmail('postbox@com')).toEqual({
+          address:'postbox',
+          domain:'com'
         });
       });
-
-      it("returns false if email is invalid", function () {
+      
+      it("returns false for email addresses that are not RFC compliant", function () {
         expect(mailcheck.splitEmail('example.com')).toBeFalsy();
+        expect(mailcheck.splitEmail('abc.example.com')).toBeFalsy();
       });
     });
-
   });
 });
