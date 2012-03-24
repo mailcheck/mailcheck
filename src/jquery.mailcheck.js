@@ -62,6 +62,9 @@ var Kicksend = {
       var closestDomain = null;
 
       for (var i = 0; i < domains.length; i++) {
+        if (domain === domains[i]) {
+          return false;
+        }
         dist = this.stringDistance(domain, domains[i]);
         if (dist < minDist) {
           minDist = dist;
@@ -69,7 +72,7 @@ var Kicksend = {
         }
       }
 
-      if (minDist <= this.threshold && closestDomain !== null && closestDomain !== domain) {
+      if (minDist <= this.threshold && closestDomain !== null) {
         return closestDomain;
       } else {
         return false;
