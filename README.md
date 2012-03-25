@@ -86,7 +86,7 @@ Mailcheck is tested with [Jasmine](http://pivotal.github.com/jasmine/). Load `sp
 Contributing
 ------------
 
-Let's make Mailcheck awesome. We're on the lookout for maintainers and contributors.
+Let's make Mailcheck awesome. We're on the lookout for maintainers and [contributors](https://github.com/Kicksend/mailcheck/contributors).
 
 And do send in those pull requests! To get them accepted, please:
 
