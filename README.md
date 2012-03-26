@@ -100,6 +100,7 @@ Who's using Mailcheck?
 -----------------------
 
 - [Kicksend](http://kicksend.com/)
+- [Kippt](http://kippt.com/)
 - [Flotype](http://flotype.com/)
 - [Prispy](http://prispy.com/)
 - [SB Nation](http://sbnation.com/)
