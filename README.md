@@ -25,39 +25,47 @@ Usage
 -----
 First, include jQuery and Mailcheck into the page.
 
-    <script src="jquery.min.js"></script>
-    <script src="jquery.mailcheck.min.js"></script>
+```html
+<script src="jquery.min.js"></script>
+<script src="jquery.mailcheck.min.js"></script>
+```
 
 Have a text field.
 
-    <input id="email" name="email" type="text" />
+```html
+<input id="email" name="email" type="text" />
+```
 
 Now, attach Mailcheck to the text field. Remember to declare an array of domains you want to check against.
 
-    <script>
-      var domains = ['hotmail.com', 'gmail.com', 'aol.com'];
-      $('#email').on('blur', function() {
-        $(this).mailcheck({
-          domains: domains,   // optional
-          suggested: function(element, suggestion) {
-            // callback code
-          },
-          empty: function(element) {
-            // callback code
-          }
-        });
-      });
-    </script>
+```html
+<script>
+var domains = ['hotmail.com', 'gmail.com', 'aol.com'];
+$('#email').on('blur', function() {
+  $(this).mailcheck({
+    domains: domains,   // optional
+    suggested: function(element, suggestion) {
+      // callback code
+    },
+    empty: function(element) {
+      // callback code
+    }
+  });
+});
+</script>
+```
 
 Mailcheck takes in two callbacks, `suggested` and `empty`. We recommend you supply both.
 
 `suggested` is called when there's a suggestion. Mailcheck passes in the target element and the suggestion. The suggestion is an object with the following members:
 
-    {
-      address: 'test',          // the address; part before the @ sign
-      domain: 'hotmail.com',    // the suggested domain
-      full: 'test@hotmail.com'  // the full suggested email
-    }
+```js
+{
+  address: 'test',          // the address; part before the @ sign
+  domain: 'hotmail.com',    // the suggested domain
+  full: 'test@hotmail.com'  // the full suggested email
+}
+```
 
 `empty` is called when there's no suggestion. Mailcheck just passes in the target element.
 
