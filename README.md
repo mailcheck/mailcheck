@@ -108,8 +108,9 @@ Who's using Mailcheck?
 -----------------------
 
 - [Kicksend](http://kicksend.com/)
-- [Kippt](http://kippt.com/)
 - [Flotype](http://flotype.com/)
+- [Kippt](http://kippt.com/)
+- [Minecraft](http://minecraft.com/)
 - [Prispy](http://prispy.com/)
 - [SB Nation](http://sbnation.com/)
 - [Show Space](http://show-space.com/)
@@ -123,6 +124,10 @@ Related links
 - [Two ways to reduce bounced welcome emails](http://blog.postmarkapp.com/post/19685472721/two-ways-to-reduce-bounced-welcome-emails) by [Postmark](http://postmark.com)
 
 - [MooTools port](https://github.com/DimitarChristoff/mailcheck) by [Dimitar Christoff](https://github.com/DimitarChristoff)
+
+- [WordPress e-Commerce Plugin](http://wordpress.org/extend/plugins/e-commerce-mailcheck/)
+
+- [Mailcheck for Drupal](https://github.com/RiverDonkey/Mailchecker)
 
 Author
 -------
