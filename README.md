@@ -115,6 +115,7 @@ Who's using Mailcheck?
 - [SB Nation](http://sbnation.com/)
 - [Show Space](http://show-space.com/)
 - [The Verge](http://theverge.com/)
+- [Uber](http://uber.com/)
 
 Do you use Mailcheck? [Tweet me](http://twitter.com/derrickko) your link.
 
