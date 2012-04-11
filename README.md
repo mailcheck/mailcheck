@@ -110,7 +110,7 @@ Who's using Mailcheck?
 - [Kicksend](http://kicksend.com/)
 - [Flotype](http://flotype.com/)
 - [Kippt](http://kippt.com/)
-- [Minecraft](http://minecraft.com/)
+- [Minecraft](http://minecraft.net/)
 - [Prispy](http://prispy.com/)
 - [SB Nation](http://sbnation.com/)
 - [Show Space](http://show-space.com/)
