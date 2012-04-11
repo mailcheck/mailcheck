@@ -11,34 +11,36 @@
  * v 1.0.1
  */
 
-(function($){
-  $.fn.mailcheck = function(opts, optsAlt) {
-    var defaultDomains = ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com",
-                          "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk",
-                          "facebook.com", "verizon.net", "sbcglobal.net", "att.net", "gmx.com", "mail.com"];
+var mailcheck = function(opts, optsAlt) {
+  var defaultDomains = ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com",
+                        "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk",
+                        "facebook.com", "verizon.net", "sbcglobal.net", "att.net", "gmx.com", "mail.com"];
 
-    if (typeof opts === 'object' && optsAlt === undefined) {
-      // only opts is passed in
-      opts.domains = opts.domains || defaultDomains;
-    } else {
-      // domains are passed in as opts
-      var domains = opts;
-      opts = optsAlt;
-      opts.domains = domains || defaultDomains;
-    }
+  if (typeof opts === 'object' && optsAlt === undefined) {
+    // only opts is passed in
+    opts.domains = opts.domains || defaultDomains;
+  } else {
+    // domains are passed in as opts
+    var domains = opts;
+    opts = optsAlt;
+    opts.domains = domains || defaultDomains;
+  }
 
-    var result = Kicksend.mailcheck.suggest(encodeURI(this.val()), opts.domains);
-    if (result) {
-      if (opts.suggested) {
-        opts.suggested(this, result);
-      }
-    } else {
-      if (opts.empty) {
-        opts.empty(this);
-      }
+  var result = Kicksend.mailcheck.suggest(encodeURI(this.val()), opts.domains);
+  if (result) {
+    if (opts.suggested) {
+      opts.suggested(this, result);
     }
-  };
-})(jQuery);
+  } else {
+    if (opts.empty) {
+      opts.empty(this);
+    }
+  }
+};
+
+if (jQuery) {
+  jQuery.fn.mailcheck = mailcheck;
+}
 
 var Kicksend = {
   mailcheck : {
