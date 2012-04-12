@@ -108,6 +108,7 @@ Who's using Mailcheck?
 -----------------------
 
 - [Kicksend](http://kicksend.com/)
+- [Dropbox](http://dropbox.com/)
 - [Flotype](http://flotype.com/)
 - [Kippt](http://kippt.com/)
 - [Minecraft](http://minecraft.net/)

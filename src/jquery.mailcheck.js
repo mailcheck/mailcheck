@@ -8,7 +8,7 @@
  *
  * Licensed under the MIT License.
  *
- * v 1.0.1
+ * v 1.0.2
  */
 
 (function($){
