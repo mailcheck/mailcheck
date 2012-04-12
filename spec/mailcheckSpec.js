@@ -1,5 +1,6 @@
 describe("mailcheck", function() {
   var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com', 'gmx.com'];
+  var topLevelDomains = ['co.uk', 'com', 'org', 'info'];
 
   describe("jquery.mailcheck", function () {
     var suggestedSpy, emptySpy;
@@ -121,57 +122,90 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@hotmail.co', domains).domain).toEqual('hotmail.com');
         expect(mailcheck.suggest('test@fabecook.com', domains).domain).toEqual('facebook.com');
         expect(mailcheck.suggest('test@yajoo.com', domains).domain).toEqual('yahoo.com');
+        expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
         expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toBeFalsy();
         expect(mailcheck.suggest('', domains)).toBeFalsy();
         expect(mailcheck.suggest('test@', domains)).toBeFalsy();
         expect(mailcheck.suggest('test', domains)).toBeFalsy();
+       
+        /* This test is for illustrative purposes as the splitEmail function should return a better
+         * representation of the true top-level domain in the case of an email address with subdomains.
+         * mailcheck will be unable to return a suggestion in the case of this email address.
+         */
+        expect(mailcheck.suggest('test@mail.randomsmallcompany.cmo', domains, topLevelDomains).domain).toBeFalsy();
       });
     });
 
     describe("mailcheck.splitEmail", function () {
-      it("returns a hash of the address and the domain", function () {
+      it("returns a hash of the address, the domain, and the top-level domain", function () {
         expect(mailcheck.splitEmail('test@example.com')).toEqual({
           address:'test',
-          domain:'example.com'
+          domain:'example.com',
+          topLevelDomain:'com'
+        });
+        
+        expect(mailcheck.splitEmail('test@example.co.uk')).toEqual({
+          address:'test',
+          domain:'example.co.uk',
+          topLevelDomain:'co.uk'
+        });
+        
+        /* This test is for illustrative purposes as the splitEmail function should return a better
+         * representation of the true top-level domain in the case of an email address with subdomains.
+         */ 
+        expect(mailcheck.splitEmail('test@mail.randomsmallcompany.co.uk')).toEqual({
+          address:'test',
+          domain:'mail.randomsmallcompany.co.uk',
+          topLevelDomain:'randomsmallcompany.co.uk'
         });
       });
 
       it("splits RFC compliant emails", function () {
         expect(mailcheck.splitEmail('"foo@bar"@example.com')).toEqual({
           address:'"foo@bar"',
-          domain:'example.com'
+          domain:'example.com',
+          topLevelDomain:'com'
+          
         });   
         expect(mailcheck.splitEmail('containsnumbers1234567890@example.com')).toEqual({
           address:'containsnumbers1234567890',
-          domain:'example.com'
+          domain:'example.com',
+          topLevelDomain:'com'
         });        
         expect(mailcheck.splitEmail('contains+symbol@example.com')).toEqual({
           address:'contains+symbol',
-          domain:'example.com'
+          domain:'example.com',
+          topLevelDomain:'com'
         });    
         expect(mailcheck.splitEmail('contains-symbol@example.com')).toEqual({
           address:'contains-symbol',
-          domain:'example.com'
+          domain:'example.com',
+          topLevelDomain:'com'
         });      
         expect(mailcheck.splitEmail('contains.symbol@domain.contains.symbol')).toEqual({
           address:'contains.symbol',
-          domain:'domain.contains.symbol'
+          domain:'domain.contains.symbol',
+          topLevelDomain:'contains.symbol'
         });
         expect(mailcheck.splitEmail('"contains.and\ symbols"@example.com')).toEqual({
           address:'"contains.and\ symbols"',
-          domain:'example.com'
+          domain:'example.com',
+          topLevelDomain:'com'
         });        
         expect(mailcheck.splitEmail('"contains.and.@.symbols.com"@example.com')).toEqual({
           address:'"contains.and.@.symbols.com"',
-          domain:'example.com'
+          domain:'example.com',
+          topLevelDomain:'com'
         });       
         expect(mailcheck.splitEmail('"()<>[]:;@,\\\"!#$%&\'*+-/=?^_`{}|\ \ \ \ \ ~\ \ \ \ \ \ \ ?\ \ \ \ \ \ \ \ \ \ \ \ ^_`{}|~.a"@allthesymbols.com')).toEqual({
           address:'"()<>[]:;@,\\\"!#$%&\'*+-/=?^_`{}|\ \ \ \ \ ~\ \ \ \ \ \ \ ?\ \ \ \ \ \ \ \ \ \ \ \ ^_`{}|~.a"',
-          domain:'allthesymbols.com'
+          domain:'allthesymbols.com',
+          topLevelDomain:'com'
         });
         expect(mailcheck.splitEmail('postbox@com')).toEqual({
           address:'postbox',
-          domain:'com'
+          domain:'com',
+          topLevelDomain:'com'
         });
       });
       
@@ -185,9 +219,19 @@ describe("mailcheck", function() {
 
     describe("mailcheck.findClosestDomain", function () {
       it("returns the most similar domain", function () {
+        expect(mailcheck.findClosestDomain('yahoo.com.tw', domains)).toEqual('yahoo.com.tw');
+        expect(mailcheck.findClosestDomain('hotmail.com', domains)).toEqual('hotmail.com');
         expect(mailcheck.findClosestDomain('gms.com', domains)).toEqual('gmx.com');
         expect(mailcheck.findClosestDomain('gmsn.com', domains)).toEqual('msn.com');
+        expect(mailcheck.findClosestDomain('gmaik.com', domains)).toEqual('gmail.com');
       });
-    });
+      
+      it("returns the most similar top-level domain", function () {
+        expect(mailcheck.findClosestDomain('cmo', topLevelDomains)).toEqual('com');
+        expect(mailcheck.findClosestDomain('ogr', topLevelDomains)).toEqual('org');
+        expect(mailcheck.findClosestDomain('ifno', topLevelDomains)).toEqual('info');
+        expect(mailcheck.findClosestDomain('com.uk', topLevelDomains)).toEqual('co.uk');
+      });
+    });    
   });
-});
+});   
