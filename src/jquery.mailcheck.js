@@ -197,7 +197,7 @@ var Kicksend = {
       var m = s.length;
       var n = t.length;
       
-      /* For all i and j, d[i][j] holds the string-aligment distance
+      /* For all i and j, d[i][j] holds the string-alignment distance
        * between the first i characters of s and the first j characters of t.
        * Note that the array has (m+1)x(n+1) values.
        */
