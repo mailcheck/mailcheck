@@ -174,7 +174,7 @@ var Kicksend = {
       // Determine substring distances
       for (var j = 1; j <= n; j++) {
         for (var i = 1; i <= m; i++) {
-          if (s.charAt(i-1) == s.charAt(j-1)) { // Subtract one to start at strings' index zero instead of index one
+          if (s.charAt(i-1) == t.charAt(j-1)) { // Subtract one to start at strings' index zero instead of index one
             d[i][j] = d[i-1][j-1];
           } else {
             d[i][j] = Math.min(d[i-1][j] + 1,            // deletion
