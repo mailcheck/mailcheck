@@ -233,5 +233,38 @@ describe("mailcheck", function() {
         expect(mailcheck.findClosestDomain('com.uk', topLevelDomains)).toEqual('co.uk');
       });
     });
+    
+    describe("mailcheck.sift3Distance", function() {
+      it("returns an approximate string edit distance in O(n) time", function () {
+        expect(mailcheck.sift3Distance('ca', 'abc')).toEqual(2.5);
+        expect(mailcheck.sift3Distance('hotmail.co', 'hotmail.com')).toEqual(0.5);
+        expect(mailcheck.sift3Distance('gmail.cmo', 'gmail.com')).toEqual(2);
+      });
+    });
+    
+    describe("mailcheck.levenshteinDistance", function() {
+      it("returns the string edit distance accounting for insertion, deletion, and substitution", function () {
+        expect(mailcheck.levenshteinDistance('ca', 'abc')).toEqual(3);
+        expect(mailcheck.levenshteinDistance('hotmail.co', 'hotmail.com')).toEqual(1);
+        expect(mailcheck.levenshteinDistance('gmail.cmo', 'gmail.com')).toEqual(2);
+      });
+    });
+    
+    describe("mailcheck.optimalStringAlignmentDistance", function() {
+      it("returns the string edit distance accounting for insertion, deletion," +
+        "substitution, and transposition when no substring is edited more than once", function () {
+        expect(mailcheck.optimalStringAlignmentDistance('ca', 'abc')).toEqual(3);
+        expect(mailcheck.optimalStringAlignmentDistance('hotmail.co', 'hotmail.com')).toEqual(1);
+        expect(mailcheck.optimalStringAlignmentDistance('gmail.cmo', 'gmail.com')).toEqual(1);
+      });
+    }); 
+    
+    describe("mailcheck.damerauLevenshteinDistance", function() {
+      it("returns the string edit distance accounting for insertion, deletion, substitution, and transposition", function () {
+        expect(mailcheck.damerauLevenshteinDistance('ca', 'abc')).toEqual(2);
+        expect(mailcheck.damerauLevenshteinDistance('hotmail.co', 'hotmail.com')).toEqual(1);
+        expect(mailcheck.damerauLevenshteinDistance('gmail.cmo', 'gmail.com')).toEqual(1);
+      });
+    });
   });
 });

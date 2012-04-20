@@ -99,7 +99,7 @@ var Kicksend = {
           closestDomain = domains[i];
         }
       }
-
+      
       if (minDist <= this.threshold && closestDomain !== null) {
         return closestDomain;
       } else {
@@ -177,13 +177,13 @@ var Kicksend = {
           if (s.charAt(i-1) == t.charAt(j-1)) { // Subtract one to start at strings' index zero instead of index one
             d[i][j] = d[i-1][j-1];
           } else {
-            d[i][j] = Math.min(d[i-1][j] + 1,            // deletion
-                               Math.min(d[i][j-1] + 1,   // insertion
-                                        d[i-1][j-1] + 1) // substitution
-                              );
+            d[i][j] = Math.min(d[i-1][j] + 1,                // deletion
+                               Math.min(d[i][j-1] + 1,       // insertion
+                                        d[i-1][j-1] + 1));   // substitution                              
           }
         }
       }
+      
       // Return the strings' distance
       return d[m][n];
     },
@@ -219,20 +219,83 @@ var Kicksend = {
           } else {
             cost = 1;
           }
-          d[i][j] = Math.min(d[i-1][j] + 1,                   // deletion
-                             Math.min(d[i][j-1] + 1,          // insertion
-                                      d[i-1][j-1] + cost)     // substitution
-                            );
+          d[i][j] = Math.min(d[i-1][j] + 1,                  // deletion
+                             Math.min(d[i][j-1] + 1,         // insertion
+                                      d[i-1][j-1] + cost));  // substitution
                             
           if(i > 1 && j > 1 && s.charAt(i-1) == t.charAt(j-2) && s.charAt(i-2) == t.charAt(j-1)) {
-            d[i][j] = Math.min(d[i][j], d[i-2][j-2] + cost);  // transposition
+            d[i][j] = Math.min(d[i][j], d[i-2][j-2] + cost); // transposition
           }
         }
       }
+      
       // Return the strings' distance
       return d[m][n];
     },
-
+    
+    damerauLevenshteinDistance: function(s, t) {
+      // Determine the Damerau-Levenshtein distance between s and t
+      if (!s || !t) {
+        return 99;
+      }     
+      
+      var m = s.length;
+      var n = t.length;
+      
+      var charDictionary = new Object();
+      
+      /* For all i and j, d[i][j] holds the Damerau-Levenshtein distance
+       * between the first i characters of s and the first j characters of t.
+       * Note that the array has (m+1)x(n+1) values.
+       *
+       * At the same time, populate a dictionary with the alphabet of the two strings.
+       */
+      var d = new Array();
+      d[0] = new Array();
+      d[0][0] = 99;
+      for (var i = 0; i <= m+2; i++) {
+        d[i+1] = new Array();
+        d[i+1][0] = 99;
+        d[i+1][1] = i;
+        
+        if (i < m) {
+          charDictionary[s.charAt(i)] = 0;
+        }
+      }
+      for (var j = 0; j <= n+2; j++) {
+        d[0][j+1] = 99;
+        d[1][j+1] = j;
+        
+        if (j < n) {
+          charDictionary[t.charAt(j)] = 0;
+        }
+      }
+            
+      // Determine substring distances
+      for (var i = 1; i <= m; i++) {
+        var db = 0;
+        for (var j = 1; j <= n; j++) {
+          var i1 = charDictionary[t.charAt(j-1)];
+          var j1 = db;
+          var cost = 0;
+          
+          if (s.charAt(i-1) == t.charAt(j-1)) {
+            db = j;
+          } else {
+            cost = 1;
+          }
+          d[i+1][j+1] = Math.min(d[i][j] + cost,                  // substitution
+                                 Math.min(d[i+1][j] + 1,          // insertion
+                                          Math.min(d[i][j+1] + 1, // deletion
+                                                   d[i1][j1] + (i-i1-1) + (j-j1-1) + 1))); //transposition
+        }
+        charDictionary[s.charAt(i-1)] = i;
+      }
+      
+      // Return the strings' distance
+      return d[m+1][n+1];
+    },
+    
     splitEmail: function(email) {
       var parts = email.split('@');
 
