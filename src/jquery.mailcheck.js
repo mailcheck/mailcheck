@@ -253,7 +253,7 @@ var Kicksend = {
       var d = new Array();
       d[0] = new Array();
       d[0][0] = 99;
-      for (var i = 0; i <= m+2; i++) {
+      for (var i = 0; i <= m; i++) {
         d[i+1] = new Array();
         d[i+1][0] = 99;
         d[i+1][1] = i;
@@ -262,7 +262,7 @@ var Kicksend = {
           charDictionary[s.charAt(i)] = 0;
         }
       }
-      for (var j = 0; j <= n+2; j++) {
+      for (var j = 0; j <= n; j++) {
         d[0][j+1] = 99;
         d[1][j+1] = j;
         
