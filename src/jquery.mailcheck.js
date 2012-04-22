@@ -237,8 +237,8 @@ var Kicksend = {
       // Determine the Damerau-Levenshtein distance between s and t
       if (!s || !t) {
         return 99;
-      }     
-      
+      }
+                 
       var m = s.length;
       var n = t.length;
       
@@ -251,20 +251,16 @@ var Kicksend = {
        * At the same time, populate a dictionary with the alphabet of the two strings.
        */
       var d = new Array();
-      d[0] = new Array();
-      d[0][0] = 99;
       for (var i = 0; i <= m; i++) {
-        d[i+1] = new Array();
-        d[i+1][0] = 99;
-        d[i+1][1] = i;
+        d[i] = new Array();
+        d[i][0] = i;
         
         if (i < m) {
           charDictionary[s.charAt(i)] = 0;
         }
       }
       for (var j = 0; j <= n; j++) {
-        d[0][j+1] = 99;
-        d[1][j+1] = j;
+        d[0][j] = j;
         
         if (j < n) {
           charDictionary[t.charAt(j)] = 0;
@@ -284,16 +280,18 @@ var Kicksend = {
           } else {
             cost = 1;
           }
-          d[i+1][j+1] = Math.min(d[i][j] + cost,                  // substitution
-                                 Math.min(d[i+1][j] + 1,          // insertion
-                                          Math.min(d[i][j+1] + 1, // deletion
-                                                   d[i1][j1] + (i-i1-1) + (j-j1-1) + 1))); //transposition
+          d[i][j] = Math.min(d[i-1][j-1] + cost,           // substitution
+                                 Math.min(d[i][j-1] + 1,   // insertion
+                                          d[i-1][j] + 1)); // deletion
+          if(i1 > 0 && j1 > 0) {
+            d[i][j] = Math.min(d[i][j], d[i1-1][j1-1] + (i-i1-1) + (j-j1-1) + 1); //transposition
+          }
         }
         charDictionary[s.charAt(i-1)] = i;
       }
-      
+            
       // Return the strings' distance
-      return d[m+1][n+1];
+      return d[m][n];
     },
     
     splitEmail: function(email) {
