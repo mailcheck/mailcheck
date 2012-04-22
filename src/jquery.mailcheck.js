@@ -79,13 +79,13 @@ var Kicksend = {
 
     findClosestDomain: function(domain, domains, distanceFunction) {
       var dist;
-      var minDist = 99;
-      var closestDomain = null;
+      var minDist = Infinity;
+      var closestDomains = new Array();
 
       if (!domain || !domains) {
         return false;
       }
-      if(!distanceFunction) {
+      if (!distanceFunction) {
         distanceFunction = this.sift3Distance;
       }
 
@@ -96,12 +96,24 @@ var Kicksend = {
         dist = distanceFunction(domain, domains[i]);
         if (dist < minDist) {
           minDist = dist;
-          closestDomain = domains[i];
+          closestDomains = new Array();
+        }
+        if (dist == minDist) {
+          closestDomains.push(domains[i]);
         }
       }
 
-      if (minDist <= this.threshold && closestDomain !== null) {
-        return closestDomain;
+      if ((minDist <= this.threshold || distanceFunction == this.qwertyKeyboardDistance) &&
+          closestDomains !== null && closestDomains.length != 0) {
+        if (closestDomains.length == 1) {
+          return closestDomains[0];
+        } else {
+          if (distanceFunction != this.qwertyKeyboardDistance) { // Prevent infinite recursion
+            return this.findClosestDomain(domain, closestDomains, this.qwertyKeyboardDistance);
+          } else { // We have multiple domains with the same keyboard distance; return the first as a best guess
+            return closestDomains[0];
+          }
+        } 
       } else {
         return false;
       }
@@ -147,6 +159,87 @@ var Kicksend = {
         c++;
       }
       return (s1.length + s2.length) /2 - lcs;
+    },
+
+    qwertyKeyboardDistance: function(s, t) {
+      // Access by [row][shift][column] returns the character
+      var keyboard = [ [ "`1234567890-= ".split(''),  "~!@#$%^&*()_+ ".split('')  ],
+                       [ " qwertyuiop[]\\".split(''), " QWERTYUIOP{}|".split('')  ],
+                       [ " asdfghjkl;' ".split(''),   " ASDFGHJKL:\"  ".split('') ],
+                       [ " zxcvbnm,./  ".split(''),   " ZXCVBNM<>?   ".split('')  ]
+                     ];                       
+    
+      // Access by character.charCodeAt() returns [row, col, shift]
+      var keyboardMap = [];
+      for (var i = 0; i < keyboard.length; i++) {
+        for (var j = 0; j < keyboard[i][0].length; j++) {
+          if (keyboard[i][0][j] != null && keyboard[i][0][j] != ' ') {
+            keyboardMap[keyboard[i][0][j].charCodeAt()] = [i, j, 0];
+          }
+        }
+        for (var j = 0; j < keyboard[i][1].length; j++) {
+          if (keyboard[i][1][j] != null && keyboard[i][1][j] != ' ') {
+            keyboardMap[keyboard[i][1][j].charCodeAt()] = [i, j, 1];
+          }
+        }
+      }        
+      
+      var maxQwertyDistance = 12;
+    
+      // Return the grid distance between the point (x1, y1) and (x2, y2)
+      var gridDistance = function(x1, y1, x2, y2) {
+        if (x1 == x2 && y1 == y2) {
+          return 0;
+        }
+        
+        var xDiff = Math.abs(x1 - x2);
+        var yDiff = Math.abs(y1 - y2);
+        if (xDiff == 1 && yDiff == 1) { // The points are adjacent, possibly on a diagonal
+          return 1;
+        }
+        
+        return Math.sqrt(xDiff * xDiff + yDiff * yDiff); 
+      };
+      
+      
+      // Return the grid distance between the given keys
+      var qwertyCharDistance = function(a, b) {
+        if (a == b) {
+          return 0;
+        }
+        
+        var aCoord = keyboardMap[a.charCodeAt()];
+        if (!aCoord) {
+          return maxQwertyDistance;
+        }
+        
+        var bCoord = keyboardMap[b.charCodeAt()];
+        if (!bCoord) {
+          return maxQwertyDistance;
+        }
+        
+        return gridDistance(aCoord[0], aCoord[1], bCoord[0], bCoord[1]);
+      };
+      
+      /* Perform the distance calculation.
+       *
+       * Note that this method does not do string alignment, so the distance of '#gmail' 
+       * from 'gmail' is very different from the distance of 'gmail#' to 'gmail'.
+       */
+      var longStringLength = Math.max(s.length, t.length);
+      var shortStringLength = Math.min(s.length, t.length);
+      
+      // Calculate the qwerty keyboard distance between the two strings
+      var distance = 0;
+      for (var i = 0; i < shortStringLength; i++) {
+         distance += qwertyCharDistance(s.charAt(i), t.charAt(i));
+      }
+      
+      // Account for extra characters in the long string
+      distance += maxQwertyDistance * (longStringLength - shortStringLength);
+      
+      // Return the strings' distance
+      return distance;
     },
 
     splitEmail: function(email) {

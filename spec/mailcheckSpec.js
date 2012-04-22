@@ -1,6 +1,7 @@
 describe("mailcheck", function() {
-  var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com', 'gmx.com'];
-  var topLevelDomains = ['co.uk', 'com', 'org', 'info'];
+  var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com',
+                 'comcast.net', 'facebook.com', 'msn.com', 'gmx.com', 'ua.com', 'ui.com'];
+  var topLevelDomains = ['com', 'co.uk', 'org', 'info'];
 
   describe("jquery.mailcheck", function () {
     var suggestedSpy, emptySpy;
@@ -122,6 +123,7 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@hotmail.co', domains).domain).toEqual('hotmail.com');
         expect(mailcheck.suggest('test@fabecook.com', domains).domain).toEqual('facebook.com');
         expect(mailcheck.suggest('test@yajoo.com', domains).domain).toEqual('yahoo.com');
+        expect(mailcheck.suggest('test@uo.com', domains).domain).toEqual('ui.com');
         expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
         expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toBeFalsy();
         expect(mailcheck.suggest('', domains)).toBeFalsy();
@@ -224,6 +226,7 @@ describe("mailcheck", function() {
         expect(mailcheck.findClosestDomain('gms.com', domains)).toEqual('gmx.com');
         expect(mailcheck.findClosestDomain('gmsn.com', domains)).toEqual('msn.com');
         expect(mailcheck.findClosestDomain('gmaik.com', domains)).toEqual('gmail.com');
+        expect(mailcheck.findClosestDomain('uo.com', domains)).toEqual('ui.com');
       });
 
       it("returns the most similar top-level domain", function () {
@@ -233,5 +236,19 @@ describe("mailcheck", function() {
         expect(mailcheck.findClosestDomain('com.uk', topLevelDomains)).toEqual('co.uk');
       });
     });
+    
+    describe("mailcheck.qwertyKeyboardDistance", function () {
+      it("returns the fuzzy qwerty keyboard distance", function () {
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('ca', 'abc'))).toEqual(18);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('hotmail.co', 'hotmail.com'))).toEqual(12);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail.cmo', 'gmail.com'))).toEqual(6);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('uo.com', 'ui.com'))).toEqual(1);
+        
+        // Note that this method does not do string alignment, so the next distances are very different
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('#gmail.com', 'gmail.com'))).toEqual(47);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail.com#', 'gmail.com'))).toEqual(12);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail#.com', 'gmail.com'))).toEqual(34);
+      });
+    }); 
   });
 });
