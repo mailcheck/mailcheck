@@ -8,26 +8,17 @@
  *
  * Licensed under the MIT License.
  *
- * v 1.0.3
+ * v 1.1
  */
 
 (function($){
-  $.fn.mailcheck = function(opts, optsAlt) {
+  $.fn.mailcheck = function(opts) {
     var defaultDomains = ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com",
                           "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk",
                           "facebook.com", "verizon.net", "sbcglobal.net", "att.net", "gmx.com", "mail.com"];
     var defaultTopLevelDomains = ["co.uk", "com", "net", "org", "info", "edu", "gov", "mil"];
 
-
-    if (typeof opts === 'object' && optsAlt === undefined) {
-      // only opts is passed in
-      opts.domains = opts.domains || defaultDomains;
-    } else {
-      // domains are passed in as opts
-      var domains = opts;
-      opts = optsAlt;
-      opts.domains = domains || defaultDomains;
-    }
+    opts.domains = opts.domains || defaultDomains;
     opts.topLevelDomains = opts.topLevelDomains || defaultTopLevelDomains;
     opts.distanceFunction = Kicksend.sift3Distance;
 

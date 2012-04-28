@@ -66,21 +66,6 @@ describe("mailcheck", function() {
       });
       expect(suggestedSpy.mostRecentCall.args[1].address).not.toMatch(/<script>/);
     });
-
-    describe("backwards compatibility", function () {
-      it("takes in the same method signature as the first version", function () {
-        $("#test-input").val('test@emaildomain.con').mailcheck(domains, {
-          suggested: suggestedSpy,
-          empty: emptySpy
-        });
-
-        expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"), {
-          address: 'test',
-          domain: 'emaildomain.com',
-          full: 'test@emaildomain.com'
-        });
-      });
-    });
   });
 
   describe("Kicksend.mailcheck", function(){
