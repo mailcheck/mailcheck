@@ -1,12 +1,14 @@
 mailcheck.js
 =========
 
-The jQuery plugin that suggests a right domain when your users misspell it in an email address.
+The Javascript library and jQuery plugin that suggests a right domain when your users misspell it in an email address.
 
 What does it do?
 ----------------
 
 When your user types in "user@hotnail.con", Mailcheck will suggest "user@hotmail.com".
+
+Mailcheck will offer up suggestions for top level domains too, and suggest ".com" when a user types in "user@hotmail.cmo".
 
 At [Kicksend](http://kicksend.com), we use Mailcheck to help reduce typos in email addresses during sign ups. It has [reduced our sign up confirmation email bounces by 50%](http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-b).
 
@@ -17,17 +19,15 @@ See it live in action [here](http://kicksend.com/join).
 Installation
 ------------
 
-- For instant use, download `src/jquery.mailcheck.min.js` into javascripts directory. Use `src/jquery.mailcheck.js` if you want to hack on it, or have your own minimizer.
+For instant use, download `src/mailcheck.min.js` into javascripts directory. Use `src/mailcheck.js` if you want to hack on it, or have your own minimizer.
 
-- For hacking, fork the repo or git clone it.
-
-Usage
+Usage with jQuery
 -----
 First, include jQuery and Mailcheck into the page.
 
 ```html
 <script src="jquery.min.js"></script>
-<script src="jquery.mailcheck.min.js"></script>
+<script src="mailcheck.min.js"></script>
 ```
 
 Have a text field.
@@ -36,14 +36,22 @@ Have a text field.
 <input id="email" name="email" type="text" />
 ```
 
-Now, attach Mailcheck to the text field. Remember to declare an array of domains you want to check against.
+Now, attach Mailcheck to the text field. You can declare an array of domains and top level domains you want to check against.
 
 ```html
 <script>
 var domains = ['hotmail.com', 'gmail.com', 'aol.com'];
+var topLevelDomains = ["com", "net", "org"];
+
+var superStringDistance = function(string1, string2) {
+  // a string distance algorithm of your choosing
+}
+
 $('#email').on('blur', function() {
   $(this).mailcheck({
-    domains: domains,   // optional
+    domains: domains,                       // optional
+    topLevelDomains: topLevelDomains,       // optional
+    distanceFunction: superStringDistance,  // optional
     suggested: function(element, suggestion) {
       // callback code
     },
@@ -63,6 +71,7 @@ Mailcheck takes in two callbacks, `suggested` and `empty`. We recommend you supp
 {
   address: 'test',          // the address; part before the @ sign
   domain: 'hotmail.com',    // the suggested domain
+  topLevelDomain: 'com',    // the suggested top level domain
   full: 'test@hotmail.com'  // the full suggested email
 }
 ```
@@ -71,18 +80,44 @@ Mailcheck takes in two callbacks, `suggested` and `empty`. We recommend you supp
 
 You can use the callbacks to display the appropriate visual feedback to the user.
 
+Usage without jQuery
+--------------------
+Mailcheck is decoupled from jQuery, so its usage without jQuery is almost identical.
+
+Using the example from above, you would call `Kicksend.mailcheck.run` instead.
+
+```html
+<script>
+Kicksend.mailcheck.run({
+  domains: domains,                       // optional
+  topLevelDomains: topLevelDomains,       // optional
+  distanceFunction: superStringDistance,  // optional
+  suggested: function(suggestion) {
+    // callback code
+  },
+  empty: function() {
+    // callback code
+  }
+});
+</script>
+```
+
+The rest works similarly. In fact, the Mailcheck jQuery plugin just wraps `Kicksend.mailcheck.run`.
+
 Domains
 -------
-The Mailcheck jQuery plugin defaults to a list of top email domains if the `domain` option isn't provided. We still recommend supplying your own domains based on the distribution of your users.
+Mailcheck has inbuilt defaults if the `domains` or `topLevelDomains` options aren't provided. We still recommend supplying your own domains based on the distribution of your users.
 
-The included default domains are: yahoo.com, google.com, hotmail.com, gmail.com, me.com, aol.com, mac.com, live.com, comcast.net, googlemail.com, msn.com, hotmail.co.uk, yahoo.co.uk, facebook.com, verizon.net, sbcglobal.net, att.net, gmx.com, and mail.com.
+The included default domains are yahoo.com, google.com, hotmail.com, gmail.com, me.com, aol.com, mac.com, live.com, comcast.net, googlemail.com, msn.com, hotmail.co.uk, yahoo.co.uk, facebook.com, verizon.net, sbcglobal.net, att.net, gmx.com, and mail.com.
+
+The included default top level domains are com, net, org, info, edu, gov, co.uk, and mil.
 
 Customization
 -------------
 The Mailcheck jQuery plugin wraps Kicksend.mailcheck. The prime candidates for customization are the methods
 `Kicksend.mailcheck.findClosestDomain` and `Kicksend.mailcheck.stringDistance`.
 
-Mailcheck currently uses the [sift3](http://siderite.blogspot.com/2007/04/super-fast-and-accurate-string-distance.html) string similarity algorithm by [Siderite](http://siderite.blogspot.com/).
+Mailcheck currently uses the [sift3](http://siderite.blogspot.com/2007/04/super-fast-and-accurate-string-distance.html) string similarity algorithm by [Siderite](http://siderite.blogspot.com/). You can modify the inbuilt string distance function, or pass in your own when calling Mailcheck.
 
 Since Mailcheck runs client side, keep in mind file size, memory usage, and performance.
 

@@ -11,33 +11,57 @@
  * v 1.1
  */
 
-(function($){
-  $.fn.mailcheck = function(opts) {
-    var defaultDomains = ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com",
-                          "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk",
-                          "facebook.com", "verizon.net", "sbcglobal.net", "att.net", "gmx.com", "mail.com"];
-    var defaultTopLevelDomains = ["co.uk", "com", "net", "org", "info", "edu", "gov", "mil"];
-
-    opts.domains = opts.domains || defaultDomains;
-    opts.topLevelDomains = opts.topLevelDomains || defaultTopLevelDomains;
-    opts.distanceFunction = Kicksend.sift3Distance;
-
-    var result = Kicksend.mailcheck.suggest(encodeURI(this.val()), opts.domains, opts.topLevelDomains, opts.distanceFunction);
-    if (result) {
-      if (opts.suggested) {
-        opts.suggested(this, result);
-      }
-    } else {
-      if (opts.empty) {
-        opts.empty(this);
-      }
-    }
-  };
-})(jQuery);
+//(function($){
+//  $.fn.mailcheck = function(opts) {
+//    var defaultDomains = ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com",
+//                          "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk",
+//                          "facebook.com", "verizon.net", "sbcglobal.net", "att.net", "gmx.com", "mail.com"];
+//    var defaultTopLevelDomains = ["co.uk", "com", "net", "org", "info", "edu", "gov", "mil"];
+//
+//    opts.domains = opts.domains || defaultDomains;
+//    opts.topLevelDomains = opts.topLevelDomains || defaultTopLevelDomains;
+//    opts.distanceFunction = Kicksend.sift3Distance;
+//
+//    var result = Kicksend.mailcheck.suggest(encodeURI(this.val()), opts.domains, opts.topLevelDomains, opts.distanceFunction);
+//    if (result) {
+//      if (opts.suggested) {
+//        opts.suggested(this, result);
+//      }
+//    } else {
+//      if (opts.empty) {
+//        opts.empty(this);
+//      }
+//    }
+//  };
+//})(jQuery);
 
 var Kicksend = {
   mailcheck : {
     threshold: 3,
+
+    defaultDomains: ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com",
+      "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk",
+      "facebook.com", "verizon.net", "sbcglobal.net", "att.net", "gmx.com", "mail.com"],
+
+    defaultTopLevelDomains: ["co.uk", "com", "net", "org", "info", "edu", "gov", "mil"],
+
+    run: function(opts) {
+      opts.domains = opts.domains || Kicksend.mailcheck.defaultDomains;
+      opts.topLevelDomains = opts.topLevelDomains || Kicksend.mailcheck.defaultTopLevelDomains;
+      opts.distanceFunction = opts.distanceFunction || Kicksend.sift3Distance;
+
+      var result = Kicksend.mailcheck.suggest(encodeURI(opts.email), opts.domains, opts.topLevelDomains, opts.distanceFunction);
+
+      if (result) {
+        if (opts.suggested) {
+          opts.suggested(result);
+        }
+      } else {
+        if (opts.empty) {
+          opts.empty();
+        }
+      }
+    },
 
     suggest: function(email, domains, topLevelDomains, distanceFunction) {
       email = email.toLowerCase();
@@ -181,3 +205,27 @@ var Kicksend = {
     }
   }
 };
+
+if (jQuery) {
+  (function($){
+    $.fn.mailcheck = function(opts) {
+      var self = this;
+      if (opts.suggested) {
+        var oldSuggested = opts.suggested;
+        opts.suggested = function(result) {
+          oldSuggested(self, result);
+        };
+      }
+
+      if (opts.empty) {
+        var oldEmpty = opts.empty;
+        opts.empty = function() {
+          oldEmpty.call(null, self);
+        };
+      }
+
+      opts.email = this.val();
+      Kicksend.mailcheck.run(opts);
+    }
+  })(jQuery);
+}
