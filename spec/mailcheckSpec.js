@@ -238,16 +238,17 @@ describe("mailcheck", function() {
     });
     
     describe("mailcheck.qwertyKeyboardDistance", function () {
+      // The distances in this function do not use a square root, thus the large distance values
       it("returns the fuzzy qwerty keyboard distance", function () {
-        expect(Math.round(mailcheck.qwertyKeyboardDistance('ca', 'abc'))).toEqual(18);
-        expect(Math.round(mailcheck.qwertyKeyboardDistance('hotmail.co', 'hotmail.com'))).toEqual(12);
-        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail.cmo', 'gmail.com'))).toEqual(6);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('ca', 'abc'))).toEqual(166);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('hotmail.co', 'hotmail.com'))).toEqual(144);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail.cmo', 'gmail.com'))).toEqual(16);
         expect(Math.round(mailcheck.qwertyKeyboardDistance('uo.com', 'ui.com'))).toEqual(1);
         
         // Note that this method does not do string alignment, so the next distances are very different
-        expect(Math.round(mailcheck.qwertyKeyboardDistance('#gmail.com', 'gmail.com'))).toEqual(47);
-        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail.com#', 'gmail.com'))).toEqual(12);
-        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail#.com', 'gmail.com'))).toEqual(34);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('#gmail.com', 'gmail.com'))).toEqual(330);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail.com#', 'gmail.com'))).toEqual(144);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail#.com', 'gmail.com'))).toEqual(273);
       });
     }); 
     

@@ -64,14 +64,14 @@ var Kicksend = {
         // The email address does not closely match one of the supplied domains
         var closestTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains);
         if (emailParts.domain && closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain) {
-          // The email address may have a mispelled top-level domain; return a suggestion
+          // The email address may have a misspelled top-level domain; return a suggestion
           var domain = emailParts.domain;
           closestDomain = domain.substring(0, domain.lastIndexOf(emailParts.topLevelDomain)) + closestTopLevelDomain;
           return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
         }
       }
       /* The email address exactly matches one of the supplied domains, does not closely
-       * match any domain and does not appear to simply have a mispelled top-level domain,
+       * match any domain and does not appear to simply have a misspelled top-level domain,
        * or is an invalid email address; do not return a suggestion.
        */
       return false;
@@ -161,31 +161,38 @@ var Kicksend = {
       return (s1.length + s2.length) /2 - lcs;
     },
 
+    keyboardMap: null,
+    
     qwertyKeyboardDistance: function(s, t) {
-      // Access by [row][shift][column] returns the character
-      var keyboard = [ [ "`1234567890-= ".split(''),  "~!@#$%^&*()_+ ".split('')  ],
-                       [ " qwertyuiop[]\\".split(''), " QWERTYUIOP{}|".split('')  ],
-                       [ " asdfghjkl;' ".split(''),   " ASDFGHJKL:\"  ".split('') ],
-                       [ " zxcvbnm,./  ".split(''),   " ZXCVBNM<>?   ".split('')  ]
-                     ];                       
-    
-      // Access by character.charCodeAt() returns [row, col, shift]
-      var keyboardMap = [];
-      for (var i = 0; i < keyboard.length; i++) {
-        for (var j = 0; j < keyboard[i][0].length; j++) {
-          if (keyboard[i][0][j] != null && keyboard[i][0][j] != ' ') {
-            keyboardMap[keyboard[i][0][j].charCodeAt()] = [i, j, 0];
-          }
-        }
-        for (var j = 0; j < keyboard[i][1].length; j++) {
-          if (keyboard[i][1][j] != null && keyboard[i][1][j] != ' ') {
-            keyboardMap[keyboard[i][1][j].charCodeAt()] = [i, j, 1];
-          }
-        }
-      }        
+      var init = function() {
+        // Access by [row][shift][column] returns the character
+        var keyboard = [ [ "`1234567890-= ".split(''),  "~!@#$%^&*()_+ ".split('')  ],
+                         [ " qwertyuiop[]\\".split(''), " QWERTYUIOP{}|".split('')  ],
+                         [ " asdfghjkl;' ".split(''),   " ASDFGHJKL:\"  ".split('') ],
+                         [ " zxcvbnm,./  ".split(''),   " ZXCVBNM<>?   ".split('')  ]
+                       ];                       
       
-      var maxQwertyDistance = 12;
-    
+        // Access by character.charCodeAt() returns [row, col, shift]
+        var map = [];
+        for (var i = 0; i < keyboard.length; i++) {
+          for (var j = 0; j < keyboard[i][0].length; j++) {
+            if (keyboard[i][0][j] != null && keyboard[i][0][j] != ' ') {
+              map[keyboard[i][0][j].charCodeAt()] = [i, j, 0];
+            }
+          }
+          for (var j = 0; j < keyboard[i][1].length; j++) {
+            if (keyboard[i][1][j] != null && keyboard[i][1][j] != ' ') {
+              map[keyboard[i][1][j].charCodeAt()] = [i, j, 1];
+            }
+          }
+        }
+        return map;
+      }
+      
+      this.keyboardMap = (this.keyboardMap != null) ? this.keyboardMap : init();
+      
+      var maxQwertyDistance = 144; // 12^2
+      
       // Return the grid distance between the point (x1, y1) and (x2, y2)
       var gridDistance = function(x1, y1, x2, y2) {
         if (x1 == x2 && y1 == y2) {
@@ -198,7 +205,8 @@ var Kicksend = {
           return 1;
         }
         
-        return Math.sqrt(xDiff * xDiff + yDiff * yDiff); 
+        // Remove the square root operation for performance
+        return xDiff * xDiff + yDiff * yDiff;
       };
       
       
