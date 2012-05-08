@@ -3,92 +3,73 @@ describe("mailcheck", function() {
                  'comcast.net', 'facebook.com', 'msn.com', 'gmx.com', 'ua.com', 'ui.com'];
   var topLevelDomains = ['com', 'co.uk', 'org', 'info'];
 
-  describe("jquery.mailcheck", function () {
-    var suggestedSpy, emptySpy;
-
-    beforeEach(function() {
-      $('body').append('<div id="playground"></div>');
-
-      suggestedSpy = jasmine.createSpy();
-      emptySpy = jasmine.createSpy();
-
-      $('#playground').append('<input type="text" id="test-input"/>');
-    });
-
-    afterEach(function() {
-      $('#playground').remove();
-    });
-
-    it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
-      $("#test-input").val('test@hotmail.co').mailcheck({
-        suggested: suggestedSpy,
-        empty: emptySpy
-      });
-
-      expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"),{
-        address: 'test',
-        domain: 'hotmail.com',
-        full: 'test@hotmail.com'
-      });
-
-      expect(emptySpy).not.toHaveBeenCalled();
-    });
-
-    it("calls the 'empty' callback with the element when there's no suggestion", function () {
-      $("#test-input").val('contact@kicksend.com').mailcheck({
-        suggested: suggestedSpy,
-        empty: emptySpy
-      });
-
-      expect(suggestedSpy).not.toHaveBeenCalled();
-
-      expect(emptySpy).toHaveBeenCalledWith($("#test-input"));
-    });
-
-    it("takes in an array of specified domains", function() {
-      $("#test-input").val('test@emaildomain.con').mailcheck({
-        suggested: suggestedSpy,
-        empty: emptySpy,
-        domains: domains
-      });
-
-      expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"), {
-        address: 'test',
-        domain: 'emaildomain.com',
-        full: 'test@emaildomain.com'
-      });
-    });
-
-    it("escapes the element's value", function() {
-      $("#test-input").val('<script>alert("a")</script>@emaildomain.con').mailcheck({
-        suggested:suggestedSpy,
-        empty:emptySpy,
-        domains:domains
-      });
-      expect(suggestedSpy.mostRecentCall.args[1].address).not.toMatch(/<script>/);
-    });
-
-    describe("backwards compatibility", function () {
-      it("takes in the same method signature as the first version", function () {
-        $("#test-input").val('test@emaildomain.con').mailcheck(domains, {
-          suggested: suggestedSpy,
-          empty: emptySpy
-        });
-
-        expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"), {
-          address: 'test',
-          domain: 'emaildomain.com',
-          full: 'test@emaildomain.com'
-        });
-      });
-    });
-  });
-
   describe("Kicksend.mailcheck", function(){
     var mailcheck;
 
     beforeEach(function(){
        mailcheck = Kicksend.mailcheck;
+    });
+
+    describe("run", function () {
+      var suggestedSpy, emptySpy;
+
+      beforeEach(function () {
+        suggestedSpy = jasmine.createSpy();
+        emptySpy = jasmine.createSpy();
+      });
+
+      it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
+        mailcheck.run({
+          email: 'test@hotmail.co',
+          suggested:suggestedSpy,
+          empty:emptySpy
+        });
+
+        expect(suggestedSpy).toHaveBeenCalledWith({
+          address:'test',
+          domain:'hotmail.com',
+          full:'test@hotmail.com'
+        });
+
+        expect(emptySpy).not.toHaveBeenCalled();
+      });
+
+      it("calls the 'empty' callback with the element when there's no suggestion", function () {
+        mailcheck.run({
+          email: 'contact@kicksend.com',
+          suggested:suggestedSpy,
+          empty:emptySpy
+        });
+
+        expect(suggestedSpy).not.toHaveBeenCalled();
+
+        expect(emptySpy).toHaveBeenCalled();
+      });
+
+      it("takes in an array of specified domains", function () {
+        mailcheck.run({
+          email: 'test@emaildomain.con',
+          suggested:suggestedSpy,
+          empty:emptySpy,
+          domains:domains
+        });
+
+        expect(suggestedSpy).toHaveBeenCalledWith({
+          address:'test',
+          domain:'emaildomain.com',
+          full:'test@emaildomain.com'
+        });
+      });
+
+      it("escapes the element's value", function () {
+        mailcheck.run({
+          email: '<script>alert("a")</script>@emaildomain.con',
+          suggested:suggestedSpy,
+          empty:emptySpy,
+          domains:domains
+        });
+        expect(suggestedSpy.mostRecentCall.args[0].address).not.toMatch(/<script>/);
+      });
     });
 
     describe("return value", function () {
@@ -283,6 +264,49 @@ describe("mailcheck", function() {
         expect(mailcheck.damerauLevenshteinDistance('hotmail.co', 'hotmail.com')).toEqual(1);
         expect(mailcheck.damerauLevenshteinDistance('gmail.cmo', 'gmail.com')).toEqual(1);
       });
+    });
+  });
+
+  describe("jquery.mailcheck", function () {
+    var suggestedSpy, emptySpy;
+
+    beforeEach(function() {
+      $('body').append('<div id="playground"></div>');
+
+      suggestedSpy = jasmine.createSpy();
+      emptySpy = jasmine.createSpy();
+
+      $('#playground').append('<input type="text" id="test-input"/>');
+    });
+
+    afterEach(function() {
+      $('#playground').remove();
+    });
+
+    it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
+      $("#test-input").val('test@hotmail.co').mailcheck({
+        suggested: suggestedSpy,
+        empty: emptySpy
+      });
+
+      expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"),{
+        address: 'test',
+        domain: 'hotmail.com',
+        full: 'test@hotmail.com'
+      });
+
+      expect(emptySpy).not.toHaveBeenCalled();
+    });
+
+    it("calls the 'empty' callback with the element when there's no suggestion", function () {
+      $("#test-input").val('contact@kicksend.com').mailcheck({
+        suggested: suggestedSpy,
+        empty: emptySpy
+      });
+
+      expect(suggestedSpy).not.toHaveBeenCalled();
+
+      expect(emptySpy).toHaveBeenCalledWith($("#test-input"));
     });
   });
 });
