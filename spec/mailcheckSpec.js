@@ -1,93 +1,75 @@
 describe("mailcheck", function() {
-  var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com', 'gmx.com'];
-  var topLevelDomains = ['co.uk', 'com', 'org', 'info'];
-
-  describe("jquery.mailcheck", function () {
-    var suggestedSpy, emptySpy;
-
-    beforeEach(function() {
-      $('body').append('<div id="playground"></div>');
-
-      suggestedSpy = jasmine.createSpy();
-      emptySpy = jasmine.createSpy();
-
-      $('#playground').append('<input type="text" id="test-input"/>');
-    });
-
-    afterEach(function() {
-      $('#playground').remove();
-    });
-
-    it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
-      $("#test-input").val('test@hotmail.co').mailcheck({
-        suggested: suggestedSpy,
-        empty: emptySpy
-      });
-
-      expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"),{
-        address: 'test',
-        domain: 'hotmail.com',
-        full: 'test@hotmail.com'
-      });
-
-      expect(emptySpy).not.toHaveBeenCalled();
-    });
-
-    it("calls the 'empty' callback with the element when there's no suggestion", function () {
-      $("#test-input").val('contact@kicksend.com').mailcheck({
-        suggested: suggestedSpy,
-        empty: emptySpy
-      });
-
-      expect(suggestedSpy).not.toHaveBeenCalled();
-
-      expect(emptySpy).toHaveBeenCalledWith($("#test-input"));
-    });
-
-    it("takes in an array of specified domains", function() {
-      $("#test-input").val('test@emaildomain.con').mailcheck({
-        suggested: suggestedSpy,
-        empty: emptySpy,
-        domains: domains
-      });
-
-      expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"), {
-        address: 'test',
-        domain: 'emaildomain.com',
-        full: 'test@emaildomain.com'
-      });
-    });
-
-    it("escapes the element's value", function() {
-      $("#test-input").val('<script>alert("a")</script>@emaildomain.con').mailcheck({
-        suggested:suggestedSpy,
-        empty:emptySpy,
-        domains:domains
-      });
-      expect(suggestedSpy.mostRecentCall.args[1].address).not.toMatch(/<script>/);
-    });
-
-    describe("backwards compatibility", function () {
-      it("takes in the same method signature as the first version", function () {
-        $("#test-input").val('test@emaildomain.con').mailcheck(domains, {
-          suggested: suggestedSpy,
-          empty: emptySpy
-        });
-
-        expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"), {
-          address: 'test',
-          domain: 'emaildomain.com',
-          full: 'test@emaildomain.com'
-        });
-      });
-    });
-  });
+  var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com',
+                 'comcast.net', 'facebook.com', 'msn.com', 'gmx.com', 'ua.com', 'ui.com'];
+  var topLevelDomains = ['com', 'co.uk', 'org', 'info'];
 
   describe("Kicksend.mailcheck", function(){
     var mailcheck;
 
     beforeEach(function(){
        mailcheck = Kicksend.mailcheck;
+    });
+
+    describe("run", function () {
+      var suggestedSpy, emptySpy;
+
+      beforeEach(function () {
+        suggestedSpy = jasmine.createSpy();
+        emptySpy = jasmine.createSpy();
+      });
+
+      it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
+        mailcheck.run({
+          email: 'test@hotmail.co',
+          suggested:suggestedSpy,
+          empty:emptySpy
+        });
+
+        expect(suggestedSpy).toHaveBeenCalledWith({
+          address:'test',
+          domain:'hotmail.com',
+          full:'test@hotmail.com'
+        });
+
+        expect(emptySpy).not.toHaveBeenCalled();
+      });
+
+      it("calls the 'empty' callback with the element when there's no suggestion", function () {
+        mailcheck.run({
+          email: 'contact@kicksend.com',
+          suggested:suggestedSpy,
+          empty:emptySpy
+        });
+
+        expect(suggestedSpy).not.toHaveBeenCalled();
+
+        expect(emptySpy).toHaveBeenCalled();
+      });
+
+      it("takes in an array of specified domains", function () {
+        mailcheck.run({
+          email: 'test@emaildomain.con',
+          suggested:suggestedSpy,
+          empty:emptySpy,
+          domains:domains
+        });
+
+        expect(suggestedSpy).toHaveBeenCalledWith({
+          address:'test',
+          domain:'emaildomain.com',
+          full:'test@emaildomain.com'
+        });
+      });
+
+      it("escapes the element's value", function () {
+        mailcheck.run({
+          email: '<script>alert("a")</script>@emaildomain.con',
+          suggested:suggestedSpy,
+          empty:emptySpy,
+          domains:domains
+        });
+        expect(suggestedSpy.mostRecentCall.args[0].address).not.toMatch(/<script>/);
+      });
     });
 
     describe("return value", function () {
@@ -122,6 +104,7 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@hotmail.co', domains).domain).toEqual('hotmail.com');
         expect(mailcheck.suggest('test@fabecook.com', domains).domain).toEqual('facebook.com');
         expect(mailcheck.suggest('test@yajoo.com', domains).domain).toEqual('yahoo.com');
+        expect(mailcheck.suggest('test@uo.com', domains).domain).toEqual('ui.com');
         expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
         expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toBeFalsy();
         expect(mailcheck.suggest('', domains)).toBeFalsy();
@@ -224,6 +207,7 @@ describe("mailcheck", function() {
         expect(mailcheck.findClosestDomain('gms.com', domains)).toEqual('gmx.com');
         expect(mailcheck.findClosestDomain('gmsn.com', domains)).toEqual('msn.com');
         expect(mailcheck.findClosestDomain('gmaik.com', domains)).toEqual('gmail.com');
+        expect(mailcheck.findClosestDomain('uo.com', domains)).toEqual('ui.com');
       });
 
       it("returns the most similar top-level domain", function () {
@@ -232,6 +216,97 @@ describe("mailcheck", function() {
         expect(mailcheck.findClosestDomain('ifno', topLevelDomains)).toEqual('info');
         expect(mailcheck.findClosestDomain('com.uk', topLevelDomains)).toEqual('co.uk');
       });
+    });
+    
+    describe("mailcheck.qwertyKeyboardDistance", function () {
+      // The distances in this function do not use a square root, thus the large distance values
+      it("returns the fuzzy qwerty keyboard distance", function () {
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('ca', 'abc'))).toEqual(166);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('hotmail.co', 'hotmail.com'))).toEqual(144);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail.cmo', 'gmail.com'))).toEqual(16);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('uo.com', 'ui.com'))).toEqual(1);
+        
+        // Note that this method does not do string alignment, so the next distances are very different
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('#gmail.com', 'gmail.com'))).toEqual(330);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail.com#', 'gmail.com'))).toEqual(144);
+        expect(Math.round(mailcheck.qwertyKeyboardDistance('gmail#.com', 'gmail.com'))).toEqual(273);
+      });
+    }); 
+    
+    describe("mailcheck.sift3Distance", function() {
+      it("returns an approximate string edit distance in O(n) time", function () {
+        expect(mailcheck.sift3Distance('ca', 'abc')).toEqual(2.5);
+        expect(mailcheck.sift3Distance('hotmail.co', 'hotmail.com')).toEqual(0.5);
+        expect(mailcheck.sift3Distance('gmail.cmo', 'gmail.com')).toEqual(2);
+      });
+    });
+    
+    describe("mailcheck.levenshteinDistance", function() {
+      it("returns the string edit distance accounting for insertion, deletion, and substitution", function () {
+        expect(mailcheck.levenshteinDistance('ca', 'abc')).toEqual(3);
+        expect(mailcheck.levenshteinDistance('hotmail.co', 'hotmail.com')).toEqual(1);
+        expect(mailcheck.levenshteinDistance('gmail.cmo', 'gmail.com')).toEqual(2);
+      });
+    });
+    
+    describe("mailcheck.optimalStringAlignmentDistance", function() {
+      it("returns the string edit distance accounting for insertion, deletion," +
+        "substitution, and transposition when no substring is edited more than once", function () {
+        expect(mailcheck.optimalStringAlignmentDistance('ca', 'abc')).toEqual(3);
+        expect(mailcheck.optimalStringAlignmentDistance('hotmail.co', 'hotmail.com')).toEqual(1);
+        expect(mailcheck.optimalStringAlignmentDistance('gmail.cmo', 'gmail.com')).toEqual(1);
+      });
+    }); 
+    
+    describe("mailcheck.damerauLevenshteinDistance", function() {
+      it("returns the string edit distance accounting for insertion, deletion, substitution, and transposition", function () {
+        expect(mailcheck.damerauLevenshteinDistance('ca', 'abc')).toEqual(2);
+        expect(mailcheck.damerauLevenshteinDistance('hotmail.co', 'hotmail.com')).toEqual(1);
+        expect(mailcheck.damerauLevenshteinDistance('gmail.cmo', 'gmail.com')).toEqual(1);
+      });
+    });
+  });
+
+  describe("jquery.mailcheck", function () {
+    var suggestedSpy, emptySpy;
+
+    beforeEach(function() {
+      $('body').append('<div id="playground"></div>');
+
+      suggestedSpy = jasmine.createSpy();
+      emptySpy = jasmine.createSpy();
+
+      $('#playground').append('<input type="text" id="test-input"/>');
+    });
+
+    afterEach(function() {
+      $('#playground').remove();
+    });
+
+    it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
+      $("#test-input").val('test@hotmail.co').mailcheck({
+        suggested: suggestedSpy,
+        empty: emptySpy
+      });
+
+      expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"),{
+        address: 'test',
+        domain: 'hotmail.com',
+        full: 'test@hotmail.com'
+      });
+
+      expect(emptySpy).not.toHaveBeenCalled();
+    });
+
+    it("calls the 'empty' callback with the element when there's no suggestion", function () {
+      $("#test-input").val('contact@kicksend.com').mailcheck({
+        suggested: suggestedSpy,
+        empty: emptySpy
+      });
+
+      expect(suggestedSpy).not.toHaveBeenCalled();
+
+      expect(emptySpy).toHaveBeenCalledWith($("#test-input"));
     });
   });
 });
