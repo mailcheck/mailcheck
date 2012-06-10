@@ -440,7 +440,7 @@ var Kicksend = {
   }
 };
 
-if (jQuery) {
+if (window.jQuery) {
   (function($){
     $.fn.mailcheck = function(opts) {
       var self = this;
