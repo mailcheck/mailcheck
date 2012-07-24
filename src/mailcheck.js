@@ -21,6 +21,14 @@ var Kicksend = {
 
     defaultTopLevelDomains: ["co.uk", "com", "net", "org", "info", "edu", "gov", "mil"],
 
+    whitelistRegexes: [
+      'ymail.com',
+      'yahoo\\.co\\.',
+      'yahoo\\.com\\.',
+      'hotmail\\.co\\.',
+      'hotmail\\.com\\.'
+    ],
+
     run: function(opts) {
       opts.domains = opts.domains || Kicksend.mailcheck.defaultDomains;
       opts.topLevelDomains = opts.topLevelDomains || Kicksend.mailcheck.defaultTopLevelDomains;
@@ -45,6 +53,13 @@ var Kicksend = {
       var emailParts = this.splitEmail(email);
 
       var closestDomain = this.findClosestDomain(emailParts.domain, domains, distanceFunction);
+
+      for (var i = 0; i < this.whitelistRegexes.length; i++) {
+          var r = RegExp(this.whitelistRegexes[i]);
+          if (r.match(emailParts.domain)) {
+              return false;
+          }
+      }
 
       if (closestDomain) {
         if (closestDomain != emailParts.domain) {
