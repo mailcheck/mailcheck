@@ -89,6 +89,7 @@ Using the example from above, you would call `Kicksend.mailcheck.run` instead.
 ```html
 <script>
 Kicksend.mailcheck.run({
+  email: yourTextInput.value,
   domains: domains,                       // optional
   topLevelDomains: topLevelDomains,       // optional
   distanceFunction: superStringDistance,  // optional
