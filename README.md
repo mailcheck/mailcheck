@@ -1,6 +1,8 @@
 mailcheck.js
 =========
 
+[![TravisCI Build Status](https://secure.travis-ci.org/Kicksend/mailcheck.png?branch=master)](https://travis-ci.org/Kicksend/mailcheck)
+
 The Javascript library and jQuery plugin that suggests a right domain when your users misspell it in an email address.
 
 What does it do?
