@@ -148,6 +148,7 @@ Who's using Mailcheck?
 - [Kicksend](http://kicksend.com/)
 - [Dropbox](http://dropbox.com/)
 - [Flotype](http://flotype.com/)
+- [Kickstarter](http://kickstarter.com/)
 - [Kippt](http://kippt.com/)
 - [Minecraft](http://minecraft.net/)
 - [Prispy](http://prispy.com/)
@@ -169,10 +170,11 @@ Related links
 
 - [Mailcheck for Drupal](https://github.com/RiverDonkey/Mailchecker)
 
-Author
+Core Team
 -------
 
-Derrick Ko ([@derrickko](http://twitter.com/derrickko))
+- Derrick Ko, [Kicksend](http://kicksend.com), [@derrickko](http://twitter.com/derrickko). Created Mailcheck.
+- Wei Lu, [neo](http://neo.com), [@luweidewei](http://twitter.com/luweidewei).
 
 License
 -------
