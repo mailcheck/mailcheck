@@ -1,6 +1,2 @@
-language: ruby
-rvm:
-  - 1.9.3  
-before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
+language: javascript
+script: phantomjs spec/lib/run_jasmine_test.coffee spec/spec_runner.html

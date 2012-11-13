@@ -2,51 +2,28 @@
   "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>Jasmine Spec Runner</title>
+  <title>Jasmine Test Runner</title>
+  <link rel="stylesheet" type="text/css" href="lib/jasmine-1.2.0/jasmine.css">
+  <script type="text/javascript" src="lib/jasmine-1.2.0/jasmine.js"></script>
+  <script type="text/javascript" src="lib/jasmine-1.2.0/jasmine-html.js"></script>
+  <script type="text/javascript" src="lib/jquery.js"></script>
+  <script type="text/javascript" src="lib/console-runner.js"></script>
 
-  <link rel="shortcut icon" type="image/png" href="javascripts/lib/jasmine-1.2.0/jasmine_favicon.png">
-  <link rel="stylesheet" type="text/css" href="javascripts/lib/jasmine-1.2.0/jasmine.css">
-  <script type="text/javascript" src="javascripts/lib/jquery.js"></script>
-  <script type="text/javascript" src="javascripts/lib/jasmine-1.2.0/jasmine.js"></script>
-  <script type="text/javascript" src="javascripts/lib/jasmine-1.2.0/jasmine-html.js"></script>
-
-  <!-- include spec files here... -->
-  <script type="text/javascript" src="mailcheckSpec.js"></script>
-
-  <!-- include source files here... -->
+  <!-- SOURCE FILES -->
   <script type="text/javascript" src="../src/mailcheck.js"></script>
 
-  <script type="text/javascript">
-    (function() {
-      var jasmineEnv = jasmine.getEnv();
-      jasmineEnv.updateInterval = 1000;
-
-      var trivialReporter = new jasmine.TrivialReporter();
-
-      jasmineEnv.addReporter(trivialReporter);
-
-      jasmineEnv.specFilter = function(spec) {
-        return trivialReporter.specFilter(spec);
-      };
-
-      var currentWindowOnload = window.onload;
-
-      window.onload = function() {
-        if (currentWindowOnload) {
-          currentWindowOnload();
-        }
-        execJasmine();
-      };
-
-      function execJasmine() {
-        jasmineEnv.execute();
-      }
-
-    })();
-  </script>
-
+  <!-- TEST FILES -->
+  <script type="text/javascript" src="mailcheckSpec.js"></script>
 </head>
-
 <body>
+
+<script type="text/javascript">
+  var console_reporter = new jasmine.ConsoleReporter()
+  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+  jasmine.getEnv().addReporter(console_reporter);
+  jasmine.getEnv().execute();
+</script>
+
 </body>
 </html>
+
