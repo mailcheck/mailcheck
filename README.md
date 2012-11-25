@@ -168,7 +168,7 @@ Related links
 
 - [WordPress e-Commerce Plugin](http://wordpress.org/extend/plugins/e-commerce-mailcheck/)
 
-- [Mailcheck for Drupal](https://github.com/RiverDonkey/Mailchecker)
+- [Mailcheck for Drupal](http://drupal.org/project/Mailcheck) by [Martin Elvar](https://twitter.com/MartinElvar)
 
 Core Team
 -------
