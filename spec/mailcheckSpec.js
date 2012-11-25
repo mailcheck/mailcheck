@@ -103,6 +103,7 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@hotmail.co', domains).domain).toEqual('hotmail.com');
         expect(mailcheck.suggest('test@fabecook.com', domains).domain).toEqual('facebook.com');
         expect(mailcheck.suggest('test@yajoo.com', domains).domain).toEqual('yahoo.com');
+        expect(mailcheck.suggest('test@canadian.ca', domains, topLevelDomains, null, true)).toBeFalsy();
         expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
         expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toBeFalsy();
         expect(mailcheck.suggest('', domains)).toBeFalsy();

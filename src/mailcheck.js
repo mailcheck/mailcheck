@@ -25,8 +25,9 @@ var Kicksend = {
       opts.domains = opts.domains || Kicksend.mailcheck.defaultDomains;
       opts.topLevelDomains = opts.topLevelDomains || Kicksend.mailcheck.defaultTopLevelDomains;
       opts.distanceFunction = opts.distanceFunction || Kicksend.sift3Distance;
+      opts.ignoreTLDs = opts.ignoreTLDs || false;
 
-      var result = Kicksend.mailcheck.suggest(encodeURI(opts.email), opts.domains, opts.topLevelDomains, opts.distanceFunction);
+      var result = Kicksend.mailcheck.suggest(encodeURI(opts.email), opts.domains, opts.topLevelDomains, opts.distanceFunction, opts.ignoreTLDs);
 
       if (result) {
         if (opts.suggested) {
@@ -39,7 +40,7 @@ var Kicksend = {
       }
     },
 
-    suggest: function(email, domains, topLevelDomains, distanceFunction) {
+    suggest: function(email, domains, topLevelDomains, distanceFunction, ignoreTLDs) {
       email = email.toLowerCase();
 
       var emailParts = this.splitEmail(email);
@@ -51,7 +52,7 @@ var Kicksend = {
           // The email address closely matches one of the supplied domains; return a suggestion
           return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
         }
-      } else {
+      } else if (!ignoreTLDs) {
         // The email address does not closely match one of the supplied domains
         var closestTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains);
         if (emailParts.domain && closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain) {
