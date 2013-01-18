@@ -3,11 +3,11 @@
   "title": "mailcheck",
   "description": "A jQuery plugin that suggests a right domain when your users misspell it in an email address.",
   "keywords": [
-    "forms",
+    "form",
     "email",
     "spell check"
   ],
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": {
     "name": "Derrick Ko",
     "url": "http://derrickko.com",
