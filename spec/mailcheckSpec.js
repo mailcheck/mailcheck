@@ -1,6 +1,6 @@
 describe("mailcheck", function() {
   var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com', 'gmx.com'];
-  var topLevelDomains = ['co.uk', 'com', 'org', 'info'];
+  var topLevelDomains = ['co.uk', 'com', 'org', 'info', 'name'];
 
   describe("Kicksend.mailcheck", function(){
     var mailcheck;
@@ -104,6 +104,7 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@fabecook.com', domains).domain).toEqual('facebook.com');
         expect(mailcheck.suggest('test@yajoo.com', domains).domain).toEqual('yahoo.com');
         expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
+        expect(mailcheck.suggest("person@person.naem", domains, topLevelDomains).domain).toEqual("person.name")
         expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toBeFalsy();
         expect(mailcheck.suggest('', domains)).toBeFalsy();
         expect(mailcheck.suggest('test@', domains)).toBeFalsy();
