@@ -1,7 +1,11 @@
 {
   "name": "mailcheck",
-  "version": "0.0.1",
+  "version": "1.0.2",
   "main": "src/mailcheck.js",
+  "scripts": [
+    "src/mailcheck.js",
+    "src/mailcheck.min.js"
+  ],
   "ignore": [
     "**/.*",
     "node_modules",
