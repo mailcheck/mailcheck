@@ -35,7 +35,7 @@ First, include jQuery and Mailcheck into the page.
 Have a text field.
 
 ```html
-<input id="email" name="email" type="text" />
+<input id="email" name="email" type="email" />
 ```
 
 Now, attach Mailcheck to the text field. You can declare an array of domains and top level domains you want to check against.
