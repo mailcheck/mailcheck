@@ -31,6 +31,8 @@ var Kicksend = {
       if (result) {
         if (opts.suggested) {
           opts.suggested(result);
+        } else {
+          return result;
         }
       } else {
         if (opts.empty) {
