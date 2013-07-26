@@ -6,7 +6,9 @@ describe("mailcheck", function() {
     var mailcheck;
 
     beforeEach(function(){
-       mailcheck = Kicksend.mailcheck;
+      // We may be running in a CommonJS environment.
+      // If so, mailcheck won't be in a global Kicksend object.
+      mailcheck = typeof Kicksend !== 'undefined' ? Kicksend.mailcheck : require('../');
     });
 
     describe("run", function () {
@@ -215,6 +217,12 @@ describe("mailcheck", function() {
       });
     });
   });
+
+  // Browser-only code below:
+
+  if (typeof window === 'undefined') {
+      return;
+  }
 
   describe("jquery.mailcheck", function () {
     var suggestedSpy, emptySpy;
