@@ -182,7 +182,13 @@ var Kicksend = {
   }
 };
 
-if (window.jQuery) {
+// Export the mailcheck object if we're in a CommonJS env (e.g. Node).
+// Modeled off of Underscore.js.
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Kicksend.mailcheck;
+}
+
+if (typeof window !== 'undefined' && window.jQuery) {
   (function($){
     $.fn.mailcheck = function(opts) {
       var self = this;
