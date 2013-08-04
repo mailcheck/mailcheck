@@ -1,0 +1,45 @@
+{
+  "name": "mailcheck",
+  "title": "mailcheck",
+  "description": "A jQuery plugin that suggests a right domain when your users misspell it in an email address.",
+  "keywords": [
+    "form",
+    "email",
+    "spell check"
+  ],
+  "version": "1.0.3",
+  "author": {
+    "name": "Derrick Ko",
+    "url": "http://derrickko.com",
+    "email": "hello@derrickko.com"
+  },
+  "maintainers": [
+    {
+      "name": "Wei Lu",
+      "url": "http://neo.com",
+      "email": "wei@neo.com"
+    }
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/Kicksend/mailcheck/blob/master/LICENSE"
+    }
+  ],
+  "bugs": "https://github.com/Kicksend/mailcheck/issues",
+  "homepage": "https://github.com/Kicksend/mailcheck",
+  "docs": "https://github.com/Kicksend/mailcheck/blob/master/README.md",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "jasmine-node": "1.x"
+  },
+  "main": "src/mailcheck.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/aseemk/mailcheck.git"
+  },
+  "scripts": {
+    "test": "jasmine-node spec/"
+  }
+}
