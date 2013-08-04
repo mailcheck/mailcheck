@@ -81,8 +81,6 @@ Mailcheck does not want to get in the way of how you can show suggestions. Use t
 
 `empty` is called when there's no suggestion. Mailcheck just passes in the target element. It is a good idea to use this callback to clear an existing suggestion.
 
-Check out our [live demo](http://kicksend.com/join) for an idea on displaying visual feedback to the user.
-
 Usage without jQuery
 --------------------
 Mailcheck is decoupled from jQuery, so its usage without jQuery is almost identical.
