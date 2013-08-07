@@ -23,6 +23,8 @@ Installation
 
 For instant use, download `src/mailcheck.min.js` into javascripts directory. Use `src/mailcheck.js` if you want to hack on it, or have your own minimizer.
 
+You can also use it on the server with Node.js. Just add it to your package.json, or run `npm install mailcheck`.
+
 Usage with jQuery
 -----
 First, include jQuery and Mailcheck into the page.
@@ -105,6 +107,10 @@ Kicksend.mailcheck.run({
 ```
 
 The rest works similarly. In fact, the Mailcheck jQuery plugin just wraps `Kicksend.mailcheck.run`.
+
+Usage on Node.js
+----------------
+If you're running this on Node.js, you can just `require('mailcheck')` to get the `mailcheck` object, and call `run` on that.
 
 Domains
 -------
