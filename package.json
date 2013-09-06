@@ -29,10 +29,12 @@
   "bugs": "https://github.com/Kicksend/mailcheck/issues",
   "homepage": "https://github.com/Kicksend/mailcheck",
   "docs": "https://github.com/Kicksend/mailcheck/blob/master/README.md",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "jasmine-node": "1.x"
+    "jasmine-node": "1.x",
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-jasmine-node": "~0.1.0"
   },
   "main": "src/mailcheck.js",
   "repository": {
