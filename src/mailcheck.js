@@ -19,7 +19,7 @@ var Kicksend = {
       "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk",
       "facebook.com", "verizon.net", "sbcglobal.net", "att.net", "gmx.com", "mail.com", "outlook.com"],
 
-    defaultTopLevelDomains: ["co.uk", "com", "net", "org", "info", "edu", "gov", "mil"],
+    defaultTopLevelDomains: ["co.jp", "co.uk", "com", "net", "org", "info", "edu", "gov", "mil"],
 
     run: function(opts) {
       opts.domains = opts.domains || Kicksend.mailcheck.defaultDomains;
