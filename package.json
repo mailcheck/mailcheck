@@ -32,7 +32,7 @@
   "dependencies": {},
   "devDependencies": {
     "jasmine-node": "1.x",
-    "grunt": "~0.4.1",
+    "grunt": "0.4.x",
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-jasmine-node": "~0.1.0"
   },
