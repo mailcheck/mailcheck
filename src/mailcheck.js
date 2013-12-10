@@ -53,12 +53,14 @@ var Kicksend = {
         }
       } else {
         // The email address does not closely match one of the supplied domains
-        var closestTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains);
-        if (emailParts.domain && closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain) {
-          // The email address may have a mispelled top-level domain; return a suggestion
-          var domain = emailParts.domain;
-          closestDomain = domain.substring(0, domain.lastIndexOf(emailParts.topLevelDomain)) + closestTopLevelDomain;
-          return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
+        if (email.match(/^.+@.+\./)) {
+          var closestTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains);
+          if (emailParts.domain && closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain) {
+            // The email address may have a mispelled top-level domain; return a suggestion
+            var domain = emailParts.domain;
+            closestDomain = domain.substring(0, domain.lastIndexOf(emailParts.topLevelDomain)) + closestTopLevelDomain;
+            return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
+          }
         }
       }
       /* The email address exactly matches one of the supplied domains, does not closely
