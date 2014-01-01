@@ -22,5 +22,5 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-jasmine-node'
 
-  grunt.registerTask 'default', ['uglify']
+  grunt.registerTask 'default', ['jasmine_node', 'uglify']
   grunt.registerTask 'test', ['jasmine_node']
