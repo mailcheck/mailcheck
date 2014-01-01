@@ -160,6 +160,7 @@ Mailcheck has inbuilt defaults if the `domains` or `topLevelDomains` options are
 * gmx.com
 * mail.com
 * outlook.com
+* icloud.com
 
 #### Default Top-Level Domains ####
 
@@ -172,6 +173,7 @@ Mailcheck has inbuilt defaults if the `domains` or `topLevelDomains` options are
 * .edu
 * .gov
 * .mil
+* .ca
 
 #### Adding your own Domains ####
 
