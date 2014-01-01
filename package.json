@@ -34,7 +34,8 @@
     "jasmine-node": "1.x",
     "grunt": "0.4.x",
     "grunt-contrib-uglify": "~0.2.4",
-    "grunt-jasmine-node": "~0.1.0"
+    "grunt-jasmine-node": "~0.1.0",
+    "grunt-cli": "~0.1.9"
   },
   "main": "src/mailcheck.js",
   "repository": {
@@ -42,6 +43,7 @@
     "url": "git://github.com/Kicksend/mailcheck.git"
   },
   "scripts": {
-    "test": "jasmine-node spec/"
+    "test": "grunt test",
+    "prepublish": "grunt test",
   }
 }
