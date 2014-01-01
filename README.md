@@ -21,7 +21,7 @@ See it live in action [here](http://kicksend.com/join).
 Installation
 ------------
 
-For instant use, download the minified library [mailcheck.min.js](https://raw.github.com/Kicksend/mailcheck/master/src/mailcheck.min.js) into your javascripts directory. [mailcheck.js](https://raw.github.com/Kicksend/mailcheck/master/src/mailcheck.js) is also available unminimised if you want to hack on it, or have your own minimizer.
+For instant use, download the minified library [mailcheck.min.js](https://raw.github.com/Kicksend/mailcheck/314d14c2fdd3fb5e0da1726674a4b536f313178a/src/mailcheck.min.js) into your javascripts directory. [mailcheck.js](https://raw.github.com/Kicksend/mailcheck/314d14c2fdd3fb5e0da1726674a4b536f313178a/src/mailcheck.js) is also available unminimised if you want to hack on it, or have your own minimizer.
 
 #### Bower ####
 
