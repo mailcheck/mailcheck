@@ -26,19 +26,13 @@ var Kicksend = {
       opts.topLevelDomains = opts.topLevelDomains || Kicksend.mailcheck.defaultTopLevelDomains;
       opts.distanceFunction = opts.distanceFunction || Kicksend.sift3Distance;
 
+      var defaultCallback = function(result){ return result }
+      var suggestedCallback = opts.suggested || defaultCallback
+      var emptyCallback = opts.empty || defaultCallback
+
       var result = Kicksend.mailcheck.suggest(encodeURI(opts.email), opts.domains, opts.topLevelDomains, opts.distanceFunction);
 
-      if (result) {
-        if (opts.suggested) {
-          opts.suggested(result);
-        } else {
-          return result;
-        }
-      } else {
-        if (opts.empty) {
-          opts.empty();
-        }
-      }
+      return result ? suggestedCallback(result) : emptyCallback()
     },
 
     suggest: function(email, domains, topLevelDomains, distanceFunction) {

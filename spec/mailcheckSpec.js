@@ -47,6 +47,18 @@ describe("mailcheck", function() {
         expect(emptySpy).toHaveBeenCalled();
       });
 
+      it("returns the result when 'suggested' callback is not defined", function () {
+        var result = mailcheck.run({
+          email: 'test@hotmail.co',
+        });
+
+        expect(result).toEqual({
+          address:'test',
+          domain:'hotmail.com',
+          full:'test@hotmail.com'
+        })
+      })
+
       it("takes in an array of specified domains", function () {
         mailcheck.run({
           email: 'test@emaildomain.con',
