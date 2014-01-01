@@ -1,7 +1,7 @@
 {
   "name": "mailcheck",
   "title": "mailcheck",
-  "description": "A jQuery plugin that suggests a right domain when your users misspell it in an email address.",
+  "description": "A standalone module that suggests a right domain when your users misspell it in an email address.",
   "keywords": [
     "form",
     "email",
@@ -37,7 +37,7 @@
   "main": "src/mailcheck.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/aseemk/mailcheck.git"
+    "url": "git://github.com/Kicksend/mailcheck.git"
   },
   "scripts": {
     "test": "jasmine-node spec/"
