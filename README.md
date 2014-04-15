@@ -257,6 +257,4 @@ Core Team
 License
 -------
 
-Copyright (c) 2012 [Receivd, Inc.](http://kicksend.com)
-
 Licensed under the MIT License.
