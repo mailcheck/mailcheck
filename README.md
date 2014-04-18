@@ -35,13 +35,6 @@ For instant use, download the minified library [mailcheck.min.js](https://raw.gi
 > npm install --save mailcheck
 ```
 
-Hacking on Nitrous.IO
----------------------
-
-Start hacking on Mailcheck on [Nitrous.IO](https://www.nitrous.io/?utm_source=github.com&utm_campaign=kicksend-mailcheck&utm_medium=hackonnitrous) in seconds:
-
-[![Hack kicksend/mailcheck on Nitrous.IO](https://d3o0mnbgv6k92a.cloudfront.net/assets/hack-l-v1-3cc067e71372f6045e1949af9d96095b.png)](https://www.nitrous.io/hack_button?source=embed&runtime=nodejs&repo=kicksend%2Fmailcheck&file_to_open=README.nitrous.md)
-
 Usage with jQuery
 -----
 
@@ -145,43 +138,6 @@ Domains
 
 Mailcheck has inbuilt defaults if the `domains` or `topLevelDomains` options aren't provided. We still recommend supplying your own domains based on the distribution of your users.
 
-#### Default Domains ####
-
-* yahoo.com
-* google.com
-* hotmail.com
-* gmail.com
-* me.com
-* aol.com
-* mac.com
-* live.com
-* comcast.net
-* googlemail.com
-* msn.com
-* hotmail.co.uk
-* yahoo.co.uk
-* facebook.com
-* verizon.net
-* sbcglobal.net
-* att.net
-* gmx.com
-* mail.com
-* outlook.com
-* icloud.com
-
-#### Default Top-Level Domains ####
-
-* .co.jp
-* .co.uk
-* .com
-* .net
-* .org
-* .info
-* .edu
-* .gov
-* .mil
-* .ca
-
 #### Adding your own Domains ####
 
 You can replace Mailcheck's default domain/TLD suggestions by supplying replacements to `mailcheck.run`:
@@ -226,6 +182,14 @@ And do send in those pull requests! To get them accepted, please:
 - Minify the plugin by running `grunt` in the Mailcheck directory.
 
 Upcoming features, bugs and feature requests are managed in [Issues](https://github.com/Kicksend/mailcheck/issues).
+
+Developing on Nitrous.IO
+---------------------
+
+Start contributing to Mailcheck instantly on [Nitrous.IO](https://www.nitrous.io/?utm_source=github.com&utm_campaign=kicksend-mailcheck&utm_medium=hackonnitrous):
+
+[![Hack kicksend/mailcheck on Nitrous.IO](https://d3o0mnbgv6k92a.cloudfront.net/assets/hack-l-v1-3cc067e71372f6045e1949af9d96095b.png)](https://www.nitrous.io/hack_button?source=embed&runtime=nodejs&repo=kicksend%2Fmailcheck&file_to_open=README.nitrous.md)
+
 
 Who's using Mailcheck?
 -----------------------
