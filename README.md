@@ -35,6 +35,13 @@ For instant use, download the minified library [mailcheck.min.js](https://raw.gi
 > npm install --save mailcheck
 ```
 
+Hacking on Nitrous.IO
+---------------------
+
+Start hacking on Mailcheck on [Nitrous.IO](https://www.nitrous.io/?utm_source=github.com&utm_campaign=kicksend-mailcheck&utm_medium=hackonnitrous) in seconds:
+
+[![Hack kicksend/mailcheck on Nitrous.IO](https://d3o0mnbgv6k92a.cloudfront.net/assets/hack-l-v1-3cc067e71372f6045e1949af9d96095b.png)](https://www.nitrous.io/hack_button?source=embed&runtime=nodejs&repo=kicksend%2Fmailcheck&file_to_open=README.nitrous.md)
+
 Usage with jQuery
 -----
 

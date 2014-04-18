@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ABSOLUTE_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)/../examples
+node script/server.js 3000 $ABSOLUTE_PATH
