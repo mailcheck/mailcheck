@@ -83,6 +83,16 @@ describe("mailcheck", function() {
         });
         expect(suggestedSpy.mostRecentCall.args[0].address).not.toMatch(/<script>/);
       });
+
+      it("allows valid special characters", function() {
+        mailcheck.run({
+          email: " g1!#$%&'*+-/=?^_`{|}@gmai.com",
+          suggested:suggestedSpy,
+          empty:emptySpy,
+          domains:domains
+        });
+        expect(suggestedSpy.mostRecentCall.args[0].address).toEqual(" g1!#$%&'*+-/=?^_`{|}@gmail.com");
+      });
     });
 
     describe("return value", function () {
