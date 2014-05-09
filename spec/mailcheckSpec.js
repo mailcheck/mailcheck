@@ -210,6 +210,19 @@ describe("mailcheck", function() {
         expect(mailcheck.splitEmail('@example.com')).toBeFalsy();
         expect(mailcheck.splitEmail('test@')).toBeFalsy();
       });
+
+      it("trims spaces from the start and end of the string", function () {
+        expect(mailcheck.splitEmail(' postbox@com')).toEqual({
+          address:'postbox',
+          domain:'com',
+          topLevelDomain:'com'
+        });
+        expect(mailcheck.splitEmail('postbox@com ')).toEqual({
+          address:'postbox',
+          domain:'com',
+          topLevelDomain:'com'
+        });
+      });
     });
 
     describe("mailcheck.findClosestDomain", function () {

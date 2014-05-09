@@ -137,7 +137,7 @@ var Kicksend = {
     },
 
     splitEmail: function(email) {
-      var parts = email.split('@');
+      var parts = email.trim().split('@');
 
       if (parts.length < 2) {
         return false;
