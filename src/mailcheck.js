@@ -30,7 +30,7 @@ var Kicksend = {
       var suggestedCallback = opts.suggested || defaultCallback
       var emptyCallback = opts.empty || defaultCallback
 
-      var result = Kicksend.mailcheck.suggest(encodeURI(opts.email), opts.domains, opts.topLevelDomains, opts.distanceFunction);
+      var result = Kicksend.mailcheck.suggest(Kicksend.mailcheck.encodeEmail(opts.email), opts.domains, opts.topLevelDomains, opts.distanceFunction);
 
       return result ? suggestedCallback(result) : emptyCallback()
     },
@@ -174,6 +174,17 @@ var Kicksend = {
         domain: domain,
         address: parts.join('@')
       }
+    },
+
+    // Encode the email address to prevent XSS but leave in valid
+    // characters, following this official spec:
+    // http://en.wikipedia.org/wiki/Email_address#Syntax
+    encodeEmail: function(email) {
+      var result = encodeURI(email);
+      result = result.replace('%20', ' ').replace('%25', '%').replace('%5E', '^')
+                     .replace('%60', '`').replace('%7B', '{').replace('%7C', '|')
+                     .replace('%7D', '}');
+      return result;
     }
   }
 };
