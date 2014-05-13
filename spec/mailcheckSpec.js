@@ -73,15 +73,17 @@ describe("mailcheck", function() {
           full:'test@emaildomain.com'
         });
       });
+    });
 
+    describe("encodeEmail", function () {
       it("escapes the element's value", function () {
-        mailcheck.run({
-          email: '<script>alert("a")</script>@emaildomain.con',
-          suggested:suggestedSpy,
-          empty:emptySpy,
-          domains:domains
-        });
-        expect(suggestedSpy.mostRecentCall.args[0].address).not.toMatch(/<script>/);
+        var result = mailcheck.encodeEmail('<script>alert("a")</script>@emaildomain.con');
+        expect(result).not.toMatch(/<script>/);
+      });
+
+      it("allows valid special characters", function() {
+        var result = mailcheck.encodeEmail( " g1!#$%&'*+-/=?^_`{|}@gmai.com")
+        expect(result).toEqual(" g1!#$%&'*+-/=?^_`{|}@gmai.com");
       });
     });
 
@@ -209,6 +211,19 @@ describe("mailcheck", function() {
         expect(mailcheck.splitEmail('abc.example.com')).toBeFalsy();
         expect(mailcheck.splitEmail('@example.com')).toBeFalsy();
         expect(mailcheck.splitEmail('test@')).toBeFalsy();
+      });
+
+      it("trims spaces from the start and end of the string", function () {
+        expect(mailcheck.splitEmail(' postbox@com')).toEqual({
+          address:'postbox',
+          domain:'com',
+          topLevelDomain:'com'
+        });
+        expect(mailcheck.splitEmail('postbox@com ')).toEqual({
+          address:'postbox',
+          domain:'com',
+          topLevelDomain:'com'
+        });
       });
     });
 
