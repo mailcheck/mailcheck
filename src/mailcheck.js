@@ -13,7 +13,8 @@
 
 var Kicksend = {
   mailcheck : {
-    threshold: 3,
+    domainThreshold: 4,
+    topLevelThreshold: 3,
 
     defaultDomains: ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com",
       "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk",
@@ -40,7 +41,7 @@ var Kicksend = {
 
       var emailParts = this.splitEmail(email);
 
-      var closestDomain = this.findClosestDomain(emailParts.domain, domains, distanceFunction);
+      var closestDomain = this.findClosestDomain(emailParts.domain, domains, distanceFunction, this.domainThreshold);
 
       if (closestDomain) {
         if (closestDomain != emailParts.domain) {
@@ -49,7 +50,7 @@ var Kicksend = {
         }
       } else {
         // The email address does not closely match one of the supplied domains
-        var closestTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains);
+        var closestTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains, distanceFunction, this.topLevelThreshold);
         if (emailParts.domain && closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain) {
           // The email address may have a mispelled top-level domain; return a suggestion
           var domain = emailParts.domain;
@@ -64,7 +65,8 @@ var Kicksend = {
       return false;
     },
 
-    findClosestDomain: function(domain, domains, distanceFunction) {
+    findClosestDomain: function(domain, domains, distanceFunction, threshold) {
+      threshold = threshold || this.topLevelThreshold; 
       var dist;
       var minDist = 99;
       var closestDomain = null;
@@ -87,7 +89,7 @@ var Kicksend = {
         }
       }
 
-      if (minDist <= this.threshold && closestDomain !== null) {
+      if (minDist <= threshold && closestDomain !== null) {
         return closestDomain;
       } else {
         return false;
