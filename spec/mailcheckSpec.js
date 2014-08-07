@@ -131,6 +131,11 @@ describe("mailcheck", function() {
          */
         expect(mailcheck.suggest('test@mail.randomsmallcompany.cmo', domains, topLevelDomains).domain).toBeFalsy();
       });
+
+      it("will not offer a suggestion that itself leads to another suggestion", function() {
+        var suggestion = mailcheck.suggest('test@yahooo.cmo', domains, topLevelDomains);
+        expect(suggestion.domain).toEqual('yahoo.com');
+      });
     });
 
     describe("mailcheck.splitEmail", function () {
