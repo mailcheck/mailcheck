@@ -14,14 +14,14 @@ Mailcheck will offer up suggestions for top level domains too, and suggest ".com
 
 At [Kicksend](http://kicksend.com), we use Mailcheck to help reduce typos in email addresses during sign ups. It has [reduced our sign up confirmation email bounces by 50%](http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-b).
 
-![diagram](http://github.com/mailcheck/mailcheck/raw/master/doc/example.png?raw=true)
+![diagram](https://raw.githubusercontent.com/mailcheck/mailcheck/master/doc/example.png)
 
 See it live in action [here](http://kicksend.com/join).
 
 Installation
 ------------
 
-For instant use, download the minified library [mailcheck.min.js](https://raw.github.com/mailcheck/mailcheck/314d14c2fdd3fb5e0da1726674a4b536f313178a/src/mailcheck.min.js) into your javascripts directory. [mailcheck.js](https://raw.github.com/mailcheck/mailcheck/314d14c2fdd3fb5e0da1726674a4b536f313178a/src/mailcheck.js) is also available unminimised if you want to hack on it, or have your own minimizer.
+For instant use, download the minified library [mailcheck.min.js](https://raw.githubusercontent.com/mailcheck/mailcheck/d25dc9a119ca844bb35b1baf341cca0a634e4ac9/src/mailcheck.min.js) into your javascripts directory. [mailcheck.js](https://raw.githubusercontent.com/mailcheck/mailcheck/d25dc9a119ca844bb35b1baf341cca0a634e4ac9/src/mailcheck.js) is also available unminimised if you want to hack on it, or have your own minimizer.
 
 #### Bower ####
 
@@ -191,28 +191,26 @@ Start contributing to Mailcheck instantly on [Nitrous.IO](https://www.nitrous.io
 [![Hack mailcheck/mailcheck on Nitrous.IO](https://d3o0mnbgv6k92a.cloudfront.net/assets/hack-l-v1-3cc067e71372f6045e1949af9d96095b.png)](https://www.nitrous.io/hack_button?source=embed&runtime=nodejs&repo=kicksend%2Fmailcheck&file_to_open=README.nitrous.md)
 
 
-Who's using Mailcheck?
+Who have used Mailcheck?
 -----------------------
 
 - [Kicksend](http://kicksend.com/)
 - [Dropbox](http://dropbox.com/)
-- [Flotype](http://flotype.com/)
 - [Kickstarter](http://kickstarter.com/)
-- [Kippt](http://kippt.com/)
-- [Minecraft](http://minecraft.net/)
-- [Prispy](http://prispy.com/)
-- [SB Nation](http://sbnation.com/)
-- [Show Space](http://show-space.com/)
-- [The Verge](http://theverge.com/)
 - [Uber](http://uber.com/)
 - [Khan Academy](http://khanacademy.org/)
+- [Minecraft](http://minecraft.net/)
 - [Paperless Post](http://www.paperlesspost.com/)
+- [The Verge](http://theverge.com/)
+- [SB Nation](http://sbnation.com/)
+- [Kippt](http://kippt.com/)
 
 Do you use Mailcheck? [Tweet me](http://twitter.com/derrickko) your link.
 
 Related Links
 -------------
 
+- [Official Mailcheck Ports](https://github.com/mailcheck/)
 - [Two ways to reduce bounced welcome emails](http://blog.postmarkapp.com/post/19685472721/two-ways-to-reduce-bounced-welcome-emails) by [Postmark](http://postmark.com)
 - [MooTools port](https://github.com/DimitarChristoff/mailcheck) by [Dimitar Christoff](https://github.com/DimitarChristoff)
 - [WordPress Plugin](https://github.com/bmoredrew/mailcheck-wordpress-plugin/) by [Drew Poland](https://github.com/bmoredrew)
@@ -223,7 +221,7 @@ Core Team
 -------
 
 - Derrick Ko, [Kicksend](http://kicksend.com), [@derrickko](http://twitter.com/derrickko). Created Mailcheck.
-- Wei Lu, [neo](http://neo.com), [@luweidewei](http://twitter.com/luweidewei).
+- Wei Lu, [Hive](https://www.hivewallet.com/), [@luweidewei](http://twitter.com/luweidewei).
 
 License
 -------
