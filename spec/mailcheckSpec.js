@@ -2,13 +2,13 @@ describe("mailcheck", function() {
   var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com', 'gmx.com'];
   var topLevelDomains = ['co.uk', 'com', 'org', 'info'];
 
-  describe("Kicksend.mailcheck", function(){
+  describe("Mailcheck", function(){
     var mailcheck;
 
     beforeEach(function(){
       // We may be running in a CommonJS environment.
       // If so, mailcheck won't be in a global Kicksend object.
-      mailcheck = typeof Kicksend !== 'undefined' ? Kicksend.mailcheck : require('../');
+      mailcheck = typeof Mailcheck !== 'undefined' ? Mailcheck : require('../');
     });
 
     describe("run", function () {
@@ -49,7 +49,7 @@ describe("mailcheck", function() {
 
       it("returns the result when 'suggested' callback is not defined", function () {
         var result = mailcheck.run({
-          email: 'test@hotmail.co',
+          email: 'test@hotmail.co'
         });
 
         expect(result).toEqual({

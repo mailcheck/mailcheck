@@ -14,14 +14,14 @@ Mailcheck will offer up suggestions for top level domains too, and suggest ".com
 
 At [Kicksend](http://kicksend.com), we use Mailcheck to help reduce typos in email addresses during sign ups. It has [reduced our sign up confirmation email bounces by 50%](http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-b).
 
-![diagram](http://github.com/Kicksend/mailcheck/raw/master/doc/example.png?raw=true)
+![diagram](http://github.com/mailcheck/mailcheck/raw/master/doc/example.png?raw=true)
 
 See it live in action [here](http://kicksend.com/join).
 
 Installation
 ------------
 
-For instant use, download the minified library [mailcheck.min.js](https://raw.github.com/Kicksend/mailcheck/314d14c2fdd3fb5e0da1726674a4b536f313178a/src/mailcheck.min.js) into your javascripts directory. [mailcheck.js](https://raw.github.com/Kicksend/mailcheck/314d14c2fdd3fb5e0da1726674a4b536f313178a/src/mailcheck.js) is also available unminimised if you want to hack on it, or have your own minimizer.
+For instant use, download the minified library [mailcheck.min.js](https://raw.github.com/mailcheck/mailcheck/314d14c2fdd3fb5e0da1726674a4b536f313178a/src/mailcheck.min.js) into your javascripts directory. [mailcheck.js](https://raw.github.com/mailcheck/mailcheck/314d14c2fdd3fb5e0da1726674a4b536f313178a/src/mailcheck.js) is also available unminimised if you want to hack on it, or have your own minimizer.
 
 #### Bower ####
 
@@ -99,11 +99,11 @@ Usage without jQuery
 
 Mailcheck is decoupled from jQuery, so its usage without jQuery is almost identical.
 
-Using the example from above, you would call `Kicksend.mailcheck.run` instead.
+Using the example from above, you would call `Mailcheck.run` instead.
 
 ```html
 <script>
-Kicksend.mailcheck.run({
+Mailcheck.run({
   email: yourTextInput.value,
   domains: domains,                       // optional
   topLevelDomains: topLevelDomains,       // optional
@@ -118,7 +118,7 @@ Kicksend.mailcheck.run({
 </script>
 ```
 
-The rest works similarly. In fact, the Mailcheck jQuery plugin just wraps `Kicksend.mailcheck.run`.
+The rest works similarly. In fact, the Mailcheck jQuery plugin just wraps `Mailcheck.run`.
 
 Usage on Node.js
 ----------------
@@ -143,24 +143,24 @@ Mailcheck has inbuilt defaults if the `domains` or `topLevelDomains` options are
 You can replace Mailcheck's default domain/TLD suggestions by supplying replacements to `mailcheck.run`:
 
 ```js
-Kicksend.mailcheck.run({
+Mailcheck.run({
   domains: ['customdomain.com', 'anotherdomain.net'], // replaces existing domains
   topLevelDomains: ['com.au', 'ru'] // replaces existing TLDs
 });
 ```
 
-Alternatively, you can *extend* Mailcheck's global set of default domains & TLDs by adding items to `Kicksend.mailcheck.defaultDomains` and `Kicksend.mailcheck.defaultTopLevelDomains`:
+Alternatively, you can *extend* Mailcheck's global set of default domains & TLDs by adding items to `Mailcheck.defaultDomains` and `Mailcheck.defaultTopLevelDomains`:
 
 ```js
-Kicksend.mailcheck.defaultDomains.push('customdomain.com', 'anotherdomain.net') // extend existing domains
-Kicksend.mailcheck.defaultTopLevelDomains.push('com.au', 'ru') // extend existing TLDs
+Mailcheck.defaultDomains.push('customdomain.com', 'anotherdomain.net') // extend existing domains
+Mailcheck.defaultTopLevelDomains.push('com.au', 'ru') // extend existing TLDs
 ```
 
 Customization
 -------------
 
-The Mailcheck jQuery plugin wraps Kicksend.mailcheck. The prime candidates for customization are the methods
-`Kicksend.mailcheck.findClosestDomain` and `Kicksend.mailcheck.stringDistance`.
+The Mailcheck jQuery plugin wraps Mailcheck. The prime candidates for customization are the methods
+`Mailcheck.findClosestDomain` and `Mailcheck.stringDistance`.
 
 Mailcheck currently uses the [sift3](http://siderite.blogspot.com/2007/04/super-fast-and-accurate-string-distance.html) string similarity algorithm by [Siderite](http://siderite.blogspot.com/). You can modify the inbuilt string distance function, or pass in your own when calling Mailcheck.
 
@@ -174,21 +174,21 @@ Mailcheck is tested with [Jasmine](http://pivotal.github.com/jasmine/). Load `sp
 Contributing
 ------------
 
-Let's make Mailcheck awesome. We're on the lookout for maintainers and [contributors](https://github.com/Kicksend/mailcheck/contributors).
+Let's make Mailcheck awesome. We're on the lookout for maintainers and [contributors](https://github.com/mailcheck/mailcheck/contributors).
 
 And do send in those pull requests! To get them accepted, please:
 
 - Test your code. Add test cases to `spec/mailcheckSpec.js`, and run it across browsers (yes, including IE).
 - Minify the plugin by running `grunt` in the Mailcheck directory.
 
-Upcoming features, bugs and feature requests are managed in [Issues](https://github.com/Kicksend/mailcheck/issues).
+Upcoming features, bugs and feature requests are managed in [Issues](https://github.com/mailcheck/mailcheck/issues).
 
 Developing on Nitrous.IO
 ---------------------
 
 Start contributing to Mailcheck instantly on [Nitrous.IO](https://www.nitrous.io/?utm_source=github.com&utm_campaign=kicksend-mailcheck&utm_medium=hackonnitrous):
 
-[![Hack kicksend/mailcheck on Nitrous.IO](https://d3o0mnbgv6k92a.cloudfront.net/assets/hack-l-v1-3cc067e71372f6045e1949af9d96095b.png)](https://www.nitrous.io/hack_button?source=embed&runtime=nodejs&repo=kicksend%2Fmailcheck&file_to_open=README.nitrous.md)
+[![Hack mailcheck/mailcheck on Nitrous.IO](https://d3o0mnbgv6k92a.cloudfront.net/assets/hack-l-v1-3cc067e71372f6045e1949af9d96095b.png)](https://www.nitrous.io/hack_button?source=embed&runtime=nodejs&repo=kicksend%2Fmailcheck&file_to_open=README.nitrous.md)
 
 
 Who's using Mailcheck?
@@ -228,4 +228,4 @@ Core Team
 License
 -------
 
-Licensed under the MIT License.
+Released under the MIT License.

@@ -4,7 +4,7 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json'),
     uglify:
       options:
-        banner: '/*! <%= pkg.name %> v<%= pkg.version %> (c)2012 Received Inc, @licence MIT */'
+        banner: '/*! <%= pkg.name %> v<%= pkg.version %> @licence MIT */'
       main:
         files:
           'src/mailcheck.min.js': 'src/mailcheck.js'
