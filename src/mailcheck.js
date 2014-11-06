@@ -9,8 +9,9 @@
  */
 
 var Mailcheck = {
-  domainThreshold: 4,
-  topLevelThreshold: 3,
+  //domainThreshold: 4,
+  //topLevelThreshold: 3,
+  threshold: 3,
 
   defaultDomains: ["yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com",
     "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk",
@@ -37,7 +38,7 @@ var Mailcheck = {
 
     var emailParts = this.splitEmail(email);
 
-    var closestDomain = this.findClosestDomain(emailParts.domain, domains, distanceFunction, this.domainThreshold);
+    var closestDomain = this.findClosestDomain(emailParts.domain, domains, distanceFunction);
 
     if (closestDomain) {
       if (closestDomain != emailParts.domain) {
@@ -46,11 +47,16 @@ var Mailcheck = {
       }
     } else {
       // The email address does not closely match one of the supplied domains
-      var closestTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains, distanceFunction, this.topLevelThreshold);
+      var closestTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains, distanceFunction);
       if (emailParts.domain && closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain) {
         // The email address may have a mispelled top-level domain; return a suggestion
         var domain = emailParts.domain;
         closestDomain = domain.substring(0, domain.lastIndexOf(emailParts.topLevelDomain)) + closestTopLevelDomain;
+        // Check if this suggestion leads to a supplied domain
+        var nextDomain = this.findClosestDomain(closestDomain, domains, distanceFunction);
+        if (nextDomain) {
+          closestDomain = nextDomain;
+        }
         return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
       }
     }
@@ -61,8 +67,7 @@ var Mailcheck = {
     return false;
   },
 
-  findClosestDomain: function(domain, domains, distanceFunction, threshold) {
-    threshold = threshold || this.topLevelThreshold;
+  findClosestDomain: function(domain, domains, distanceFunction) {
     var dist;
     var minDist = 99;
     var closestDomain = null;
@@ -85,7 +90,7 @@ var Mailcheck = {
       }
     }
 
-    if (minDist <= threshold && closestDomain !== null) {
+    if (minDist <= this.threshold && closestDomain !== null) {
       return closestDomain;
     } else {
       return false;
