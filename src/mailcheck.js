@@ -192,6 +192,14 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = Mailcheck;
 }
 
+// Support AMD style definitions
+// Based on jQuery (see http://stackoverflow.com/a/17954882/1322410)
+if (typeof define === "function" && define.amd) {
+  define("mailcheck", [], function() {
+    return Mailcheck;
+  });
+}
+
 if (typeof window !== 'undefined' && window.jQuery) {
   (function($){
     $.fn.mailcheck = function(opts) {
