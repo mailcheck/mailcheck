@@ -1,5 +1,6 @@
 describe("mailcheck", function() {
-  var domains = ['yahoo.com', 'yahoo.com.tw', 'google.com','hotmail.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com', 'gmx.com'];
+  var domains = ['google.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com'];
+  var secondLevelDomains = ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"];
   var topLevelDomains = ['co.uk', 'com', 'org', 'info'];
 
   describe("Mailcheck", function(){
@@ -21,15 +22,15 @@ describe("mailcheck", function() {
 
       it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
         mailcheck.run({
-          email: 'test@hotmail.co',
+          email: 'test@gmail.co',
           suggested:suggestedSpy,
           empty:emptySpy
         });
 
         expect(suggestedSpy).toHaveBeenCalledWith({
           address:'test',
-          domain:'hotmail.com',
-          full:'test@hotmail.com'
+          domain:'gmail.com',
+          full:'test@gmail.com'
         });
 
         expect(emptySpy).not.toHaveBeenCalled();
@@ -49,13 +50,13 @@ describe("mailcheck", function() {
 
       it("returns the result when 'suggested' callback is not defined", function () {
         var result = mailcheck.run({
-          email: 'test@hotmail.co'
+          email: 'test@gmail.co'
         });
 
         expect(result).toEqual({
           address:'test',
-          domain:'hotmail.com',
-          full:'test@hotmail.com'
+          domain:'gmail.com',
+          full:'test@gmail.com'
         })
       })
 
@@ -89,12 +90,12 @@ describe("mailcheck", function() {
 
     describe("return value", function () {
       it("is a hash representing the email address", function () {
-        var result = mailcheck.suggest('test@hotmail.co', domains);
+        var result = mailcheck.suggest('test@gmail.co', domains);
 
         expect(result).toEqual({
           address: 'test',
-          domain: 'hotmail.com',
-          full: 'test@hotmail.com'
+          domain: 'gmail.com',
+          full: 'test@gmail.com'
         });
       });
 
@@ -115,12 +116,14 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@GNAIL.con', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@#gmail.com', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@comcast.com', domains).domain).toEqual('comcast.net');
-        expect(mailcheck.suggest('test@homail.con', domains).domain).toEqual('hotmail.com');
-        expect(mailcheck.suggest('test@hotmail.co', domains).domain).toEqual('hotmail.com');
         expect(mailcheck.suggest('test@fabecook.com', domains).domain).toEqual('facebook.com');
-        expect(mailcheck.suggest('test@yajoo.com', domains).domain).toEqual('yahoo.com');
-        expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
-        expect(mailcheck.suggest('test@yahoo.com.tw', domains)).toBeFalsy();
+
+        expect(mailcheck.suggest('test@homail.con', domains, secondLevelDomains, topLevelDomains).domain).toEqual('hotmail.com');
+        expect(mailcheck.suggest('test@hotmail.co', domains, secondLevelDomains, topLevelDomains).domain).toEqual('hotmail.com');
+        expect(mailcheck.suggest('test@yajoo.com', domains, secondLevelDomains, topLevelDomains).domain).toEqual('yahoo.com');
+        expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, secondLevelDomains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
+        expect(mailcheck.suggest('test@yahoo.co.uk', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
+
         expect(mailcheck.suggest('', domains)).toBeFalsy();
         expect(mailcheck.suggest('test@', domains)).toBeFalsy();
         expect(mailcheck.suggest('test', domains)).toBeFalsy();
@@ -129,11 +132,11 @@ describe("mailcheck", function() {
          * representation of the true top-level domain in the case of an email address with subdomains.
          * mailcheck will be unable to return a suggestion in the case of this email address.
          */
-        expect(mailcheck.suggest('test@mail.randomsmallcompany.cmo', domains, topLevelDomains).domain).toBeFalsy();
+        expect(mailcheck.suggest('test@mail.randomsmallcompany.cmo', domains, secondLevelDomains, topLevelDomains).domain).toBeFalsy();
       });
 
       it("will not offer a suggestion that itself leads to another suggestion", function() {
-        var suggestion = mailcheck.suggest('test@yahooo.cmo', domains, topLevelDomains);
+        var suggestion = mailcheck.suggest('test@yahooo.cmo', domains, secondLevelDomains, topLevelDomains);
         expect(suggestion.domain).toEqual('yahoo.com');
       });
     });
@@ -143,13 +146,15 @@ describe("mailcheck", function() {
         expect(mailcheck.splitEmail('test@example.com')).toEqual({
           address:'test',
           domain:'example.com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain: 'example'
         });
 
         expect(mailcheck.splitEmail('test@example.co.uk')).toEqual({
           address:'test',
           domain:'example.co.uk',
-          topLevelDomain:'co.uk'
+          topLevelDomain:'co.uk',
+          secondLevelDomain: 'example'
         });
 
         /* This test is for illustrative purposes as the splitEmail function should return a better
@@ -158,7 +163,8 @@ describe("mailcheck", function() {
         expect(mailcheck.splitEmail('test@mail.randomsmallcompany.co.uk')).toEqual({
           address:'test',
           domain:'mail.randomsmallcompany.co.uk',
-          topLevelDomain:'randomsmallcompany.co.uk'
+          topLevelDomain:'randomsmallcompany.co.uk',
+          secondLevelDomain: 'mail'
         });
       });
 
@@ -166,48 +172,57 @@ describe("mailcheck", function() {
         expect(mailcheck.splitEmail('"foo@bar"@example.com')).toEqual({
           address:'"foo@bar"',
           domain:'example.com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain: 'example'
 
         });
         expect(mailcheck.splitEmail('containsnumbers1234567890@example.com')).toEqual({
           address:'containsnumbers1234567890',
           domain:'example.com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain: 'example'
         });
         expect(mailcheck.splitEmail('contains+symbol@example.com')).toEqual({
           address:'contains+symbol',
           domain:'example.com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain: 'example'
         });
         expect(mailcheck.splitEmail('contains-symbol@example.com')).toEqual({
           address:'contains-symbol',
           domain:'example.com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain 'example'
         });
         expect(mailcheck.splitEmail('contains.symbol@domain.contains.symbol')).toEqual({
           address:'contains.symbol',
           domain:'domain.contains.symbol',
-          topLevelDomain:'contains.symbol'
+          topLevelDomain:'contains.symbol',
+          secondLevelDomain: 'domain'
         });
         expect(mailcheck.splitEmail('"contains.and\ symbols"@example.com')).toEqual({
           address:'"contains.and\ symbols"',
           domain:'example.com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain: 'example'
         });
         expect(mailcheck.splitEmail('"contains.and.@.symbols.com"@example.com')).toEqual({
           address:'"contains.and.@.symbols.com"',
           domain:'example.com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain: 'example'
         });
         expect(mailcheck.splitEmail('"()<>[]:;@,\\\"!#$%&\'*+-/=?^_`{}|\ \ \ \ \ ~\ \ \ \ \ \ \ ?\ \ \ \ \ \ \ \ \ \ \ \ ^_`{}|~.a"@allthesymbols.com')).toEqual({
           address:'"()<>[]:;@,\\\"!#$%&\'*+-/=?^_`{}|\ \ \ \ \ ~\ \ \ \ \ \ \ ?\ \ \ \ \ \ \ \ \ \ \ \ ^_`{}|~.a"',
           domain:'allthesymbols.com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain: 'allthesymbols'
         });
         expect(mailcheck.splitEmail('postbox@com')).toEqual({
           address:'postbox',
           domain:'com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain: ''
         });
       });
 
@@ -234,11 +249,18 @@ describe("mailcheck", function() {
 
     describe("mailcheck.findClosestDomain", function () {
       it("returns the most similar domain", function () {
-        expect(mailcheck.findClosestDomain('yahoo.com.tw', domains)).toEqual('yahoo.com.tw');
-        expect(mailcheck.findClosestDomain('hotmail.com', domains)).toEqual('hotmail.com');
-        expect(mailcheck.findClosestDomain('gms.com', domains)).toEqual('gmx.com');
+        expect(mailcheck.findClosestDomain('google.com', domains)).toEqual('google.com');
+        expect(mailcheck.findClosestDomain('gmail.com', domains)).toEqual('gmail.com');
+        expect(mailcheck.findClosestDomain('emaildoman.com', domains)).toEqual('emaildomain.com');
         expect(mailcheck.findClosestDomain('gmsn.com', domains)).toEqual('msn.com');
         expect(mailcheck.findClosestDomain('gmaik.com', domains)).toEqual('gmail.com');
+      });
+
+      it("returns the most similar second-level domain", function () {
+        expect(mailcheck.findClosestDomain('hotmial', secondLevelDomains)).toEqual('hotmail');
+        expect(mailcheck.findClosestDomain('tahoo', secondLevelDomains)).toEqual('yahoo');
+        expect(mailcheck.findClosestDomain('livr', secondLevelDomains)).toEqual('live');
+        expect(mailcheck.findClosestDomain('outllok', secondLevelDomains)).toEqual('outlook');
       });
 
       it("returns the most similar top-level domain", function () {
@@ -273,15 +295,15 @@ describe("mailcheck", function() {
     });
 
     it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
-      $("#test-input").val('test@hotmail.co').mailcheck({
+      $("#test-input").val('test@gmail.co').mailcheck({
         suggested: suggestedSpy,
         empty: emptySpy
       });
 
       expect(suggestedSpy).toHaveBeenCalledWith($("#test-input"),{
         address: 'test',
-        domain: 'hotmail.com',
-        full: 'test@hotmail.com'
+        domain: 'gmail.com',
+        full: 'test@gmail.com'
       });
 
       expect(emptySpy).not.toHaveBeenCalled();
