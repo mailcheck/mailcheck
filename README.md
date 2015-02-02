@@ -8,9 +8,9 @@ The Javascript library and jQuery plugin that suggests a right domain when your 
 What does it do?
 ----------------
 
-When your user types in "user@hotnail.con", Mailcheck will suggest "user@hotmail.com".
+When your user types in "user@gmil.con", Mailcheck will suggest "user@gmail.com".
 
-Mailcheck will offer up suggestions for top level domains too, and suggest ".com" when a user types in "user@hotmail.cmo".
+Mailcheck will offer up suggestions for second and top level domains too. For example when a user types in "user@hotmail.cmo" then "hotmail.com" will be suggested. Similarily if only the second level domain is miss-spelled then it will be corrected independently of the top level domain allowing for fine resoltion tweaking if desired.
 
 At [Kicksend](http://kicksend.com), we use Mailcheck to help reduce typos in email addresses during sign ups. It has [reduced our sign up confirmation email bounces by 50%](http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-b).
 
@@ -51,11 +51,12 @@ Have a text field.
 <input id="email" name="email" type="email" />
 ```
 
-Now, attach Mailcheck to the text field. You can declare an array of domains and top level domains you want to check against.
+Now, attach Mailcheck to the text field. You can declare an array of domains, second level domains and top level domains you want to check against.
 
 ```html
 <script>
-var domains = ['hotmail.com', 'gmail.com', 'aol.com'];
+var domains = ['gmail.com', 'aol.com'];
+var secondLevelDomains = ['hotmail']
 var topLevelDomains = ["com", "net", "org"];
 
 var superStringDistance = function(string1, string2) {
@@ -65,6 +66,7 @@ var superStringDistance = function(string1, string2) {
 $('#email').on('blur', function() {
   $(this).mailcheck({
     domains: domains,                       // optional
+    secondLevelDomains: secondLevelDomains, // optional
     topLevelDomains: topLevelDomains,       // optional
     distanceFunction: superStringDistance,  // optional
     suggested: function(element, suggestion) {
@@ -85,9 +87,8 @@ Mailcheck takes in two callbacks, `suggested` and `empty`. We recommend you supp
 ```js
 {
   address: 'test',          // the address; part before the @ sign
-  domain: 'hotmail.com',    // the suggested domain
-  topLevelDomain: 'com',    // the suggested top level domain
-  full: 'test@hotmail.com'  // the full suggested email
+  domain: 'gmail.com',    // the suggested domain
+  full: 'test@gmail.com'  // the full suggested email
 }
 ```
 Mailcheck does not want to get in the way of how you can show suggestions. Use the suggestion object to display suggestions in your preferred manner.
@@ -107,6 +108,7 @@ Mailcheck.run({
   email: yourTextInput.value,
   domains: domains,                       // optional
   topLevelDomains: topLevelDomains,       // optional
+  secondLevelDomains: secondLevelDomains, // optional
   distanceFunction: superStringDistance,  // optional
   suggested: function(suggestion) {
     // callback code
@@ -136,7 +138,7 @@ mailcheck.run({
 Domains
 -------
 
-Mailcheck has inbuilt defaults if the `domains` or `topLevelDomains` options aren't provided. We still recommend supplying your own domains based on the distribution of your users.
+Mailcheck has inbuilt defaults if the `domains`, `secondLevelDomains` or `topLevelDomains` options aren't provided. We still recommend supplying your own domains based on the distribution of your users.
 
 #### Adding your own Domains ####
 
@@ -145,6 +147,7 @@ You can replace Mailcheck's default domain/TLD suggestions by supplying replacem
 ```js
 Mailcheck.run({
   domains: ['customdomain.com', 'anotherdomain.net'], // replaces existing domains
+  secondLevelDomains: ['domain', 'yetanotherdomain'], // replaces existing SLDs
   topLevelDomains: ['com.au', 'ru'] // replaces existing TLDs
 });
 ```
@@ -153,6 +156,7 @@ Alternatively, you can *extend* Mailcheck's global set of default domains & TLDs
 
 ```js
 Mailcheck.defaultDomains.push('customdomain.com', 'anotherdomain.net') // extend existing domains
+Mailcheck.defaultSecondLevelDomains.push('domain', 'yetanotherdomain') // extend existing SLDs
 Mailcheck.defaultTopLevelDomains.push('com.au', 'ru') // extend existing TLDs
 ```
 
@@ -204,6 +208,7 @@ Who have used Mailcheck?
 - [The Verge](http://theverge.com/)
 - [SB Nation](http://sbnation.com/)
 - [Kippt](http://kippt.com/)
+- [Shopify](http://shopify.com/)
 
 Do you use Mailcheck? [Tweet me](http://twitter.com/derrickko) your link.
 
