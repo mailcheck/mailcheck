@@ -192,7 +192,7 @@ describe("mailcheck", function() {
           address:'contains-symbol',
           domain:'example.com',
           topLevelDomain:'com',
-          secondLevelDomain 'example'
+          secondLevelDomain: 'example'
         });
         expect(mailcheck.splitEmail('contains.symbol@domain.contains.symbol')).toEqual({
           address:'contains.symbol',
@@ -237,12 +237,14 @@ describe("mailcheck", function() {
         expect(mailcheck.splitEmail(' postbox@com')).toEqual({
           address:'postbox',
           domain:'com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain: ''
         });
         expect(mailcheck.splitEmail('postbox@com ')).toEqual({
           address:'postbox',
           domain:'com',
-          topLevelDomain:'com'
+          topLevelDomain:'com',
+          secondLevelDomain: ''
         });
       });
     });
