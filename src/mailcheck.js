@@ -188,9 +188,7 @@ var Mailcheck = {
       for (var i = 1; i < domainParts.length; i++) {
         tld += domainParts[i] + '.';
       }
-      if (domainParts.length >= 2) {
-        tld = tld.substring(0, tld.length - 1);
-      }
+      tld = tld.substring(0, tld.length - 1);
     }
 
     return {
