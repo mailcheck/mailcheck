@@ -173,7 +173,7 @@ Since Mailcheck runs client side, keep in mind file size, memory usage and perfo
 Tests
 -----
 
-Mailcheck is tested with [Jasmine](http://pivotal.github.com/jasmine/). Load `spec/spec_runner.html` in your browser to run the tests or run `npm test` from the commandline to test in node.
+Mailcheck is tested with [Jasmine](https://jasmine.github.io/). Load `spec/spec_runner.html` in your browser to run the tests or run `npm test` from the commandline to test in node.
 
 Contributing
 ------------
