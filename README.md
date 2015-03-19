@@ -10,7 +10,7 @@ What does it do?
 
 When your user types in "user@gmil.con", Mailcheck will suggest "user@gmail.com".
 
-Mailcheck will offer up suggestions for second and top level domains too. For example when a user types in "user@hotmail.cmo" then "hotmail.com" will be suggested. Similarily if only the second level domain is miss-spelled then it will be corrected independently of the top level domain allowing for fine resoltion tweaking if desired.
+Mailcheck will offer up suggestions for second and top level domains too. For example when a user types in "user@hotmail.cmo" then "hotmail.com" will be suggested. Similarly if only the second level domain is miss-spelled then it will be corrected independently of the top level domain allowing for fine resolution tweaking if desired.
 
 At [Kicksend](http://kicksend.com), we use Mailcheck to help reduce typos in email addresses during sign ups. It has [reduced our sign up confirmation email bounces by 50%](http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-b).
 
@@ -173,7 +173,7 @@ Since Mailcheck runs client side, keep in mind file size, memory usage and perfo
 Tests
 -----
 
-Mailcheck is tested with [Jasmine](https://jasmine.github.io/). Load `spec/spec_runner.html` in your browser to run the tests or run `npm test` from the commandline to test in node.
+Mailcheck is tested with [Jasmine](https://jasmine.github.io/). Load `spec/spec_runner.html` in your browser to run the tests or run `npm test` from the command line to test in node.
 
 Contributing
 ------------
