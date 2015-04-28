@@ -1,7 +1,7 @@
 describe("mailcheck", function() {
   var domains = ['google.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com'];
-  var secondLevelDomains = ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"];
-  var topLevelDomains = ['co.uk', 'com', 'org', 'info'];
+  var secondLevelDomains = ["yahoo", "hotmail", "mail", "live", "outlook", "gmx", "gmail"];
+  var topLevelDomains = ['co.uk', 'com', 'org', 'info', 'fr'];
 
   describe("Mailcheck", function(){
     var mailcheck;
@@ -137,6 +137,16 @@ describe("mailcheck", function() {
       it("will not offer a suggestion that itself leads to another suggestion", function() {
         var suggestion = mailcheck.suggest('test@yahooo.cmo', domains, secondLevelDomains, topLevelDomains);
         expect(suggestion.domain).toEqual('yahoo.com');
+      });
+
+      it("will not offer suggestions for valid 2ld-tld combinations", function() {
+        expect(
+            mailcheck.suggest('test@gmail.co.uk', domains, secondLevelDomains, topLevelDomains)
+        ).toBeFalsy();
+
+        expect(
+            mailcheck.suggest('test@gmail.fr', domains, secondLevelDomains, topLevelDomains)
+        ).toBeFalsy();
       });
     });
 
