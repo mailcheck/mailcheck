@@ -1,6 +1,6 @@
 describe("mailcheck", function() {
-  var domains = ['google.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com'];
-  var secondLevelDomains = ["yahoo", "hotmail", "mail", "live", "outlook", "gmx", "gmail"];
+  var domains = ['google.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com', 'gmx.de'];
+  var secondLevelDomains = ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"];
   var topLevelDomains = ['co.uk', 'com', 'org', 'info', 'fr'];
 
   describe("Mailcheck", function(){
@@ -121,7 +121,6 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@hotmail.co', domains, secondLevelDomains, topLevelDomains).domain).toEqual('hotmail.com');
         expect(mailcheck.suggest('test@yajoo.com', domains, secondLevelDomains, topLevelDomains).domain).toEqual('yahoo.com');
         expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, secondLevelDomains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
-        expect(mailcheck.suggest('test@yahoo.co.uk', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
 
         expect(mailcheck.suggest('', domains)).toBeFalsy();
         expect(mailcheck.suggest('test@', domains)).toBeFalsy();
@@ -141,11 +140,13 @@ describe("mailcheck", function() {
 
       it("will not offer suggestions for valid 2ld-tld combinations", function() {
         expect(
-            mailcheck.suggest('test@gmail.co.uk', domains, secondLevelDomains, topLevelDomains)
+            mailcheck.suggest('test@yahoo.co.uk', domains, secondLevelDomains, topLevelDomains)
         ).toBeFalsy();
+      });
 
+      it("will not offer suggestions for valid 2ld-tld even if theres a close fully-specified domain", function() {
         expect(
-            mailcheck.suggest('test@gmail.fr', domains, secondLevelDomains, topLevelDomains)
+            mailcheck.suggest('test@gmx.fr', domains, secondLevelDomains, topLevelDomains)
         ).toBeFalsy();
       });
     });
