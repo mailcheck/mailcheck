@@ -51,12 +51,19 @@ var Mailcheck = {
 
     var emailParts = this.splitEmail(email);
 
+    if (secondLevelDomains && topLevelDomains) {
+        // If the email is a valid 2nd-level + top-level, do not suggest anything.
+        if (secondLevelDomains.indexOf(emailParts.secondLevelDomain) !== -1 && topLevelDomains.indexOf(emailParts.topLevelDomain) !== -1) {
+            return false;
+        }
+    }
+
     var closestDomain = this.findClosestDomain(emailParts.domain, domains, distanceFunction, this.domainThreshold);
 
     if (closestDomain) {
       if (closestDomain == emailParts.domain) {
         // The email address exactly matches one of the supplied domains; do not return a suggestion.
-        return false
+        return false;
       } else {
         // The email address closely matches one of the supplied domains; return a suggestion
         return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
