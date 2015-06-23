@@ -152,7 +152,7 @@ Mailcheck.run({
 });
 ```
 
-Alternatively, you can *extend* Mailcheck's global set of default domains & TLDs by adding items to `Mailcheck.defaultDomains` and `Mailcheck.defaultTopLevelDomains`:
+Alternatively, you can *extend* Mailcheck's global set of default domains and TLDs by adding items to `Mailcheck.defaultDomains` and `Mailcheck.defaultTopLevelDomains`:
 
 ```js
 Mailcheck.defaultDomains.push('customdomain.com', 'anotherdomain.net') // extend existing domains
@@ -209,6 +209,7 @@ Who have used Mailcheck?
 - [SB Nation](http://sbnation.com/)
 - [Kippt](http://kippt.com/)
 - [Shopify](http://shopify.com/)
+- [Hack Design](https://hackdesign.org/)
 
 Do you use Mailcheck? [Tweet me](http://twitter.com/derrickko) your link.
 
