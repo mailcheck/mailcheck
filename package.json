@@ -44,6 +44,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "prepublish": "grunt test"
+    "prepublish": "grunt test",
+    "uglify": "grunt uglify"
   }
 }
