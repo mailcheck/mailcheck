@@ -110,6 +110,7 @@ describe("mailcheck", function() {
 
     describe("cases", function () {
       it("pass", function () {
+        expect(mailcheck.suggest('test@gmailc.om', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@emaildomain.co', domains).domain).toEqual('emaildomain.com');
         expect(mailcheck.suggest('test@gmail.con', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@gnail.con', domains).domain).toEqual('gmail.com');
