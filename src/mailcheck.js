@@ -105,7 +105,7 @@ var Mailcheck = {
   findClosestDomain: function(domain, domains, distanceFunction, threshold) {
     threshold = threshold || this.topLevelThreshold;
     var dist;
-    var minDist = 99;
+    var minDist = Infinity;
     var closestDomain = null;
 
     if (!domain || !domains) {
