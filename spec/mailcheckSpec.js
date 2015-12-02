@@ -123,6 +123,9 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@yajoo.com', domains, secondLevelDomains, topLevelDomains).domain).toEqual('yahoo.com');
         expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, secondLevelDomains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
 
+        // Ensure we do not touch the second level domain when suggesting new top level domain
+        expect(mailcheck.suggest('test@con-artists.con', domains, secondLevelDomains, topLevelDomains).domain).toEqual('con-artists.com');
+
         expect(mailcheck.suggest('', domains)).toBeFalsy();
         expect(mailcheck.suggest('test@', domains)).toBeFalsy();
         expect(mailcheck.suggest('test', domains)).toBeFalsy();
