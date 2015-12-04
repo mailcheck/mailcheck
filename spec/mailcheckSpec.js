@@ -123,6 +123,7 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@yajoo.com', domains, secondLevelDomains, topLevelDomains).domain).toEqual('yahoo.com');
         expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, secondLevelDomains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
 
+        expect(mailcheck.suggest('test@gmail.com', domains)).toBeFalsy();
         expect(mailcheck.suggest('', domains)).toBeFalsy();
         expect(mailcheck.suggest('test@', domains)).toBeFalsy();
         expect(mailcheck.suggest('test', domains)).toBeFalsy();
@@ -149,6 +150,15 @@ describe("mailcheck", function() {
         expect(
             mailcheck.suggest('test@gmx.fr', domains, secondLevelDomains, topLevelDomains)
         ).toBeFalsy();
+      });
+    });
+
+    describe("mail.sift3Distance", function() {
+      it("calculate distance", function() {
+        expect(mailcheck.sift3Distance('', 'abcdef')).toEqual(6);
+        expect(mailcheck.sift3Distance(null, 'abcqwe')).toEqual(6);
+        expect(mailcheck.sift3Distance('cde', null)).toEqual(3);
+        expect(mailcheck.sift3Distance(null, null)).toEqual(0);
       });
     });
 
