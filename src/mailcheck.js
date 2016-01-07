@@ -35,7 +35,7 @@ var Mailcheck = {
     opts.domains = opts.domains || Mailcheck.defaultDomains;
     opts.secondLevelDomains = opts.secondLevelDomains || Mailcheck.defaultSecondLevelDomains;
     opts.topLevelDomains = opts.topLevelDomains || Mailcheck.defaultTopLevelDomains;
-    opts.distanceFunction = opts.distanceFunction || Mailcheck.sift3Distance;
+    opts.distanceFunction = opts.distanceFunction || Mailcheck.sift4Distance;
 
     var defaultCallback = function(result){ return result; };
     var suggestedCallback = opts.suggested || defaultCallback;
@@ -112,14 +112,14 @@ var Mailcheck = {
       return false;
     }
     if(!distanceFunction) {
-      distanceFunction = this.sift3Distance;
+      distanceFunction = this.sift4Distance;
     }
 
     for (var i = 0; i < domains.length; i++) {
       if (domain === domains[i]) {
         return domain;
       }
-      dist = distanceFunction(domain, domains[i]);
+      dist = distanceFunction(domain, domains[i], 5);
       if (dist < minDist) {
         minDist = dist;
         closestDomain = domains[i];
@@ -133,46 +133,55 @@ var Mailcheck = {
     }
   },
 
-  sift3Distance: function(s1, s2) {
-    // sift3: http://siderite.blogspot.com/2007/04/super-fast-and-accurate-string-distance.html
-    if (s1 == null || s1.length === 0) {
-      if (s2 == null || s2.length === 0) {
-        return 0;
-      } else {
-        return s2.length;
-      }
+  // http://siderite.blogspot.com/2014/11/super-fast-and-accurate-string-distance.html
+  sift4Distance: function(s1, s2, maxOffset) {
+    if (!s1 || !s1.length) {
+      return !s2 ? 0 : s2.length;
     }
 
-    if (s2 == null || s2.length === 0) {
+    if (!s2 || !s2.length) {
       return s1.length;
     }
 
-    var c = 0;
-    var offset1 = 0;
-    var offset2 = 0;
-    var lcs = 0;
-    var maxOffset = 5;
+    var l1 = s1.length;
+    var l2 = s2.length;
 
-    while ((c + offset1 < s1.length) && (c + offset2 < s2.length)) {
-      if (s1.charAt(c + offset1) == s2.charAt(c + offset2)) {
-        lcs++;
-      } else {
-        offset1 = 0;
-        offset2 = 0;
-        for (var i = 0; i < maxOffset; i++) {
-          if ((c + i < s1.length) && (s1.charAt(c + i) == s2.charAt(c))) {
-            offset1 = i;
-            break;
+    var c1 = 0;  //cursor for string 1
+    var c2 = 0;  //cursor for string 2
+    var lcss = 0;  //largest common subsequence
+    var local_cs = 0; //local common substring
+
+    while ((c1 < l1) && (c2 < l2)) {
+        if (s1.charAt(c1) == s2.charAt(c2)) {
+          local_cs ++;
+        } else {
+          lcss += local_cs;
+          local_cs = 0;
+          if (c1 != c2) {
+              c1 = c2 = Math.max(c1,c2); //using max to bypass the need for computer transpositions ('ab' vs 'ba')
           }
-          if ((c + i < s2.length) && (s1.charAt(c) == s2.charAt(c + i))) {
-            offset2 = i;
-            break;
+
+          for (var i = 0; i < maxOffset && (c1 + i < l1 || c2 + i < l2); i++) {
+            if ((c1 + i < l1) && (s1.charAt(c1 + i) == s2.charAt(c2))) {
+              c1 += i;
+              local_cs ++;
+              break;
+            }
+
+            if ((c2 + i < l2) && (s1.charAt(c1) == s2.charAt(c2 + i))) {
+              c2 += i;
+              local_cs ++;
+              break;
+            }
           }
         }
-      }
-      c++;
+
+      c1 ++;
+      c2 ++;
     }
-    return (s1.length + s2.length) /2 - lcs;
+
+    lcss += local_cs;
+    return Math.round(Math.max(l1,l2) - lcss);
   },
 
   splitEmail: function(email) {
