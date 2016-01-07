@@ -37,13 +37,13 @@ var Mailcheck = {
     opts.topLevelDomains = opts.topLevelDomains || Mailcheck.defaultTopLevelDomains;
     opts.distanceFunction = opts.distanceFunction || Mailcheck.sift3Distance;
 
-    var defaultCallback = function(result){ return result };
+    var defaultCallback = function(result){ return result; };
     var suggestedCallback = opts.suggested || defaultCallback;
     var emptyCallback = opts.empty || defaultCallback;
 
     var result = Mailcheck.suggest(Mailcheck.encodeEmail(opts.email), opts.domains, opts.secondLevelDomains, opts.topLevelDomains, opts.distanceFunction);
 
-    return result ? suggestedCallback(result) : emptyCallback()
+    return result ? suggestedCallback(result) : emptyCallback();
   },
 
   suggest: function(email, domains, secondLevelDomains, topLevelDomains, distanceFunction) {
@@ -90,7 +90,7 @@ var Mailcheck = {
         rtrn = true;
       }
 
-      if (rtrn == true) {
+      if (rtrn === true) {
         return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
       }
     }
@@ -193,7 +193,7 @@ var Mailcheck = {
     var sld = '';
     var tld = '';
 
-    if (domainParts.length == 0) {
+    if (domainParts.length === 0) {
       // The address does not have a top-level domain
       return false;
     } else if (domainParts.length == 1) {
@@ -213,7 +213,7 @@ var Mailcheck = {
       secondLevelDomain: sld,
       domain: domain,
       address: parts.join('@')
-    }
+    };
   },
 
   // Encode the email address to prevent XSS but leave in valid
@@ -262,6 +262,6 @@ if (typeof window !== 'undefined' && window.jQuery) {
 
       opts.email = this.val();
       Mailcheck.run(opts);
-    }
+    };
   })(jQuery);
 }

@@ -20,12 +20,7 @@
       "email": "wei@neo.com"
     }
   ],
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/mailcheck/mailcheck/blob/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "bugs": "https://github.com/mailcheck/mailcheck/issues",
   "homepage": "https://github.com/mailcheck/mailcheck",
   "docs": "https://github.com/mailcheck/mailcheck/blob/master/README.md",
