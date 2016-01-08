@@ -13,23 +13,21 @@ var Mailcheck = {
   secondLevelThreshold: 2,
   topLevelThreshold: 2,
 
-  defaultDomains: ['msn.com', 'bellsouth.net',
-    'telus.net', 'comcast.net', 'optusnet.com.au',
-    'earthlink.net', 'qq.com', 'sky.com', 'icloud.com',
-    'mac.com', 'sympatico.ca', 'googlemail.com',
-    'att.net', 'xtra.co.nz', 'web.de',
-    'cox.net', 'gmail.com', 'ymail.com',
-    'aim.com', 'rogers.com', 'verizon.net',
-    'rocketmail.com', 'google.com', 'optonline.net',
-    'sbcglobal.net', 'aol.com', 'me.com', 'btinternet.com',
-    'charter.net', 'shaw.ca'],
+  defaultDomains: [
+     'aim.com', 'aol.com', 'att.net', 'bellsouth.net', 'btinternet.com',
+     'charter.net', 'comcast.net', 'cox.net', 'earthlink.net', 'gmail.com',
+     'google.com', 'googlemail.com', 'icloud.com', 'mac.com', 'me.com',
+     'msn.com', 'optonline.net', 'optusnet.com.au', 'qq.com', 'rocketmail.com',
+     'rogers.com', 'sbcglobal.net', 'shaw.ca', 'sky.com', 'sympatico.ca',
+     'telus.net', 'verizon.net', 'web.de', 'xtra.co.nz', 'ymail.com'],
 
-  defaultSecondLevelDomains: ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"],
+  defaultSecondLevelDomains: ['gmx', 'hotmail', 'live', 'mail', 'outlook', 'yahoo'],
 
-  defaultTopLevelDomains: ["com", "com.au", "com.tw", "ca", "co.nz", "co.uk", "de",
-    "fr", "it", "ru", "net", "org", "edu", "gov", "jp", "nl", "kr", "se", "eu",
-    "ie", "co.il", "us", "at", "be", "dk", "hk", "es", "gr", "ch", "no", "cz",
-    "in", "net", "net.au", "info", "biz", "mil", "co.jp", "sg", "hu"],
+  defaultTopLevelDomains: [
+    'at', 'be', 'biz', 'ca', 'ch', 'co.il', 'co.jp', 'co.nz', 'co.uk',
+    'com', 'com.au', 'com.tw', 'cz', 'de', 'dk', 'edu', 'es', 'eu', 'fr',
+    'gov', 'gr', 'hk', 'hu', 'ie', 'in', 'info', 'it', 'jp', 'kr', 'mil',
+    'net', 'net.au', 'nl', 'no', 'org', 'ru', 'se', 'sg', 'us'],
 
   run: function(opts) {
     opts.domains = opts.domains || Mailcheck.defaultDomains;
@@ -252,7 +250,7 @@ if (typeof define === "function" && define.amd) {
 }
 
 if (typeof window !== 'undefined' && window.jQuery) {
-  (function($){
+  (function($) {
     $.fn.mailcheck = function(opts) {
       var self = this;
       if (opts.suggested) {
