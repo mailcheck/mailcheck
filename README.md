@@ -12,7 +12,7 @@ When your user types in "user@gmil.con", Mailcheck will suggest "user@gmail.com"
 
 Mailcheck will offer up suggestions for second and top level domains too. For example when a user types in "user@hotmail.cmo" then "hotmail.com" will be suggested. Similarly if only the second level domain is miss-spelled then it will be corrected independently of the top level domain allowing for fine resolution tweaking if desired.
 
-At [Kicksend](http://kicksend.com), we use Mailcheck to help reduce typos in email addresses during sign ups. It has [reduced our sign up confirmation email bounces by 50%](http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-b).
+At [Kicksend](http://kicksend.com), we use Mailcheck to help reduce typos in email addresses during sign ups. It has [reduced our sign up confirmation email bounces by 50%](https://kicksendit.wordpress.com/2012/03/20/how-we-decreased-sign-up-confirmation-email-bounces-by-50/).
 
 ![diagram](https://raw.githubusercontent.com/mailcheck/mailcheck/master/doc/example.png)
 
