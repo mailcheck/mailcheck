@@ -26,10 +26,12 @@ var Mailcheck = {
 
   defaultSecondLevelDomains: ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"],
 
-  defaultTopLevelDomains: ["com", "com.au", "com.tw", "ca", "co.nz", "co.uk", "de",
-    "fr", "it", "ru", "net", "org", "edu", "gov", "jp", "nl", "kr", "se", "eu",
-    "ie", "co.il", "us", "at", "be", "dk", "hk", "es", "gr", "ch", "no", "cz",
-    "in", "net", "net.au", "info", "biz", "mil", "co.jp", "sg", "hu"],
+  defaultTopLevelDomains: ["com", "com.au", "org.au", "com.tw", "org.tw", "ca", 
+    "co.nz", "org.nz", "co.uk", "org.uk", "de", "fr", "it", "ru", "org.ru", "net", 
+    "org", "edu", "gov", "jp", "nl", "kr", "se", "org.se", "eu", "ie", "co.il", 
+    ".org.il", "us", "at", "be", "dk", "hk", "org.hk", "es", "org.es", "gr", "org.gr",
+    "ch", "no", "cz", "in", "org.in", "net", "net.au", "info", "biz", "mil", "co.jp", 
+    "sg", "org.sg", "hu", "org.hu"],
 
   run: function(opts) {
     opts.domains = opts.domains || Mailcheck.defaultDomains;
