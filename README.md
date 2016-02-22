@@ -12,8 +12,6 @@ When your user types in "user@gmil.con", Mailcheck will suggest "user@gmail.com"
 
 Mailcheck will offer up suggestions for second and top level domains too. For example when a user types in "user@hotmail.cmo" then "hotmail.com" will be suggested. Similarly if only the second level domain is miss-spelled then it will be corrected independently of the top level domain allowing for fine resolution tweaking if desired.
 
-At [Kicksend](http://kicksend.com), we use Mailcheck to help reduce typos in email addresses during sign ups. It has [reduced our sign up confirmation email bounces by 50%](https://kicksendit.wordpress.com/2012/03/20/how-we-decreased-sign-up-confirmation-email-bounces-by-50/).
-
 ![diagram](https://raw.githubusercontent.com/mailcheck/mailcheck/master/doc/example.png)
 
 See it live in action [here](http://kicksend.com/join).
@@ -187,29 +185,18 @@ And do send in those pull requests! To get them accepted, please:
 
 Upcoming features, bugs and feature requests are managed in [Issues](https://github.com/mailcheck/mailcheck/issues).
 
-Developing on Nitrous.IO
----------------------
-
-Start contributing to Mailcheck instantly on [Nitrous.IO](https://www.nitrous.io/?utm_source=github.com&utm_campaign=kicksend-mailcheck&utm_medium=hackonnitrous):
-
-[![Hack mailcheck/mailcheck on Nitrous.IO](https://d3o0mnbgv6k92a.cloudfront.net/assets/hack-l-v1-d464cf470a5da050619f6f247a1017ec.png)](https://www.nitrous.io/hack_button?source=embed&runtime=nodejs&repo=kicksend%2Fmailcheck&file_to_open=README.nitrous.md)
-
-
-Who have used Mailcheck?
+Who uses Mailcheck?
 -----------------------
 
-- [Kicksend](http://kicksend.com/)
 - [Dropbox](http://dropbox.com/)
-- [Kickstarter](http://kickstarter.com/)
-- [Uber](http://uber.com/)
-- [Khan Academy](http://khanacademy.org/)
-- [Minecraft](http://minecraft.net/)
-- [Paperless Post](http://www.paperlesspost.com/)
-- [The Verge](http://theverge.com/)
-- [SB Nation](http://sbnation.com/)
-- [Kippt](http://kippt.com/)
-- [Shopify](http://shopify.com/)
 - [Hack Design](https://hackdesign.org/)
+- [Kicksend](http://kicksend.com/)
+- [Kickstarter](http://kickstarter.com/)
+- [Khan Academy](http://khanacademy.org/)
+- [Lyft](http://lyft.com/)
+- [Minecraft](http://minecraft.net/)
+- [SB Nation](http://sbnation.com/)
+- [The Verge](http://theverge.com/)
 
 Do you use Mailcheck? [Tweet me](http://twitter.com/derrickko) your link.
 
@@ -226,7 +213,7 @@ Related Links
 Core Team
 -------
 
-- Derrick Ko, [Kicksend](http://kicksend.com), [@derrickko](http://twitter.com/derrickko). Created Mailcheck.
+- Derrick Ko, [@derrickko](http://twitter.com/derrickko). Created Mailcheck.
 - Wei Lu, [Hive](https://www.hivewallet.com/), [@luweidewei](http://twitter.com/luweidewei).
 
 License
