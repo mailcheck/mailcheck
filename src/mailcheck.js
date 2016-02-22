@@ -13,37 +13,35 @@ var Mailcheck = {
   secondLevelThreshold: 2,
   topLevelThreshold: 2,
 
-  defaultDomains: ['msn.com', 'bellsouth.net',
-    'telus.net', 'comcast.net', 'optusnet.com.au',
-    'earthlink.net', 'qq.com', 'sky.com', 'icloud.com',
-    'mac.com', 'sympatico.ca', 'googlemail.com',
-    'att.net', 'xtra.co.nz', 'web.de',
-    'cox.net', 'gmail.com', 'ymail.com',
-    'aim.com', 'rogers.com', 'verizon.net',
-    'rocketmail.com', 'google.com', 'optonline.net',
-    'sbcglobal.net', 'aol.com', 'me.com', 'btinternet.com',
-    'charter.net', 'shaw.ca'],
+  defaultDomains: [
+     'aim.com', 'aol.com', 'att.net', 'bellsouth.net', 'btinternet.com',
+     'charter.net', 'comcast.net', 'cox.net', 'earthlink.net', 'gmail.com',
+     'google.com', 'googlemail.com', 'icloud.com', 'mac.com', 'me.com',
+     'msn.com', 'optonline.net', 'optusnet.com.au', 'qq.com', 'rocketmail.com',
+     'rogers.com', 'sbcglobal.net', 'shaw.ca', 'sky.com', 'sympatico.ca',
+     'telus.net', 'verizon.net', 'web.de', 'xtra.co.nz', 'ymail.com'],
 
-  defaultSecondLevelDomains: ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"],
+  defaultSecondLevelDomains: ['gmx', 'hotmail', 'live', 'mail', 'outlook', 'yahoo'],
 
-  defaultTopLevelDomains: ["com", "com.au", "com.tw", "ca", "co.nz", "co.uk", "de",
-    "fr", "it", "ru", "net", "org", "edu", "gov", "jp", "nl", "kr", "se", "eu",
-    "ie", "co.il", "us", "at", "be", "dk", "hk", "es", "gr", "ch", "no", "cz",
-    "in", "net", "net.au", "info", "biz", "mil", "co.jp", "sg", "hu"],
+  defaultTopLevelDomains: [
+    'at', 'be', 'biz', 'ca', 'ch', 'co.il', 'co.jp', 'co.nz', 'co.uk',
+    'com', 'com.au', 'com.tw', 'cz', 'de', 'dk', 'edu', 'es', 'eu', 'fr',
+    'gov', 'gr', 'hk', 'hu', 'ie', 'in', 'info', 'it', 'jp', 'kr', 'mil',
+    'net', 'net.au', 'nl', 'no', 'org', 'ru', 'se', 'sg', 'us'],
 
   run: function(opts) {
     opts.domains = opts.domains || Mailcheck.defaultDomains;
     opts.secondLevelDomains = opts.secondLevelDomains || Mailcheck.defaultSecondLevelDomains;
     opts.topLevelDomains = opts.topLevelDomains || Mailcheck.defaultTopLevelDomains;
-    opts.distanceFunction = opts.distanceFunction || Mailcheck.sift3Distance;
+    opts.distanceFunction = opts.distanceFunction || Mailcheck.sift4Distance;
 
-    var defaultCallback = function(result){ return result };
+    var defaultCallback = function(result){ return result; };
     var suggestedCallback = opts.suggested || defaultCallback;
     var emptyCallback = opts.empty || defaultCallback;
 
     var result = Mailcheck.suggest(Mailcheck.encodeEmail(opts.email), opts.domains, opts.secondLevelDomains, opts.topLevelDomains, opts.distanceFunction);
 
-    return result ? suggestedCallback(result) : emptyCallback()
+    return result ? suggestedCallback(result) : emptyCallback();
   },
 
   suggest: function(email, domains, secondLevelDomains, topLevelDomains, distanceFunction) {
@@ -90,7 +88,7 @@ var Mailcheck = {
         rtrn = true;
       }
 
-      if (rtrn == true) {
+      if (rtrn === true) {
         return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
       }
     }
@@ -112,14 +110,14 @@ var Mailcheck = {
       return false;
     }
     if(!distanceFunction) {
-      distanceFunction = this.sift3Distance;
+      distanceFunction = this.sift4Distance;
     }
 
     for (var i = 0; i < domains.length; i++) {
       if (domain === domains[i]) {
         return domain;
       }
-      dist = distanceFunction(domain, domains[i]);
+      dist = distanceFunction(domain, domains[i], 5);
       if (dist < minDist) {
         minDist = dist;
         closestDomain = domains[i];
@@ -133,46 +131,55 @@ var Mailcheck = {
     }
   },
 
-  sift3Distance: function(s1, s2) {
-    // sift3: http://siderite.blogspot.com/2007/04/super-fast-and-accurate-string-distance.html
-    if (s1 == null || s1.length === 0) {
-      if (s2 == null || s2.length === 0) {
-        return 0;
-      } else {
-        return s2.length;
-      }
+  // http://siderite.blogspot.com/2014/11/super-fast-and-accurate-string-distance.html
+  sift4Distance: function(s1, s2, maxOffset) {
+    if (!s1 || !s1.length) {
+      return !s2 ? 0 : s2.length;
     }
 
-    if (s2 == null || s2.length === 0) {
+    if (!s2 || !s2.length) {
       return s1.length;
     }
 
-    var c = 0;
-    var offset1 = 0;
-    var offset2 = 0;
-    var lcs = 0;
-    var maxOffset = 5;
+    var l1 = s1.length;
+    var l2 = s2.length;
 
-    while ((c + offset1 < s1.length) && (c + offset2 < s2.length)) {
-      if (s1.charAt(c + offset1) == s2.charAt(c + offset2)) {
-        lcs++;
-      } else {
-        offset1 = 0;
-        offset2 = 0;
-        for (var i = 0; i < maxOffset; i++) {
-          if ((c + i < s1.length) && (s1.charAt(c + i) == s2.charAt(c))) {
-            offset1 = i;
-            break;
+    var c1 = 0;  //cursor for string 1
+    var c2 = 0;  //cursor for string 2
+    var lcss = 0;  //largest common subsequence
+    var local_cs = 0; //local common substring
+
+    while ((c1 < l1) && (c2 < l2)) {
+        if (s1.charAt(c1) == s2.charAt(c2)) {
+          local_cs ++;
+        } else {
+          lcss += local_cs;
+          local_cs = 0;
+          if (c1 != c2) {
+              c1 = c2 = Math.max(c1,c2); //using max to bypass the need for computer transpositions ('ab' vs 'ba')
           }
-          if ((c + i < s2.length) && (s1.charAt(c) == s2.charAt(c + i))) {
-            offset2 = i;
-            break;
+
+          for (var i = 0; i < maxOffset && (c1 + i < l1 || c2 + i < l2); i++) {
+            if ((c1 + i < l1) && (s1.charAt(c1 + i) == s2.charAt(c2))) {
+              c1 += i;
+              local_cs ++;
+              break;
+            }
+
+            if ((c2 + i < l2) && (s1.charAt(c1) == s2.charAt(c2 + i))) {
+              c2 += i;
+              local_cs ++;
+              break;
+            }
           }
         }
-      }
-      c++;
+
+      c1 ++;
+      c2 ++;
     }
-    return (s1.length + s2.length) /2 - lcs;
+
+    lcss += local_cs;
+    return Math.round(Math.max(l1,l2) - lcss);
   },
 
   splitEmail: function(email) {
@@ -193,7 +200,7 @@ var Mailcheck = {
     var sld = '';
     var tld = '';
 
-    if (domainParts.length == 0) {
+    if (domainParts.length === 0) {
       // The address does not have a top-level domain
       return false;
     } else if (domainParts.length == 1) {
@@ -213,7 +220,7 @@ var Mailcheck = {
       secondLevelDomain: sld,
       domain: domain,
       address: parts.join('@')
-    }
+    };
   },
 
   // Encode the email address to prevent XSS but leave in valid
@@ -243,7 +250,7 @@ if (typeof define === "function" && define.amd) {
 }
 
 if (typeof window !== 'undefined' && window.jQuery) {
-  (function($){
+  (function($) {
     $.fn.mailcheck = function(opts) {
       var self = this;
       if (opts.suggested) {
@@ -262,6 +269,6 @@ if (typeof window !== 'undefined' && window.jQuery) {
 
       opts.email = this.val();
       Mailcheck.run(opts);
-    }
+    };
   })(jQuery);
 }
