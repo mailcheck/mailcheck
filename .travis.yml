@@ -1,2 +1,2 @@
-language: javascript
+language: node_js
 script: phantomjs spec/lib/run_jasmine_test.coffee spec/spec_runner.html
