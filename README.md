@@ -5,12 +5,14 @@ mailcheck.js
 
 The Javascript library and jQuery plugin that suggests a right domain when your users misspell it in an email address.
 
+mailcheck.js is part of the [Mailcheck family](http://getmailcheck.org), and we're always on the lookout for more ports and adaptions. Get in touch!
+
 What does it do?
 ----------------
 
 When your user types in "user@gmil.con", Mailcheck will suggest "user@gmail.com".
 
-Mailcheck will offer up suggestions for second and top level domains too. For example when a user types in "user@hotmail.cmo" then "hotmail.com" will be suggested. Similarly if only the second level domain is miss-spelled then it will be corrected independently of the top level domain allowing for fine resolution tweaking if desired.
+Mailcheck will offer up suggestions for second and top level domains too. For example, when a user types in "user@hotmail.cmo", "hotmail.com" will be suggested. Similarly, if only the second level domain is misspelled, it will be corrected independently of the top level domain.
 
 ![diagram](https://raw.githubusercontent.com/mailcheck/mailcheck/master/doc/example.png)
 
@@ -171,7 +173,7 @@ Since Mailcheck runs client side, keep in mind file size, memory usage and perfo
 Tests
 -----
 
-Mailcheck is tested with [Jasmine](https://jasmine.github.io/). Load `spec/spec_runner.html` in your browser to run the tests or run `npm test` from the command line to test in node.
+Mailcheck is tested with [Jasmine](https://jasmine.github.io/). Run `npm test` from the command line to run the test suite. Alternatively, you can Load `spec/spec_runner.html` in your browser.
 
 Contributing
 ------------
