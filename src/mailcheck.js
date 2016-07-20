@@ -5,7 +5,7 @@
  *
  * Released under the MIT License.
  *
- * v 1.1.1
+ * v 1.1.2
  */
 
 var Mailcheck = {

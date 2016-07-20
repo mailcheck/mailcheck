@@ -1,13 +1,13 @@
 {
   "name": "mailcheck",
   "title": "mailcheck",
-  "description": "A standalone module that suggests a right domain when your users misspell it in an email address.",
+  "description": "Reduce misspelled email addresses in your forms.",
   "keywords": [
     "form",
     "email",
     "spell check"
   ],
-  "version": "1.1.1",
+  "version": "1.1.2",
   "author": {
     "name": "Derrick Ko",
     "url": "http://derrickko.com",
@@ -32,8 +32,8 @@
   "dependencies": {},
   "devDependencies": {
     "jasmine-node": "1.x",
-    "grunt": "0.4.x",
-    "grunt-contrib-uglify": "~0.2.4",
+    "grunt": "~0.4",
+    "grunt-contrib-uglify": "~0.2",
     "grunt-jasmine-node": "~0.1.0",
     "grunt-cli": "~0.1.9"
   },
