@@ -35,7 +35,7 @@ var Mailcheck = {
     opts.domains = opts.domains || Mailcheck.defaultDomains;
     opts.secondLevelDomains = opts.secondLevelDomains || Mailcheck.defaultSecondLevelDomains;
     opts.topLevelDomains = opts.topLevelDomains || Mailcheck.defaultTopLevelDomains;
-    opts.distanceFunction = opts.distanceFunction || Mailcheck.sift3Distance;
+    opts.distanceFunction = opts.distanceFunction || Mailcheck.sift4Distance;
 
     var defaultCallback = function(result){ return result };
     var suggestedCallback = opts.suggested || defaultCallback;
@@ -112,7 +112,7 @@ var Mailcheck = {
       return false;
     }
     if(!distanceFunction) {
-      distanceFunction = this.sift3Distance;
+      distanceFunction = this.sift4Distance;
     }
 
     for (var i = 0; i < domains.length; i++) {
@@ -133,46 +133,100 @@ var Mailcheck = {
     }
   },
 
-  sift3Distance: function(s1, s2) {
-    // sift3: http://siderite.blogspot.com/2007/04/super-fast-and-accurate-string-distance.html
-    if (s1 == null || s1.length === 0) {
-      if (s2 == null || s2.length === 0) {
-        return 0;
-      } else {
-        return s2.length;
-      }
+  sift4Distance: function(s1, s2, maxOffset) {
+    // sift4: https://siderite.blogspot.com/2014/11/super-fast-and-accurate-string-distance.html
+    if (maxOffset === undefined) {
+        maxOffset = 5 //default
     }
 
-    if (s2 == null || s2.length === 0) {
-      return s1.length;
-    }
-
-    var c = 0;
-    var offset1 = 0;
-    var offset2 = 0;
-    var lcs = 0;
-    var maxOffset = 5;
-
-    while ((c + offset1 < s1.length) && (c + offset2 < s2.length)) {
-      if (s1.charAt(c + offset1) == s2.charAt(c + offset2)) {
-        lcs++;
-      } else {
-        offset1 = 0;
-        offset2 = 0;
-        for (var i = 0; i < maxOffset; i++) {
-          if ((c + i < s1.length) && (s1.charAt(c + i) == s2.charAt(c))) {
-            offset1 = i;
-            break;
-          }
-          if ((c + i < s2.length) && (s1.charAt(c) == s2.charAt(c + i))) {
-            offset2 = i;
-            break;
-          }
+    if (!s1||!s1.length) {
+        if (!s2) {
+            return 0;
         }
-      }
-      c++;
+        return s2.length;
     }
-    return (s1.length + s2.length) /2 - lcs;
+
+    if (!s2||!s2.length) {
+        return s1.length;
+    }
+
+    var l1=s1.length;
+    var l2=s2.length;
+
+    var c1 = 0;  //cursor for string 1
+    var c2 = 0;  //cursor for string 2
+    var lcss = 0;  //largest common subsequence
+    var local_cs = 0; //local common substring
+    var trans = 0;  //number of transpositions ('ab' vs 'ba')
+    var offset_arr=[];  //offset pair array, for computing the transpositions
+
+    while ((c1 < l1) && (c2 < l2)) {
+        if (s1.charAt(c1) == s2.charAt(c2)) {
+            local_cs++;
+            var isTrans=false;
+            //see if current match is a transposition
+            var i=0;
+            while (i<offset_arr.length) {
+                var ofs=offset_arr[i];
+                if (c1<=ofs.c1 || c2 <= ofs.c2) {
+                    // when two matches cross, the one considered a transposition is the one with the largest difference in offsets
+                    isTrans=Math.abs(c2-c1)>=Math.abs(ofs.c2-ofs.c1);
+                    if (isTrans)
+                    {
+                        trans++;
+                    } else
+                    {
+                        if (!ofs.trans) {
+                            ofs.trans=true;
+                            trans++;
+                        }
+                    }
+                    break;
+                } else {
+                    if (c1>ofs.c2 && c2>ofs.c1) {
+                        offset_arr.splice(i,1);
+                    } else {
+                        i++;
+                    }
+                }
+            }
+            offset_arr.push({
+                c1:c1,
+                c2:c2,
+                trans:isTrans
+            });
+        } else {
+            lcss+=local_cs;
+            local_cs=0;
+            if (c1!=c2) {
+                c1=c2=Math.min(c1,c2);  //using min allows the computation of transpositions
+            }
+            //if matching characters are found, remove 1 from both cursors (they get incremented at the end of the loop)
+            //so that we can have only one code block handling matches 
+            for (var i = 0; i < maxOffset && (c1+i<l1 || c2+i<l2); i++) {
+                if ((c1 + i < l1) && (s1.charAt(c1 + i) == s2.charAt(c2))) {
+                    c1+= i-1; 
+                    c2--;
+                    break;
+                }
+                if ((c2 + i < l2) && (s1.charAt(c1) == s2.charAt(c2 + i))) {
+                    c1--;
+                    c2+= i-1;
+                    break;
+                }
+            }
+        }
+        c1++;
+        c2++;
+        // this covers the case where the last match is on the last token in list, so that it can compute transpositions correctly
+        if ((c1 >= l1) || (c2 >= l2)) {
+            lcss+=local_cs;
+            local_cs=0;
+            c1=c2=Math.min(c1,c2);
+        }
+    }
+    lcss+=local_cs;
+    return Math.round(Math.max(l1,l2)- lcss +trans); //add the cost of transpositions to the final result
   },
 
   splitEmail: function(email) {
