@@ -16,7 +16,7 @@ Mailcheck will offer up suggestions for second and top level domains too. For ex
 
 ![diagram](https://raw.githubusercontent.com/mailcheck/mailcheck/master/doc/example.png)
 
-See it live in action [here](http://kicksend.com/join).
+See it live in action [here](https://www.kickstarter.com/signup).
 
 Installation
 ------------
