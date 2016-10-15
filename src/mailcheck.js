@@ -29,7 +29,8 @@ var Mailcheck = {
   defaultTopLevelDomains: ["com", "com.au", "com.tw", "ca", "co.nz", "co.uk", "de",
     "fr", "it", "ru", "net", "org", "edu", "gov", "jp", "nl", "kr", "se", "eu",
     "ie", "co.il", "us", "at", "be", "dk", "hk", "es", "gr", "ch", "no", "cz",
-    "in", "net", "net.au", "info", "biz", "mil", "co.jp", "sg", "hu", "uk"],
+    "in", "net", "net.au", "info", "biz", "mil", "co.jp", "sg", "hu", "uk",
+    "com.mx", "mx"],
 
   run: function(opts) {
     opts.domains = opts.domains || Mailcheck.defaultDomains;
