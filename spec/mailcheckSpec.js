@@ -1,5 +1,5 @@
 describe("mailcheck", function() {
-  var domains = ['google.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com', 'gmx.de'];
+  var domains = ['google.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com'];
   var secondLevelDomains = ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"];
   var topLevelDomains = ['co.uk', 'com', 'org', 'info', 'fr'];
 
@@ -153,6 +153,12 @@ describe("mailcheck", function() {
             mailcheck.suggest('test@gmx.fr', domains, secondLevelDomains, topLevelDomains)
         ).toBeFalsy();
       });
+
+      it("will not offer suggestions for unrecognised 2ld's without a tld", function() {
+        expect(mailcheck.suggest('test@gm', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
+        expect(mailcheck.suggest('test@gma', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
+        expect(mailcheck.suggest('test@gmai', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
+      });      
     });
 
     describe("mailcheck.splitEmail", function () {
