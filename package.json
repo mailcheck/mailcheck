@@ -31,11 +31,12 @@
   "docs": "https://github.com/mailcheck/mailcheck/blob/master/README.md",
   "dependencies": {},
   "devDependencies": {
-    "jasmine-node": "1.x",
     "grunt": "~0.4",
+    "grunt-cli": "~0.1.9",
+    "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-uglify": "~0.2",
     "grunt-jasmine-node": "~0.1.0",
-    "grunt-cli": "~0.1.9"
+    "jasmine-node": "1.x"
   },
   "main": "src/mailcheck.js",
   "repository": {
