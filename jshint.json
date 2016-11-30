@@ -1,0 +1,9 @@
+{
+	"undef": true,
+	"unused": "vars",
+	"browser": true, 
+	"devel": true,
+	"esversion": 3,
+	"curly": true,
+	"forin": true
+}
