@@ -1,3 +1,5 @@
+/* globals define, module, jQuery */
+
 /*
  * Mailcheck https://github.com/mailcheck/mailcheck
  * Author
@@ -37,13 +39,13 @@ var Mailcheck = {
     opts.topLevelDomains = opts.topLevelDomains || Mailcheck.defaultTopLevelDomains;
     opts.distanceFunction = opts.distanceFunction || Mailcheck.sift4Distance;
 
-    var defaultCallback = function(result){ return result };
+    var defaultCallback = function(result){ return result; };
     var suggestedCallback = opts.suggested || defaultCallback;
     var emptyCallback = opts.empty || defaultCallback;
 
     var result = Mailcheck.suggest(Mailcheck.encodeEmail(opts.email), opts.domains, opts.secondLevelDomains, opts.topLevelDomains, opts.distanceFunction);
 
-    return result ? suggestedCallback(result) : emptyCallback()
+    return result ? suggestedCallback(result) : emptyCallback();
   },
 
   suggest: function(email, domains, secondLevelDomains, topLevelDomains, distanceFunction) {
@@ -75,7 +77,7 @@ var Mailcheck = {
     var closestTopLevelDomain    = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains, distanceFunction, this.topLevelThreshold);
 
     if (emailParts.domain) {
-      var closestDomain = emailParts.domain;
+      closestDomain = emailParts.domain;
       var rtrn = false;
 
       if(closestSecondLevelDomain && closestSecondLevelDomain != emailParts.secondLevelDomain) {
@@ -90,7 +92,7 @@ var Mailcheck = {
         rtrn = true;
       }
 
-      if (rtrn == true) {
+      if (rtrn) {
         return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
       }
     }
@@ -136,7 +138,7 @@ var Mailcheck = {
   sift4Distance: function(s1, s2, maxOffset) {
     // sift4: https://siderite.blogspot.com/2014/11/super-fast-and-accurate-string-distance.html
     if (maxOffset === undefined) {
-        maxOffset = 5 //default
+        maxOffset = 5; //default
     }
 
     if (!s1||!s1.length) {
@@ -203,15 +205,15 @@ var Mailcheck = {
             }
             //if matching characters are found, remove 1 from both cursors (they get incremented at the end of the loop)
             //so that we can have only one code block handling matches 
-            for (var i = 0; i < maxOffset && (c1+i<l1 || c2+i<l2); i++) {
-                if ((c1 + i < l1) && (s1.charAt(c1 + i) == s2.charAt(c2))) {
-                    c1+= i-1; 
+            for (var j = 0; j < maxOffset && (c1+j<l1 || c2+j<l2); j++) {
+                if ((c1 + j < l1) && (s1.charAt(c1 + j) == s2.charAt(c2))) {
+                    c1+= j-1; 
                     c2--;
                     break;
                 }
-                if ((c2 + i < l2) && (s1.charAt(c1) == s2.charAt(c2 + i))) {
+                if ((c2 + j < l2) && (s1.charAt(c1) == s2.charAt(c2 + j))) {
                     c1--;
-                    c2+= i-1;
+                    c2+= j-1;
                     break;
                 }
             }
@@ -230,7 +232,8 @@ var Mailcheck = {
   },
 
   splitEmail: function(email) {
-    var parts = email.trim().split('@');
+	email = email !== null ? (email.replace(/^\s*/, '').replace(/\s*$/, '')) : null; // trim() not exist in old IE!
+    var parts = email.split('@');
 
     if (parts.length < 2) {
       return false;
@@ -247,7 +250,7 @@ var Mailcheck = {
     var sld = '';
     var tld = '';
 
-    if (domainParts.length == 0) {
+    if (domainParts.length === 0) {
       // The address does not have a top-level domain
       return false;
     } else if (domainParts.length == 1) {
@@ -256,8 +259,8 @@ var Mailcheck = {
     } else {
       // The address has a domain and a top-level domain
       sld = domainParts[0];
-      for (var i = 1; i < domainParts.length; i++) {
-        tld += domainParts[i] + '.';
+      for (var j = 1; j < domainParts.length; j++) {
+        tld += domainParts[j] + '.';
       }
       tld = tld.substring(0, tld.length - 1);
     }
@@ -267,7 +270,7 @@ var Mailcheck = {
       secondLevelDomain: sld,
       domain: domain,
       address: parts.join('@')
-    }
+    };
   },
 
   // Encode the email address to prevent XSS but leave in valid
@@ -316,6 +319,6 @@ if (typeof window !== 'undefined' && window.jQuery) {
 
       opts.email = this.val();
       Mailcheck.run(opts);
-    }
+    };
   })(jQuery);
 }

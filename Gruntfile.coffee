@@ -2,6 +2,11 @@ module.exports = (grunt) ->
 
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json'),
+    jshint:
+      files: 'src/mailcheck.js'
+      options:
+        jshintrc: 'jshint.json'
+
     uglify:
       options:
         banner: '/*! <%= pkg.name %> v<%= pkg.version %> @licence MIT */'
@@ -21,6 +26,7 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-jasmine-node'
+  grunt.loadNpmTasks 'grunt-contrib-jshint'
 
-  grunt.registerTask 'default', ['jasmine_node', 'uglify']
-  grunt.registerTask 'test', ['jasmine_node']
+  grunt.registerTask 'default', ['jshint', 'jasmine_node', 'uglify']
+  grunt.registerTask 'test', ['jshint', 'jasmine_node']
