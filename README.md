@@ -183,7 +183,7 @@ Let's make Mailcheck awesome. We're on the lookout for maintainers and [contribu
 And do send in those pull requests! To get them accepted, please:
 
 - Test your code. Add test cases to `spec/mailcheckSpec.js`, and run it across browsers (yes, including IE).
-- Minify the plugin by running `grunt` in the Mailcheck directory.
+- Minify the plugin by running `grunt` in the Mailcheck directory (npm install should have installed a git pre-commit hook that takes care of this for you).
 
 Upcoming features, bugs and feature requests are managed in [Issues](https://github.com/mailcheck/mailcheck/issues).
 
