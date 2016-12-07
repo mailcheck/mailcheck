@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mailcheck Example</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="../src/jquery.mailcheck.min.js"></script>
+    <script>
+      // The domains to check for
+      var domains = ["yahoo.com","google.com","hotmail.com","gmail.com","me.com","aol.com","mac.com","live.com","comcast.net","googlemail.com","msn.com","qq.com","163.com","hotmail.fr","yahoo.fr","yahoo.com.tw","hotmail.it","sbcglobal.net","hotmail.co.uk","yahoo.co.uk","yahoo.es"];
+      $(function(){
+        $('#email').blur(function() {
+          // Run the check
+          $('#email').mailcheck(domains, {
+            suggested: function(element, suggestion) {
+              alert('Did you mean to type "'+suggestion.full+'"?');
+            }
+          })
+        });
+      });
+    </script>
+    <style>
+      form {width:250px;margin:100px auto;}
+      label {display:block;}
+      .input input {width:200px;}
+      .submit {margin:10px 0;}
+    </style>
+  </head>
+  <body>
+    <form method="post">
+      <div class="input">
+        <label for="email">Email Address</label>
+        <input type="text" name="email" id="email" />
+      </div>
+      <div class="submit">
+        <input type="submit" value="submit" />
+      </div>
+    </form>
+  </body>
+</html>
