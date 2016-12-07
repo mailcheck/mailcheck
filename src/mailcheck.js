@@ -86,7 +86,7 @@ var Mailcheck = {
         rtrn = true;
       }
 
-      if(closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain) {
+      if(closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain && emailParts.secondLevelDomain !== '') {
         // The email address may have a mispelled top-level domain; return a suggestion
         closestDomain = closestDomain.replace(new RegExp(emailParts.topLevelDomain + "$"), closestTopLevelDomain);
         rtrn = true;
