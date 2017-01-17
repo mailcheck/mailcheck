@@ -7,7 +7,7 @@
  *
  * Released under the MIT License.
  *
- * v 1.1.2
+ * v 1.1.3
  */
 
 var Mailcheck = {
@@ -24,14 +24,17 @@ var Mailcheck = {
     'aim.com', 'rogers.com', 'verizon.net',
     'rocketmail.com', 'google.com', 'optonline.net',
     'sbcglobal.net', 'aol.com', 'me.com', 'btinternet.com',
-    'charter.net', 'shaw.ca'],
+    'charter.net', 'shaw.ca', 'facebook.com', 'inbox.com',
+    'mail.com', 'zoho.com'],
 
-  defaultSecondLevelDomains: ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"],
+  defaultSecondLevelDomains: ["yahoo", "hotmail", "mail", "live", "outlook", "gmx", "yandex"],
 
   defaultTopLevelDomains: ["com", "com.au", "com.tw", "ca", "co.nz", "co.uk", "de",
     "fr", "it", "ru", "net", "org", "edu", "gov", "jp", "nl", "kr", "se", "eu",
     "ie", "co.il", "us", "at", "be", "dk", "hk", "es", "gr", "ch", "no", "cz",
-    "in", "net", "net.au", "info", "biz", "mil", "co.jp", "sg", "hu", "uk"],
+    "in", "net", "net.au", "info", "biz", "mil", "co.jp", "sg", "hu", "uk", "ua",
+    "br", "ch", "io", "ac", "ar", "asia", "cat", "cl", "cn", "fi", "ir", "is",
+    "lt", "pl", "pr", "sh", "th", "tm", "vn", "tw", "com.br"],
 
   run: function(opts) {
     opts.domains = opts.domains || Mailcheck.defaultDomains;
