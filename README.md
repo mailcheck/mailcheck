@@ -21,7 +21,7 @@ See it live in action [here](https://www.kickstarter.com/signup).
 Installation
 ------------
 
-For instant use, download the minified library [mailcheck.min.js](https://raw.githubusercontent.com/mailcheck/mailcheck/d25dc9a119ca844bb35b1baf341cca0a634e4ac9/src/mailcheck.min.js) into your javascripts directory. [mailcheck.js](https://raw.githubusercontent.com/mailcheck/mailcheck/d25dc9a119ca844bb35b1baf341cca0a634e4ac9/src/mailcheck.js) is also available unminimised if you want to hack on it, or have your own minimizer.
+For instant use, download the minified library [mailcheck.min.js](https://github.com/mailcheck/mailcheck/blob/master/src/mailcheck.min.js) into your javascripts directory. [mailcheck.js](https://github.com/mailcheck/mailcheck/blob/master/src/mailcheck.js) is also available unminimised if you want to hack on it, or have your own minimizer.
 
 #### Bower ####
 
