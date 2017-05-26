@@ -69,7 +69,7 @@ $('#email').on('blur', function() {
     secondLevelDomains: secondLevelDomains, // optional
     topLevelDomains: topLevelDomains,       // optional
     distanceFunction: superStringDistance,  // optional
-    suggested: function(element, suggestion) {
+    suggested: function(suggestion) {
       // callback code
     },
     empty: function(element) {
