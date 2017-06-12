@@ -1,0 +1,299 @@
+{% load actionkit_tags %}
+<!DOCTYPE html>
+<html lang="{{page.lang.iso_code|default:'en'}}"{% if page.lang.is_rtl %} dir="rtl"{% endif %}>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{{ page.title }} | {% filter ak_text:"org_name" %}{% client_name %}{% endfilter %}{% endblock %}</title>
+    <script>startTime=new Date()</script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    {{ page.followup.share_title_tag }}
+    {% if form.id %}<meta name="description" property="og:description" content="{% block description %}{{ page.followup.share_description_value }}{% endblock %}">{% endif %}
+    {{ page.followup.share_image_tag }}
+    {{ page.followup.share_url_tag }}
+    <meta property="og:site_name" content="{% filter ak_text:"org_name" %}{% client_name %}{% endfilter %}">
+    <meta property="og:type" content="article">
+    <meta name="twitter:card" value="summary">
+    {% block meta_additions %}{% endblock %}
+
+    {% load_css %}
+        //fonts.googleapis.com/css?family=Open+Sans:100,300,400,600,700
+        /media/modern/actionkit.css?1=22
+    {% end %}
+    {% block css_additions %}{% endblock %}
+
+    {% load_ak_context context %}
+    {% load_js %}
+        //ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
+        /resources/actionkit.js
+    {% end %}
+
+    <style>
+    {% if templateset.custom_fields.font_family %}
+        html {
+            font-family: {{ templateset.custom_fields.font_family|safe }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.font_size %}
+        html {
+            font-size: {{ templateset.custom_fields.font_size }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_page %}
+        div.ak-page-container {
+            background-color: {{ templateset.custom_fields.color_page }};
+        }
+        .ak-progress-meter .ak-progress-meter-border {
+            border-color: {{ templateset.custom_fields.color_page }};
+        }
+        .ak-whipcount-callbox .ak-whipcount-boxhead {
+            color: {{ templateset.custom_fields.color_page }};
+        }
+        @media (min-width:480px) {
+            body .ak-steps-area h3 div.ak-step-number {
+                color: {{ templateset.custom_fields.color_page }};
+            }
+        }
+        @media (max-width:479px) {
+            .ak-steps-area h3 {
+                color: {{ templateset.custom_fields.color_page }};
+            }
+            .ak-steps-area h3 div.ak-step-number {
+                background-color: {{ templateset.custom_fields.color_page }};
+            }
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_margin %}
+        body {
+            background-color: {{ templateset.custom_fields.color_margin }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_header %}
+        .ak-page-header {
+            background-color: {{ templateset.custom_fields.color_header }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_header_text %}
+        .ak-page-header {
+            color: {{ templateset.custom_fields.color_header_text }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_title|default:templateset.custom_fields.color_header %}
+        h2 {
+            color: {{ templateset.custom_fields.color_title|default:templateset.custom_fields.color_header }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_text %}
+        body,
+        a.ak-highlight-on-hover {
+            color: {{ templateset.custom_fields.color_text }};
+        }
+        .ak-donate-menu input:checked + div.ak-step-number {
+            background: {{ templateset.custom_fields.color_text }};
+        }
+        .ak-whipcount-callbox .ak-whipcount-boxhead {
+            background-color: {{ templateset.custom_fields.color_text }};
+        }
+        @media (min-width:480px) {
+            .ak-steps-area h3 label.ak-step-label {
+                color: {{ templateset.custom_fields.color_text }};
+            }
+            .ak-steps-area h3 div.ak-step-number {
+                background-color: {{ templateset.custom_fields.color_text }};
+            }
+        }
+        @media (max-width:479px) {
+            .ak-steps-area h3 {
+                background: {{ templateset.custom_fields.color_text }};
+            }
+            .ak-steps-area h3 div.ak-step-number {
+                color: {{ templateset.custom_fields.color_text }};
+            }
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_text_faded %}
+        .ak-faded-text,
+        .ak-labels-overlaid label.ak-is-overlaid.active,
+        .ak-donate-step input:checked span {
+            color: {{ templateset.custom_fields.color_text_faded }};
+        }
+        .ak-donate-menu div.ak-step-number {
+            background-color: {{ templateset.custom_fields.color_text_faded }};
+        }        
+    {% endif %}
+    {% if templateset.custom_fields.color_link %}
+        a {
+            color: {{ templateset.custom_fields.color_link }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_link_hover %}
+        a:active,
+        a:hover,
+        a.ak-highlight-on-hover:hover,
+        label.ak-donate-step:hover {
+            color: {{ templateset.custom_fields.color_link_hover }};
+        }
+        .ak-donate-menu input:checked + div.ak-step-number:hover,
+        label.ak-donate-step:hover div.ak-step-number {
+            background-color: {{ templateset.custom_fields.color_link_hover }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_button %}
+        button,
+        input[type="submit"],
+        a.ak-button,
+        .ak-button {
+            background-color: {{ templateset.custom_fields.color_button }};
+        }
+        .ak-arrow:after,
+        .ak-arrow-inline:after {
+            color: {{ templateset.custom_fields.color_button }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_button_hover %}
+        button:hover,
+        input[type="submit"]:hover,
+        a.ak-button:hover,
+        .ak-button:hover {
+            background-color: {{ templateset.custom_fields.color_button_hover }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_button_text %}
+        button,
+        input[type="submit"],
+        a.ak-button,
+        .ak-button,
+        a.ak-button:hover,
+        .ak-button:hover {
+            color: {{ templateset.custom_fields.color_button_text }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_fieldbox %}
+        .ak-field-box,
+        .ak-accordion ul li {
+            background-color: {{ templateset.custom_fields.color_fieldbox }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_fieldbox_text %}
+        .ak-field-box,
+        .ak-accordion ul li {
+            color: {{ templateset.custom_fields.color_fieldbox_text }};
+        }
+        .ak-field-box .ak-donate-menu input:checked + div.ak-step-number {
+            background: {{ templateset.custom_fields.color_fieldbox_text }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_accentbox %}
+        #ak-whipcount-targets tbody tr,
+        .ak-newspaper-row,
+        .ak-signoff-box,
+        .ak-progress-meter .ak-progress-holder {
+            background-color: {{ templateset.custom_fields.color_accentbox }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_accentbox_text %}
+        #ak-whipcount-targets tbody tr,
+        .ak-newspaper-row,
+        .ak-signoff-box {
+            color: {{ templateset.custom_fields.color_accentbox_text }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_amount %}
+        #ak-amount-list li label {
+            background: {{ templateset.custom_fields.color_amount }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_amount_hover %}
+        #ak-amount-list li label:hover,
+        #ak-amount-list li label.ak-radio-checked,
+        div#ak-amount-list label[for="amount_other_field"].ak-radio-checked {
+            background-color: {{ templateset.custom_fields.color_amount_hover }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_progress %}
+        .ak-progress-meter .ak-progress-bar {
+            background-color: {{ templateset.custom_fields.color_progress }};
+        }
+        .ak-progress-meter .ak-progress-percent {
+            color: {{ templateset.custom_fields.color_progress }};
+        }
+    {% endif %}
+    {% if templateset.custom_fields.color_error %}
+        #ak-errors,
+        .ak-errors {
+            background-color: {{ templateset.custom_fields.color_error }};
+        }
+        .ak-styled-fields input[type="text"].ak-error,
+        .ak-styled-fields input[type="password"].ak-error,
+        .ak-styled-fields input[type="number"].ak-error,
+        .ak-styled-fields input[type="email"].ak-error,
+        .ak-styled-fields textarea.ak-error,
+        .ak-styled-fields select.ak-error,
+        input.ak-error,
+        select.ak-error,
+        textarea.ak-error {
+            border-color: {{ templateset.custom_fields.color_error }};
+        }
+        .ak-err,
+        .ak-color-error,
+        span.ak-error,
+        label.ak-error,
+        .ak-labels-overlaid input.ak-error,
+        .ak-labels-overlaid label.ak-error,
+        .ak-labels-before label.ak-error,
+        .ak-styled-fields select.ak-error,
+        ul.errorlist.ak-errors,
+        ul.errorlist li {
+            color: {{ templateset.custom_fields.color_error }};
+        }
+    {% endif %}
+    </style>
+    {% block script_additions %}{% endblock %}
+</head>
+<body class="ak-pagetype-{{ filename|split:'.'|nth:0 }} ak-lang-{{page.lang.iso_code|default:"unknown"}}{% if page.lang.is_rtl %} ak-rtl{% endif %} ak-no-js">
+    <script type="text/javascript">actionkit.forms.initPage()</script>
+
+    <div class="ak-page-header">
+        <div class="ak-page-header-contents">
+            <h1>{% filter ak_text:"org_name" %}{% client_name %}{% endfilter %}</h1>
+            {% include "./language_picker.html" %}
+            <div class="ak-page-nav"></div>
+        </div>
+    </div>
+
+    <div class="ak-page-container">
+
+        {% block content %}{% endblock %}
+
+        <div class="ak-page-footer">
+            <div class="ak-page-footer-contents">
+                <span>{% filter ak_text:"org_name" %}{% client_name %}{% endfilter %}</span>
+                <span><a href="//example.com/privacy/">{{ 'Privacy'|ak_text:'privacy' }}</a></span>
+                <span><a href="//example.com/contact/">{{ 'Contact'|ak_text:'contact' }}</a></span>
+            </div>
+        </div>
+
+    </div>
+
+    {% block below_form %}
+    <script type="text/javascript">
+        actionkit.forms.contextRoot = '/context/';
+        actionkit.forms.initForm('act');
+    </script>
+    {% endblock %}
+
+    {% if analytics_key %}
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '{{ analytics_key }}', 'auto');
+    ga('send', 'pageview');
+    </script>
+    {% endif %}
+
+</body>
+</html>
