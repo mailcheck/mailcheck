@@ -36,6 +36,9 @@
                 {% include "./country_select.html" %}
             {% case 'state' %} 
                 {% include "./state_select.html" %}
+            {% case 'email' %} 
+                {{ field.input_html }}
+                <div id="hint"></div>
             {% else %}
                 {{ field.input_html }}
         {% endswitch %}
