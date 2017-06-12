@@ -27,6 +27,7 @@
     {% load_js %}
         //ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
         /resources/actionkit.js
+        ../src/mailcheck.js
     {% end %}
 
     <style>
@@ -280,6 +281,36 @@
     <script type="text/javascript">
         actionkit.forms.contextRoot = '/context/';
         actionkit.forms.initForm('act');
+    </script>
+    <script type="text/javascript">
+        // Mailcheck.js doesn't determine how you show the hint. This snippet puts the hint on the page.
+        // ActionKit's email input field ID is #id_email
+            var $email = $('#id_email');
+            var $hint = $('#hint');
+            $email.on('blur',function() {
+                $hint.css('display', 'none').empty();
+                $(this).mailcheck({
+                    suggested: function(element, suggestion) {
+                        if(!$hint.html()) {
+                            // First error - fill in/show entire hint element
+                            var suggestion = "Did you mean <a href='#' class='suggestion'>" + suggestion.full + "</a>?";
+                              
+                            $hint.html(suggestion).fadeIn(150);
+                        } else {
+                            // Subsequent errors
+                            $(".suggestion").html(suggestion.full);
+                        }
+                    }
+                });
+            });
+            $hint.on('click', '.suggestion', function() {
+                // On click, fill in the field with the suggestion and remove the hint
+                $email.val($(".suggestion").text());
+                $hint.fadeOut(200, function() {
+                    $(this).empty();
+                });
+                return false;
+            });	
     </script>
     {% endblock %}
 
