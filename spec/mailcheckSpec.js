@@ -1,7 +1,7 @@
 describe("mailcheck", function() {
   var domains = ['google.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com'];
   var secondLevelDomains = ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"];
-  var topLevelDomains = ['co.uk', 'com', 'org', 'info', 'fr'];
+  var topLevelDomains = ['co.uk', 'com', 'org', 'info', 'fr', 'pl'];
 
   describe("Mailcheck", function(){
     var mailcheck;
@@ -158,7 +158,7 @@ describe("mailcheck", function() {
         expect(mailcheck.suggest('test@gm', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
         expect(mailcheck.suggest('test@gma', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
         expect(mailcheck.suggest('test@gmai', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
-      });      
+      });
     });
 
     describe("mailcheck.splitEmail", function () {
@@ -290,6 +290,7 @@ describe("mailcheck", function() {
         expect(mailcheck.findClosestDomain('ogr', topLevelDomains)).toEqual('org');
         expect(mailcheck.findClosestDomain('ifno', topLevelDomains)).toEqual('info');
         expect(mailcheck.findClosestDomain('com.uk', topLevelDomains)).toEqual('co.uk');
+        expect(mailcheck.findClosestDomain('lp', topLevelDomains)).toEqual('pl');
       });
     });
   });
