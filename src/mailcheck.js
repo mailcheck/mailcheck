@@ -38,17 +38,18 @@ var Mailcheck = {
     opts.secondLevelDomains = opts.secondLevelDomains || Mailcheck.defaultSecondLevelDomains;
     opts.topLevelDomains = opts.topLevelDomains || Mailcheck.defaultTopLevelDomains;
     opts.distanceFunction = opts.distanceFunction || Mailcheck.sift4Distance;
+    opts.sugestOnValid = opts.sugestOnValid || false;
 
     var defaultCallback = function(result){ return result; };
     var suggestedCallback = opts.suggested || defaultCallback;
     var emptyCallback = opts.empty || defaultCallback;
 
-    var result = Mailcheck.suggest(Mailcheck.encodeEmail(opts.email), opts.domains, opts.secondLevelDomains, opts.topLevelDomains, opts.distanceFunction);
+    var result = Mailcheck.suggest(Mailcheck.encodeEmail(opts.email), opts.domains, opts.secondLevelDomains, opts.topLevelDomains, opts.distanceFunction, opts.sugestOnValid);
 
     return result ? suggestedCallback(result) : emptyCallback();
   },
 
-  suggest: function(email, domains, secondLevelDomains, topLevelDomains, distanceFunction) {
+  suggest: function(email, domains, secondLevelDomains, topLevelDomains, distanceFunction, sugestOnValid) {
     email = email.toLowerCase();
 
     var emailParts = this.splitEmail(email);
@@ -56,7 +57,7 @@ var Mailcheck = {
     if (secondLevelDomains && topLevelDomains) {
         // If the email is a valid 2nd-level + top-level, do not suggest anything.
         if (secondLevelDomains.indexOf(emailParts.secondLevelDomain) !== -1 && topLevelDomains.indexOf(emailParts.topLevelDomain) !== -1) {
-            return false;
+            return sugestOnValid ? { address: emailParts.address, domain: emailParts.domain, full: emailParts.address + "@" + emailParts.domain } : false;
         }
     }
 
@@ -65,7 +66,7 @@ var Mailcheck = {
     if (closestDomain) {
       if (closestDomain == emailParts.domain) {
         // The email address exactly matches one of the supplied domains; do not return a suggestion.
-        return false;
+        return sugestOnValid ? { address: emailParts.address, domain: emailParts.domain, full: emailParts.address + "@" + emailParts.domain } : false;
       } else {
         // The email address closely matches one of the supplied domains; return a suggestion
         return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
