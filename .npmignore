@@ -1,0 +1,6 @@
+.DS_Store
+
+npm-debug.log
+spec
+doc
+examples
