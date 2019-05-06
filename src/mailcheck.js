@@ -13,6 +13,7 @@
 var Mailcheck = {
   domainThreshold: 2,
   secondLevelThreshold: 2,
+  prioritizedTopLevelThreshold: 2,
   topLevelThreshold: 2,
 
   defaultDomains: ['msn.com', 'bellsouth.net',
@@ -24,18 +25,21 @@ var Mailcheck = {
     'aim.com', 'rogers.com', 'verizon.net',
     'rocketmail.com', 'google.com', 'optonline.net',
     'sbcglobal.net', 'aol.com', 'me.com', 'btinternet.com',
-    'charter.net', 'shaw.ca'],
+    'charter.net', 'shaw.ca', 'stadt-nuernberg.de'],
 
-  defaultSecondLevelDomains: ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"],
+  defaultSecondLevelDomains: ["yahoo", "hotmail", "mail", "live", "outlook", "gmx", "stadt-nuernberg"],
+
+  defaultPrioritizedTopLevelDomains: ["com"],
 
   defaultTopLevelDomains: ["com", "com.au", "com.tw", "ca", "co.nz", "co.uk", "de",
     "fr", "it", "ru", "net", "org", "edu", "gov", "jp", "nl", "kr", "se", "eu",
     "ie", "co.il", "us", "at", "be", "dk", "hk", "es", "gr", "ch", "no", "cz",
-    "in", "net", "net.au", "info", "biz", "mil", "co.jp", "sg", "hu", "uk"],
+    "in", "net", "net.au", "info", "biz", "mil", "co.jp", "sg", "hu"],
 
   run: function(opts) {
     opts.domains = opts.domains || Mailcheck.defaultDomains;
     opts.secondLevelDomains = opts.secondLevelDomains || Mailcheck.defaultSecondLevelDomains;
+    opts.prioritizedTopLevelDomains = opts.prioritizedTopLevelDomains || Mailcheck.defaultPrioritizedTopLevelDomains;
     opts.topLevelDomains = opts.topLevelDomains || Mailcheck.defaultTopLevelDomains;
     opts.distanceFunction = opts.distanceFunction || Mailcheck.sift4Distance;
 
@@ -43,19 +47,30 @@ var Mailcheck = {
     var suggestedCallback = opts.suggested || defaultCallback;
     var emptyCallback = opts.empty || defaultCallback;
 
-    var result = Mailcheck.suggest(Mailcheck.encodeEmail(opts.email), opts.domains, opts.secondLevelDomains, opts.topLevelDomains, opts.distanceFunction);
+    var result = Mailcheck.suggest(Mailcheck.encodeEmail(opts.email), opts.domains, opts.secondLevelDomains, opts.prioritizedTopLevelDomains, opts.topLevelDomains, opts.distanceFunction);
 
     return result ? suggestedCallback(result) : emptyCallback();
   },
 
-  suggest: function(email, domains, secondLevelDomains, topLevelDomains, distanceFunction) {
+  suggest: function(
+    email,
+    domains,
+    secondLevelDomains,
+    prioritizedTopLevelDomains,
+    topLevelDomains,
+    distanceFunction
+  ) {
     email = email.toLowerCase();
 
     var emailParts = this.splitEmail(email);
 
-    if (secondLevelDomains && topLevelDomains) {
+    if (secondLevelDomains && prioritizedTopLevelDomains && topLevelDomains) {
         // If the email is a valid 2nd-level + top-level, do not suggest anything.
-        if (secondLevelDomains.indexOf(emailParts.secondLevelDomain) !== -1 && topLevelDomains.indexOf(emailParts.topLevelDomain) !== -1) {
+        if (
+          secondLevelDomains.indexOf(emailParts.secondLevelDomain) !== -1 &&
+          prioritizedTopLevelDomains.indexOf(emailParts.topLevelDomain) !== -1 &&
+          topLevelDomains.indexOf(emailParts.topLevelDomain) !== -1
+        ) {
             return false;
         }
     }
@@ -74,9 +89,10 @@ var Mailcheck = {
 
     // The email address does not closely match one of the supplied domains
     var closestSecondLevelDomain = this.findClosestDomain(emailParts.secondLevelDomain, secondLevelDomains, distanceFunction, this.secondLevelThreshold);
-    var closestTopLevelDomain    = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains, distanceFunction, this.topLevelThreshold);
+    var closestPrioritizedTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, prioritizedTopLevelDomains, distanceFunction, this.prioritizedTopLevelThreshold);
+    var closestTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains, distanceFunction, this.topLevelThreshold);
 
-    if (emailParts.domain) {
+    if (emailParts.domain && emailParts.secondLevelDomain) {
       closestDomain = emailParts.domain;
       var rtrn = false;
 
@@ -86,13 +102,20 @@ var Mailcheck = {
         rtrn = true;
       }
 
-      if(closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain && emailParts.secondLevelDomain !== '') {
+      if(
+        closestPrioritizedTopLevelDomain &&
+        closestPrioritizedTopLevelDomain != emailParts.topLevelDomain &&
+        closestTopLevelDomain != emailParts.topLevelDomain
+      ) {
+        closestDomain = closestDomain.replace('.' + emailParts.topLevelDomain, '.' + closestPrioritizedTopLevelDomain);
+        rtrn = true;
+      } else if(closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain) {
         // The email address may have a mispelled top-level domain; return a suggestion
-        closestDomain = closestDomain.replace(new RegExp(emailParts.topLevelDomain + "$"), closestTopLevelDomain);
+        closestDomain = closestDomain.replace('.' + emailParts.topLevelDomain, '.' + closestTopLevelDomain);
         rtrn = true;
       }
 
-      if (rtrn) {
+      if (rtrn == true) {
         return { address: emailParts.address, domain: closestDomain, full: emailParts.address + "@" + closestDomain };
       }
     }
@@ -107,7 +130,7 @@ var Mailcheck = {
   findClosestDomain: function(domain, domains, distanceFunction, threshold) {
     threshold = threshold || this.topLevelThreshold;
     var dist;
-    var minDist = Infinity;
+    var minDist = 99;
     var closestDomain = null;
 
     if (!domain || !domains) {
@@ -135,105 +158,64 @@ var Mailcheck = {
     }
   },
 
-  sift4Distance: function(s1, s2, maxOffset) {
-    // sift4: https://siderite.blogspot.com/2014/11/super-fast-and-accurate-string-distance.html
-    if (maxOffset === undefined) {
-        maxOffset = 5; //default
-    }
+  sift4Distance: function(s1, s2) {
+      if (!s1||!s1.length) {
+          if (!s2) {
+              return 0;
+          }
+          return s2.length;
+      }
 
-    if (!s1||!s1.length) {
-        if (!s2) {
-            return 0;
-        }
-        return s2.length;
-    }
+      if (!s2||!s2.length) {
+          return s1.length;
+      }
 
-    if (!s2||!s2.length) {
-        return s1.length;
-    }
+      var l1=s1.length;
+      var l2=s2.length;
 
-    var l1=s1.length;
-    var l2=s2.length;
+      var c1 = 0;  //cursor for string 1
+      var c2 = 0;  //cursor for string 2
+      var lcss = 0;  //largest common subsequence
+      var local_cs = 0; //local common substring
+      var maxOffset = 5;
 
-    var c1 = 0;  //cursor for string 1
-    var c2 = 0;  //cursor for string 2
-    var lcss = 0;  //largest common subsequence
-    var local_cs = 0; //local common substring
-    var trans = 0;  //number of transpositions ('ab' vs 'ba')
-    var offset_arr=[];  //offset pair array, for computing the transpositions
-
-    while ((c1 < l1) && (c2 < l2)) {
-        if (s1.charAt(c1) == s2.charAt(c2)) {
-            local_cs++;
-            var isTrans=false;
-            //see if current match is a transposition
-            var i=0;
-            while (i<offset_arr.length) {
-                var ofs=offset_arr[i];
-                if (c1<=ofs.c1 || c2 <= ofs.c2) {
-                    // when two matches cross, the one considered a transposition is the one with the largest difference in offsets
-                    isTrans=Math.abs(c2-c1)>=Math.abs(ofs.c2-ofs.c1);
-                    if (isTrans)
-                    {
-                        trans++;
-                    } else
-                    {
-                        if (!ofs.trans) {
-                            ofs.trans=true;
-                            trans++;
-                        }
+      while ((c1 < l1) && (c2 < l2)) {
+          if (s1.charAt(c1) == s2.charAt(c2)) {
+              local_cs++;
+          } else {
+              lcss+=local_cs;
+              local_cs=0;
+              if (c1!=c2) {
+                  c1=c2=Math.max(c1,c2); //using max to bypass the need for computer transpositions ('ab' vs 'ba')
+              }
+              for (var i = 0; i < maxOffset && (c1+i<l1 || c2+i<l2); i++) {
+                  var matches1 = (c1 + i < l1) && (s1.charAt(c1 + i) == s2.charAt(c2));
+                  var matches2 = (c2 + i < l2) && (s1.charAt(c1) == s2.charAt(c2 + i));
+                  if (matches1 || matches2) {
+                    if (matches1) {
+                      local_cs++;
+                      c1 += i;
+                      if (i == 0) {
+                        break;
+                      }
+                    }
+                    if (matches2) {
+                      local_cs += matches1 ? 0.5 : 1;
+                      c2 += i;
                     }
                     break;
-                } else {
-                    if (c1>ofs.c2 && c2>ofs.c1) {
-                        offset_arr.splice(i,1);
-                    } else {
-                        i++;
-                    }
-                }
-            }
-            offset_arr.push({
-                c1:c1,
-                c2:c2,
-                trans:isTrans
-            });
-        } else {
-            lcss+=local_cs;
-            local_cs=0;
-            if (c1!=c2) {
-                c1=c2=Math.min(c1,c2);  //using min allows the computation of transpositions
-            }
-            //if matching characters are found, remove 1 from both cursors (they get incremented at the end of the loop)
-            //so that we can have only one code block handling matches 
-            for (var j = 0; j < maxOffset && (c1+j<l1 || c2+j<l2); j++) {
-                if ((c1 + j < l1) && (s1.charAt(c1 + j) == s2.charAt(c2))) {
-                    c1+= j-1; 
-                    c2--;
-                    break;
-                }
-                if ((c2 + j < l2) && (s1.charAt(c1) == s2.charAt(c2 + j))) {
-                    c1--;
-                    c2+= j-1;
-                    break;
-                }
-            }
-        }
-        c1++;
-        c2++;
-        // this covers the case where the last match is on the last token in list, so that it can compute transpositions correctly
-        if ((c1 >= l1) || (c2 >= l2)) {
-            lcss+=local_cs;
-            local_cs=0;
-            c1=c2=Math.min(c1,c2);
-        }
-    }
-    lcss+=local_cs;
-    return Math.round(Math.max(l1,l2)- lcss +trans); //add the cost of transpositions to the final result
+                  }
+              }
+          }
+          c1++;
+          c2++;
+      }
+      lcss+=local_cs;
+      return Math.max(l1,l2)- lcss;
   },
 
   splitEmail: function(email) {
-	email = email !== null ? (email.replace(/^\s*/, '').replace(/\s*$/, '')) : null; // trim() not exist in old IE!
-    var parts = email.split('@');
+    var parts = email.trim().split('@');
 
     if (parts.length < 2) {
       return false;
