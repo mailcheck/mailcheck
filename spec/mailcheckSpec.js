@@ -2,6 +2,7 @@ describe("mailcheck", function() {
   var domains = ['google.com', 'gmail.com', 'emaildomain.com', 'comcast.net', 'facebook.com', 'msn.com'];
   var secondLevelDomains = ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"];
   var topLevelDomains = ['co.uk', 'com', 'org', 'info', 'fr'];
+  var prioritizedTopLevelDomains = ['com', 'net', 'de', 'fr', 'es', 'it', 'nl', 'be', 'at', 'sv', 'pl'];
 
   describe("Mailcheck", function(){
     var mailcheck;
@@ -39,8 +40,8 @@ describe("mailcheck", function() {
       it("calls the 'empty' callback with the element when there's no suggestion", function () {
         mailcheck.run({
           email: 'contact@kicksend.com',
-          suggested:suggestedSpy,
-          empty:emptySpy
+          suggested: suggestedSpy,
+          empty: emptySpy
         });
 
         expect(suggestedSpy).not.toHaveBeenCalled();
@@ -155,9 +156,9 @@ describe("mailcheck", function() {
       });
 
       it("will not offer suggestions for unrecognised 2ld's without a tld", function() {
-        expect(mailcheck.suggest('test@gm', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
-        expect(mailcheck.suggest('test@gma', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
-        expect(mailcheck.suggest('test@gmai', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
+        expect(mailcheck.suggest('test@gm', domains, secondLevelDomains, prioritizedTopLevelDomains, topLevelDomains)).toBeFalsy();
+        expect(mailcheck.suggest('test@gma', domains, secondLevelDomains, prioritizedTopLevelDomains, topLevelDomains)).toBeFalsy();
+        expect(mailcheck.suggest('test@gmai', domains, secondLevelDomains, prioritizedTopLevelDomains, topLevelDomains)).toBeFalsy();
       });      
     });
 
@@ -290,6 +291,13 @@ describe("mailcheck", function() {
         expect(mailcheck.findClosestDomain('ogr', topLevelDomains)).toEqual('org');
         expect(mailcheck.findClosestDomain('ifno', topLevelDomains)).toEqual('info');
         expect(mailcheck.findClosestDomain('com.uk', topLevelDomains)).toEqual('co.uk');
+      });
+      it("returns the most similar prioritized top-level domain", function () {
+        expect(mailcheck.findClosestDomain('cmo', prioritizedTopLevelDomains)).toEqual('com');
+        expect(mailcheck.findClosestDomain('net', prioritizedTopLevelDomains)).toEqual('net');
+        expect(mailcheck.findClosestDomain('de', prioritizedTopLevelDomains)).toEqual('de');
+        expect(mailcheck.findClosestDomain('es', prioritizedTopLevelDomains)).toEqual('es');
+        expect(mailcheck.findClosestDomain('sv', prioritizedTopLevelDomains)).toEqual('sv');
       });
     });
   });
