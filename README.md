@@ -206,7 +206,7 @@ Related Links
 -------------
 
 - [Official Mailcheck Ports](https://github.com/mailcheck/)
-- [Two ways to reduce bounced welcome emails](http://blog.postmarkapp.com/post/19685472721/two-ways-to-reduce-bounced-welcome-emails) by [Postmark](http://postmark.com)
+- [Two ways to reduce bounced welcome emails](https://postmarkapp.com/blog/two-ways-to-reduce-bounced-welcome-emails) by [Postmark](https://postmarkapp.com)
 - [MooTools port](https://github.com/DimitarChristoff/mailcheck) by [Dimitar Christoff](https://github.com/DimitarChristoff)
 - [WordPress Plugin](https://github.com/bmoredrew/mailcheck-wordpress-plugin/) by [Drew Poland](https://github.com/bmoredrew)
 - [WordPress e-Commerce Plugin](http://wordpress.org/extend/plugins/e-commerce-mailcheck/)
