@@ -24,7 +24,7 @@ var Mailcheck = {
     'aim.com', 'rogers.com', 'verizon.net',
     'rocketmail.com', 'google.com', 'optonline.net',
     'sbcglobal.net', 'aol.com', 'me.com', 'btinternet.com',
-    'charter.net', 'shaw.ca'],
+    'charter.net', 'shaw.ca', 'hey.com'],
 
   defaultSecondLevelDomains: ["yahoo", "hotmail", "mail", "live", "outlook", "gmx"],
 
