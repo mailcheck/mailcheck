@@ -21,7 +21,7 @@ See it live in action [here](https://www.kickstarter.com/signup).
 Installation
 ------------
 
-For instant use, download the minified library [mailcheck.min.js](https://raw.githubusercontent.com/mailcheck/mailcheck/d25dc9a119ca844bb35b1baf341cca0a634e4ac9/src/mailcheck.min.js) into your javascripts directory. [mailcheck.js](https://raw.githubusercontent.com/mailcheck/mailcheck/d25dc9a119ca844bb35b1baf341cca0a634e4ac9/src/mailcheck.js) is also available unminimised if you want to hack on it, or have your own minimizer.
+For instant use, download the library `mailcheck.js` into your javascript directory.
 
 #### Bower ####
 
@@ -42,7 +42,7 @@ First, include jQuery and Mailcheck into the page.
 
 ```html
 <script src="jquery.min.js"></script>
-<script src="mailcheck.min.js"></script>
+<script src="mailcheck.js"></script>
 ```
 
 Have a text field.
@@ -183,7 +183,6 @@ Let's make Mailcheck awesome. We're on the lookout for maintainers and [contribu
 And do send in those pull requests! To get them accepted, please:
 
 - Test your code. Add test cases to `spec/mailcheckSpec.js`, and run it across browsers (yes, including IE).
-- Minify the plugin by running `grunt` in the Mailcheck directory (npm install should have installed a git pre-commit hook that takes care of this for you).
 
 Upcoming features, bugs and feature requests are managed in [Issues](https://github.com/mailcheck/mailcheck/issues).
 
