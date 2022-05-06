@@ -48,10 +48,5 @@
     "test": "grunt test",
     "prepublish": "grunt test",
     "uglify": "grunt uglify"
-  },
-  "config": {
-    "ghooks": {
-      "pre-commit": "grunt"
-    }
   }
 }

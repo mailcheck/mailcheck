@@ -2,8 +2,7 @@
   "name": "mailcheck",
   "main": "src/mailcheck.js",
   "scripts": [
-    "src/mailcheck.js",
-    "src/mailcheck.min.js"
+    "src/mailcheck.js"
   ],
   "ignore": [
     "**/.*",
