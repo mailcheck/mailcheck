@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mailcheck plain JavaScript test fixture</title>
+  <script src="/src/mailcheck.js"></script>
+</head>
+<body>
+  <label for="email">Email</label>
+  <input id="email" type="email">
+  <button type="button">Next</button>
+  <p id="suggestion" aria-live="polite"></p>
+  <script>
+    var input = document.getElementById('email');
+    var output = document.getElementById('suggestion');
+    input.addEventListener('blur', function() {
+      Mailcheck.run({
+        email: input.value,
+        suggested: function(suggestion) {
+          output.textContent = 'Did you mean ' + suggestion.full + '?';
+        },
+        empty: function() {
+          output.textContent = '';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

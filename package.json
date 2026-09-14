@@ -31,23 +31,33 @@
   "docs": "https://github.com/mailcheck/mailcheck/blob/master/README.md",
   "dependencies": {},
   "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/jquery": "3.5.34",
+    "jquery": "3.7.1",
+    "jquery-legacy": "npm:jquery@1.12.4",
+    "esbuild": "0.25.10",
+    "typescript": "^6.0.3",
     "ghooks": "^1.3.2",
-    "grunt": "~0.4",
-    "grunt-cli": "~0.1.9",
-    "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-uglify": "~0.2",
-    "grunt-jasmine-node": "~0.1.0",
-    "jasmine-node": "1.x"
+    "grunt": "^1.6.1",
+    "grunt-cli": "^1.5.0"
   },
   "main": "src/mailcheck.js",
+  "types": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/mailcheck/mailcheck.git"
   },
   "scripts": {
-    "test": "grunt test",
-    "prepublish": "grunt test",
-    "uglify": "grunt uglify"
+    "test": "node script/test-all.js",
+    "test:min": "node script/test-all.js --min",
+    "test:types": "tsc -p spec/types/tsconfig.json && tsc -p spec/types/tsconfig.jquery.json",
+    "test:package": "node script/test-package.js",
+    "test:e2e": "playwright test",
+    "test:ci": "npm run build:check && npm test && npm run test:types && npm run test:package && npm run test:e2e",
+    "build": "node script/build.js",
+    "build:check": "node script/build.js --check",
+    "prepublishOnly": "npm run build:check && npm test && npm run test:types",
+    "uglify": "npm run build"
   },
   "config": {
     "ghooks": {

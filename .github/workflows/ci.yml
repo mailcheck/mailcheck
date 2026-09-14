@@ -1,0 +1,106 @@
+name: Mailcheck checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mailcheck-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compatibility:
+    name: Package and API / Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      # Disable dependency lifecycle scripts, including the legacy Git hook installer.
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run build:check
+      - run: npm test
+      - run: npm run test:types
+      - run: npm run test:package
+
+  browser:
+    name: Browser / ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npx --no-install playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run test:e2e -- --project=${{ matrix.browser }}
+      - name: Upload failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-failure-${{ matrix.browser }}
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  notify-agenthook:
+    name: Report result to agenthook
+    needs: [compatibility, browser]
+    # This fork's pushes can use its secrets; upstream and PR jobs remain secret-free.
+    if: ${{ always() && github.repository == 'skyfallsin/mailcheck' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Send CI completion
+        env:
+          AGENTHOOK_URL: ${{ secrets.AGENTHOOK_URL }}
+          AGENTHOOK_TOKEN: ${{ secrets.AGENTHOOK_TOKEN }}
+          AGENTHOOK_TOPIC: ${{ secrets.AGENTHOOK_TOPIC }}
+          COMPATIBILITY_RESULT: ${{ needs.compatibility.result }}
+          BROWSER_RESULT: ${{ needs.browser.result }}
+        run: |
+          set -euo pipefail
+          test -n "$AGENTHOOK_URL" && test -n "$AGENTHOOK_TOKEN" && test -n "$AGENTHOOK_TOPIC"
+          status=success
+          if [[ "$COMPATIBILITY_RESULT" == failure || "$BROWSER_RESULT" == failure ]]; then
+            status=failure
+          elif [[ "$COMPATIBILITY_RESULT" != success || "$BROWSER_RESULT" != success ]]; then
+            status=incomplete
+          fi
+          payload=$(jq -nc \
+            --arg status "$status" \
+            --arg repo "$GITHUB_REPOSITORY" \
+            --arg branch "$GITHUB_REF_NAME" \
+            --arg sha "$GITHUB_SHA" \
+            --arg run_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --arg compatibility "$COMPATIBILITY_RESULT" \
+            --arg browser "$BROWSER_RESULT" \
+            '{kind:"ci",status:$status,repository:$repo,branch:$branch,sha:$sha,run_url:$run_url,checks:{compatibility:$compatibility,browser:$browser}}')
+          # Pass secret values through stdin, not command arguments or logs.
+          printf 'url = "%s/v1/webhooks/%s"\nheader = "Authorization: Bearer %s"\n' \
+            "$AGENTHOOK_URL" "$AGENTHOOK_TOPIC" "$AGENTHOOK_TOKEN" |
+            curl --config - --fail --silent --show-error --retry 3 \
+              --connect-timeout 10 --max-time 30 --request POST \
+              --header 'Content-Type: application/json' \
+              --data "$payload" --output /dev/null
