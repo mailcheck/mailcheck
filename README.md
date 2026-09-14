@@ -282,7 +282,8 @@ Tests
 With Node 20.19+:
 
 - `npm test`: run the existing vendored Jasmine core specs and the new correctness
-  cases against both source and minified builds. No install is needed for these tests.
+  cases against both source and minified builds, plus local release-packaging tests.
+  Packaging tests require the installed development dependencies.
 - `npm run test:types`: check strict CommonJS, ESM, browser-global, and opt-in jQuery
   type fixtures, including expected compile errors and the real jQuery declarations.
 - `npm run test:package`: pack Mailcheck, install the tarball into an isolated
@@ -329,6 +330,37 @@ callback fails its own job rather than hiding a delivery failure.
 The original `spec/spec_runner.html` can also still be opened manually;
 Internet Explorer is not covered by the automated suite.
 
+Cutting a release
+-----------------
+
+`cut_release.sh` builds a **local npm-compatible archive** in `Releases/`:
+
+```sh
+./cut_release.sh 2.0.0-beta.1   # Releases/mailcheck-2.0.0-beta.1.tgz
+./cut_release.sh 2.0.0          # Releases/mailcheck-2.0.0.tgz
+```
+
+Use `--dry-run` to preview the destination. Development dependencies must already
+be installed; the script does not install anything or need an npm login.
+
+The archive uses the current checkout, including local changes. The requested
+version is applied to the package manifest, jQuery manifest, and source banner
+in a temporary copy, and the minified file is rebuilt with the normal build code.
+The checkout's manifests, lockfile, and source versions stay unchanged.
+
+Only runtime files, TypeScript declarations, manifests, README, and license are
+included. Tests, tools, development dependencies, and old vendored jQuery files
+are not bundled. Packing runs offline with lifecycle scripts disabled. Existing
+archives are never overwritten.
+
+This command does **not** publish, commit, tag, push, or create a GitHub Release.
+Local maintainer metadata does not grant npm publishing access.
+
+`npm run test:release` builds and inspects real prerelease and regular-release
+archives in temporary directories, verifies their version metadata and runtime,
+and checks that checkout files are preserved and existing archives cannot be
+overwritten. These tests run as part of `npm test` and GitHub Actions.
+
 Contributing
 ------------
 
@@ -374,6 +406,7 @@ Core Team
 
 - Derrick Ko, [@derrickko](http://twitter.com/derrickko). Created Mailcheck.
 - Wei Lu, [Hive](https://www.hivewallet.com/), [@luweidewei](http://twitter.com/luweidewei).
+- Pradeep Elankumaran, [@skyfallsin](https://github.com/skyfallsin). Maintainer.
 
 License
 -------

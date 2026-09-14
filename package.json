@@ -18,6 +18,10 @@
       "name": "Wei Lu",
       "url": "http://neo.com",
       "email": "wei@neo.com"
+    },
+    {
+      "name": "Pradeep Elankumaran",
+      "url": "https://github.com/skyfallsin"
     }
   ],
   "licenses": [
@@ -48,7 +52,8 @@
     "url": "git://github.com/mailcheck/mailcheck.git"
   },
   "scripts": {
-    "test": "node script/test-all.js",
+    "test": "node script/test-all.js && npm run test:release",
+    "test:release": "node --test spec/release.test.js",
     "test:min": "node script/test-all.js --min",
     "test:types": "tsc -p spec/types/tsconfig.json && tsc -p spec/types/tsconfig.jquery.json",
     "test:package": "node script/test-package.js",
