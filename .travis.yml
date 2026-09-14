@@ -1,2 +1,8 @@
 language: node_js
-script: phantomjs spec/lib/run_jasmine_test.coffee spec/spec_runner.html
+node_js:
+  - "22"
+  - "24"
+script:
+  - npm run build:check
+  - npm test
+  - npm run test:types

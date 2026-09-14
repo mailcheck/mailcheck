@@ -1,32 +1,14 @@
+# Compatibility entry points for existing contributors and the pre-commit hook.
+# Use the same build and tests as npm, including the checked-in browser artifact.
 module.exports = (grunt) ->
+  run = (args) ->
+    require('child_process').execFileSync process.execPath, args, stdio: 'inherit'
 
-  grunt.initConfig
-    pkg: grunt.file.readJSON('package.json'),
-    jshint:
-      files: 'src/mailcheck.js'
-      options:
-        jshintrc: 'jshint.json'
+  grunt.registerTask 'uglify', -> run ['script/build.js']
+  grunt.registerTask 'test', -> run ['script/test-all.js']
+  grunt.registerTask 'types', ->
+    tsc = require.resolve 'typescript/bin/tsc'
+    run [tsc, '-p', 'spec/types/tsconfig.json']
+    run [tsc, '-p', 'spec/types/tsconfig.jquery.json']
 
-    uglify:
-      options:
-        banner: '/*! <%= pkg.name %> v<%= pkg.version %> @licence MIT */'
-      main:
-        files:
-          'src/mailcheck.min.js': 'src/mailcheck.js'
-
-    jasmine_node:
-      specNameMatcher: "spec"
-      requirejs: false
-      forceExit: true
-      jUnit:
-        report: false
-        savePath : "spec"
-        useDotNotation: true
-        consolidate: true
-
-  grunt.loadNpmTasks 'grunt-contrib-uglify'
-  grunt.loadNpmTasks 'grunt-jasmine-node'
-  grunt.loadNpmTasks 'grunt-contrib-jshint'
-
-  grunt.registerTask 'default', ['jshint', 'jasmine_node', 'uglify']
-  grunt.registerTask 'test', ['jshint', 'jasmine_node']
+  grunt.registerTask 'default', ['uglify', 'test', 'types']

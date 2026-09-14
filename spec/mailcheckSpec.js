@@ -22,7 +22,7 @@ describe("mailcheck", function() {
 
       it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
         mailcheck.run({
-          email: 'test@gmail.co',
+          email: 'test@gmail.con',
           suggested:suggestedSpy,
           empty:emptySpy
         });
@@ -50,7 +50,7 @@ describe("mailcheck", function() {
 
       it("returns the result when 'suggested' callback is not defined", function () {
         var result = mailcheck.run({
-          email: 'test@gmail.co'
+          email: 'test@gmail.con'
         });
 
         expect(result).toEqual({
@@ -90,7 +90,7 @@ describe("mailcheck", function() {
 
     describe("return value", function () {
       it("is a hash representing the email address", function () {
-        var result = mailcheck.suggest('test@gmail.co', domains);
+        var result = mailcheck.suggest('test@gmail.con', domains);
 
         expect(result).toEqual({
           address: 'test',
@@ -110,16 +110,17 @@ describe("mailcheck", function() {
 
     describe("cases", function () {
       it("pass", function () {
-        expect(mailcheck.suggest('test@gmailc.om', domains).domain).toEqual('gmail.com');
-        expect(mailcheck.suggest('test@emaildomain.co', domains).domain).toEqual('emaildomain.com');
+        // .om and .co are real endings, not evidence of a typo.
+        expect(mailcheck.suggest('test@gmailc.om', domains)).toBeFalsy();
+        expect(mailcheck.suggest('test@emaildomain.co', domains)).toBeFalsy();
         expect(mailcheck.suggest('test@gmail.con', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@gnail.con', domains).domain).toEqual('gmail.com');
         expect(mailcheck.suggest('test@GNAIL.con', domains).domain).toEqual('gmail.com');
-        expect(mailcheck.suggest('test@#gmail.com', domains).domain).toEqual('gmail.com');
+        expect(mailcheck.suggest('test@#gmail.com', domains)).toBeFalsy();
         expect(mailcheck.suggest('test@comcast.nry', domains).domain).toEqual('comcast.net');
 
         expect(mailcheck.suggest('test@homail.con', domains, secondLevelDomains, topLevelDomains).domain).toEqual('hotmail.com');
-        expect(mailcheck.suggest('test@hotmail.co', domains, secondLevelDomains, topLevelDomains).domain).toEqual('hotmail.com');
+        expect(mailcheck.suggest('test@hotmail.co', domains, secondLevelDomains, topLevelDomains)).toBeFalsy();
         expect(mailcheck.suggest('test@yajoo.com', domains, secondLevelDomains, topLevelDomains).domain).toEqual('yahoo.com');
         expect(mailcheck.suggest('test@randomsmallcompany.cmo', domains, secondLevelDomains, topLevelDomains).domain).toEqual('randomsmallcompany.com');
 
@@ -317,7 +318,7 @@ describe("mailcheck", function() {
     });
 
     it("calls the 'suggested' callback with the element and result when there's a suggestion", function () {
-      $("#test-input").val('test@gmail.co').mailcheck({
+      $("#test-input").val('test@gmail.con').mailcheck({
         suggested: suggestedSpy,
         empty: emptySpy
       });

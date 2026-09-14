@@ -7,7 +7,7 @@
 
 <body>
 <h1>Mailcheck</h1>
-<p>For a demo, enter a@hotmale.com or b@gmail.co in the field below:</p>
+<p>For a demo, enter a@hotmale.com or b@gmail.con in the field below:</p>
 <input id="email" name="email" type="email" />
 <input name="Submit" type="submit" />
 <p id="suggestion"></p>
@@ -25,7 +25,8 @@ $('#email').on('blur', function(event) {
     suggested: function(element, suggestion) {
       // callback code
       console.log("suggestion ", suggestion.full);
-      $('#suggestion').html("Did you mean <b><i>" + suggestion.full + "</b></i>?");
+      $('#suggestion').empty().append('Did you mean ',
+        $('<b>').append($('<i>').text(suggestion.full)), '?');
     },
     empty: function(element) {
       // callback code
