@@ -63,3 +63,44 @@ jobs:
           path: test-results/
           if-no-files-found: ignore
           retention-days: 7
+
+  notify-agenthook:
+    name: Report result to agenthook
+    needs: [compatibility, browser]
+    # This fork's pushes can use its secrets; upstream and PR jobs remain secret-free.
+    if: ${{ always() && github.repository == 'skyfallsin/mailcheck' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Send CI completion
+        env:
+          AGENTHOOK_URL: ${{ secrets.AGENTHOOK_URL }}
+          AGENTHOOK_TOKEN: ${{ secrets.AGENTHOOK_TOKEN }}
+          AGENTHOOK_TOPIC: ${{ secrets.AGENTHOOK_TOPIC }}
+          COMPATIBILITY_RESULT: ${{ needs.compatibility.result }}
+          BROWSER_RESULT: ${{ needs.browser.result }}
+        run: |
+          set -euo pipefail
+          test -n "$AGENTHOOK_URL" && test -n "$AGENTHOOK_TOKEN" && test -n "$AGENTHOOK_TOPIC"
+          status=success
+          if [[ "$COMPATIBILITY_RESULT" == failure || "$BROWSER_RESULT" == failure ]]; then
+            status=failure
+          elif [[ "$COMPATIBILITY_RESULT" != success || "$BROWSER_RESULT" != success ]]; then
+            status=incomplete
+          fi
+          payload=$(jq -nc \
+            --arg status "$status" \
+            --arg repo "$GITHUB_REPOSITORY" \
+            --arg branch "$GITHUB_REF_NAME" \
+            --arg sha "$GITHUB_SHA" \
+            --arg run_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --arg compatibility "$COMPATIBILITY_RESULT" \
+            --arg browser "$BROWSER_RESULT" \
+            '{kind:"ci",status:$status,repository:$repo,branch:$branch,sha:$sha,run_url:$run_url,checks:{compatibility:$compatibility,browser:$browser}}')
+          # Pass secret values through stdin, not command arguments or logs.
+          printf 'url = "%s/v1/webhooks/%s"\nheader = "Authorization: Bearer %s"\n' \
+            "$AGENTHOOK_URL" "$AGENTHOOK_TOPIC" "$AGENTHOOK_TOKEN" |
+            curl --config - --fail --silent --show-error --retry 3 \
+              --connect-timeout 10 --max-time 30 --request POST \
+              --header 'Content-Type: application/json' \
+              --data "$payload" --output /dev/null
