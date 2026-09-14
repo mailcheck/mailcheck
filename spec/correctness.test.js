@@ -32,6 +32,52 @@ for (const email of legitimate) {
   test('leaves ' + email + ' alone', () => assert.equal(Mailcheck.run({ email }), undefined));
 }
 
+test('completes an exact known domain name with a missing ending', () => {
+  for (const [email, full] of [
+    ['sample@gmail', 'sample@gmail.com'],
+    ['Sample+Tag@GMAIL', 'Sample+Tag@gmail.com'],
+    ['sample@gmail.', 'sample@gmail.com'],
+    ['person@icloud', 'person@icloud.com'],
+    ['person@proton', 'person@proton.me']
+  ]) {
+    const suggestion = Mailcheck.run({ email });
+    assert.equal(suggestion.full, full);
+    assert.equal(Mailcheck.run({ email: suggestion.full }), undefined);
+  }
+});
+
+test('completion uses existing domain lists and the existing suggested callback', () => {
+  assert.deepEqual(Mailcheck.suggest('sample@gmail', ['gmail.com']), {
+    address: 'sample', domain: 'gmail.com', full: 'sample@gmail.com'
+  });
+  assert.equal(Mailcheck.run({ email: 'sample@gmail', domains: [] }), undefined);
+  assert.equal(Mailcheck.run({ email: 'sample@gmail', domains: ['custom.com'] }), undefined);
+  assert.equal(Mailcheck.run({
+    email: 'Person@custom', domains: ['custom.co.uk'],
+    suggested: suggestion => suggestion.full,
+    empty: () => 'empty'
+  }), 'Person@custom.co.uk');
+});
+
+test('completion abstains on ambiguous endings, prefixes, and unknown names', () => {
+  for (const domains of [['gmail.com', 'gmail.co.uk'], ['gmail.co.uk', 'gmail.com']]) {
+    assert.equal(Mailcheck.run({ email: 'sample@gmail', domains }), undefined);
+    assert.equal(Mailcheck.run({ email: 'sample@gmail.', domains }), undefined);
+  }
+  assert.equal(Mailcheck.run({ email: 'sample@gmail', domains: ['gmail.com', 'gmail.com'] }).full, 'sample@gmail.com');
+  for (const domain of ['g', 'gm', 'gmai', 'gmial', 'unknowncompany', 'gmail..', 'gmail.-', '-gmail', 'gmail-', 'xn--bcher-kva']) {
+    assert.equal(Mailcheck.run({ email: 'sample@' + domain }), undefined, domain);
+  }
+  // Respect an explicitly configured single-label domain rather than extending it.
+  assert.equal(Mailcheck.run({ email: 'sample@gmail', domains: ['gmail', 'gmail.com'] }), undefined);
+});
+
+test('completion retains the encoding contract of both entry points', () => {
+  const local = '<tag>Sample+Tag';
+  assert.equal(Mailcheck.suggest(local + '@gmail', ['gmail.com']).address, local);
+  assert.equal(Mailcheck.run({ email: local + '@gmail' }).address, Mailcheck.encodeEmail(local));
+});
+
 test('preserves local-part case and the existing encoding contract of each entry point', () => {
   for (const local of ['Person.Name+Tag', 'François', 'a%%^^``{{||}}', '"Foo@Bar"', '<script>alert("x")</script>']) {
     const email = local + '@gmial.com';
@@ -105,6 +151,63 @@ test('custom distance and callback return values remain supported', () => {
   }), 'person@custom.com');
   assert.ok(calls > 0);
   assert.equal(Mailcheck.run({ email: 'person@hey.com', empty: () => 'empty' }), 'empty');
+});
+
+test('callbacks retain their argument counts, result keys, and exactly-once dispatch', () => {
+  const suggestedCalls = [];
+  const emptyCalls = [];
+  const options = {
+    email: 'Person@gmial.com',
+    suggested: function() { suggestedCalls.push(Array.from(arguments)); return 'suggested-result'; },
+    empty: function() { emptyCalls.push(Array.from(arguments)); return 'empty-result'; }
+  };
+  assert.equal(Mailcheck.run(options), 'suggested-result');
+  assert.deepEqual(suggestedCalls, [[{ address: 'Person', domain: 'gmail.com', full: 'Person@gmail.com' }]]);
+  assert.deepEqual(emptyCalls, []);
+  options.email = 'Person@hey.com';
+  assert.equal(Mailcheck.run(options), 'empty-result');
+  assert.equal(suggestedCalls.length, 1);
+  assert.deepEqual(emptyCalls, [[]]);
+  assert.equal(Mailcheck.suggest(options.email, Mailcheck.defaultDomains), false);
+  assert.equal(Mailcheck.run({ email: options.email }), undefined);
+});
+
+test('empty correction lists replace defaults without changing global lists', () => {
+  const originalDomains = Mailcheck.defaultDomains.slice();
+  const originalSecondLevels = Mailcheck.defaultSecondLevelDomains.slice();
+  const originalSuffixes = Mailcheck.defaultTopLevelDomains.slice();
+  const domains = [];
+  const options = { email: 'person@gmial.com', domains, secondLevelDomains: [], topLevelDomains: [] };
+  assert.equal(Mailcheck.run(options), undefined);
+  assert.equal(options.domains, domains);
+  assert.deepEqual(Mailcheck.defaultDomains, originalDomains);
+  assert.deepEqual(Mailcheck.defaultSecondLevelDomains, originalSecondLevels);
+  assert.deepEqual(Mailcheck.defaultTopLevelDomains, originalSuffixes);
+  assert.equal(Mailcheck.run({ email: options.email }).full, 'person@gmail.com');
+});
+
+test('modern and regional endings stay protected independently of correction-list order', () => {
+  const roots = ['ai', 'io', 'app', 'dev', 'me', 'co', 'om', 'zip', 'mov', 'xyz', 'tech',
+    'cloud', 'email', 'design', 'photography', 'solutions', 'museum', 'travel', 'uk',
+    'nz', 'au', 'sg', 'br', 'za', 'in', 'is', 'tv', 'gg', 'ly', 'cc'];
+  for (const root of roots) {
+    for (const domains of [['gmail.com', 'outlook.com'], ['outlook.com', 'gmail.com']]) {
+      assert.equal(Mailcheck.run({ email: 'Person@independentcompany.' + root, domains }), undefined, root);
+    }
+  }
+  for (const suffix of ['co.uk', 'com.au', 'co.nz', 'com.tw', 'co.jp', 'co.il']) {
+    assert.equal(Mailcheck.run({ email: 'Person@independentcompany.' + suffix }), undefined, suffix);
+  }
+});
+
+test('low-level suggestions preserve raw local parts while run retains URI encoding', () => {
+  const local = '<tag>François+Tag';
+  const raw = Mailcheck.suggest(local + '@gmial.com', ['gmail.com']);
+  assert.deepEqual(raw, { address: local, domain: 'gmail.com', full: local + '@gmail.com' });
+  const encoded = Mailcheck.run({ email: local + '@gmial.com' });
+  assert.equal(encoded.address, Mailcheck.encodeEmail(local));
+  assert.equal(encoded.full, Mailcheck.encodeEmail(local) + '@gmail.com');
+  assert.notEqual(encoded.address, raw.address);
 });
 
 test('Node ESM default import exposes the same runtime', async () => {

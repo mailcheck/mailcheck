@@ -1,12 +1,8 @@
+import $ = require('jquery');
 import type {} from '../../jquery';
 
-// Minimal host declaration to verify merging without a runtime jQuery dependency.
-declare global {
-  interface JQuery<TElement = HTMLElement> {
-    get(index: number): TElement | undefined;
-  }
-}
-declare const input: JQuery<HTMLInputElement>;
+// Merge with the real @types/jquery declarations, not a substitute interface.
+const input = $('<input type="email">') as JQuery<HTMLInputElement>;
 const result: void = input.mailcheck({
   domains: ['gmail.com'],
   suggested(element, suggestion) {

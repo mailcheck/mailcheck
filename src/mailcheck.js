@@ -96,7 +96,28 @@ var Mailcheck = (function() {
     emailParts.secondLevelDomain = emailParts.secondLevelDomain.toLowerCase();
     emailParts.topLevelDomain = emailParts.topLevelDomain.toLowerCase();
 
-    // Do not guess about single-label, malformed, Unicode or punycode domains.
+    // Complete a missing ending only for an exact name with one known full
+    // domain. Do not fuzzy-match prefixes or invent name/ending combinations.
+    if (/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.?$/.test(emailParts.domain) &&
+        emailParts.domain.indexOf('xn--') !== 0) {
+      if (domains && domains.indexOf(emailParts.domain) !== -1) {
+        return false;
+      }
+      var prefix = emailParts.domain.replace(/\.$/, '') + '.';
+      var completion = false;
+      for (var d = 0; domains && d < domains.length; d++) {
+        if (domains[d].indexOf(prefix) === 0 && domains[d].length > prefix.length) {
+          if (completion && completion !== domains[d]) {
+            return false;
+          }
+          completion = domains[d];
+        }
+      }
+      return completion ? { address: emailParts.address, domain: completion,
+        full: emailParts.address + '@' + completion } : false;
+    }
+
+    // Do not guess about other malformed, Unicode or punycode domains.
     // Internationalized local parts are safe to preserve without transforming them.
     if (!emailParts.secondLevelDomain ||
         !/^[a-z0-9-]+(?:\.[a-z0-9-]+)+$/.test(emailParts.domain) ||

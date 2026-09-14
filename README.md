@@ -29,7 +29,12 @@ They intentionally improve some 1.1.2 matching behavior:
 - Local-part case is preserved; only the domain is lowercased. `run()` still uses
   the existing `encodeEmail()` path, while low-level `suggest()` receives the
   caller's string directly. Outer whitespace is trimmed.
-- Malformed domains, Unicode/punycode domains, and unrecognized subdomain layouts
+- A missing ending can be completed from an exact, unambiguous full-domain target:
+  `sample@gmail` and `sample@gmail.` suggest `sample@gmail.com`. This uses the
+  existing `domains` list (or its defaults), not a new option. Unknown names,
+  partial names such as `gmai`, and names with multiple configured endings are
+  left alone; second-level and top-level lists are not combined to invent completions.
+- Other malformed domains, Unicode/punycode domains, and unrecognized subdomain layouts
   produce no suggestion. This is conservative abstention, not a claim of invalidity.
   Listed compound suffixes such as `co.uk` still work. This is not a public-suffix parser.
 - A distance threshold of zero now means exact matches only.
@@ -47,6 +52,9 @@ What does it do?
 ----------------
 
 When your user types in "user@gmil.con", Mailcheck will suggest "user@gmail.com".
+It also suggests "sample@gmail.com" for "sample@gmail" when the ending is missing.
+Both use the existing suggestion callback or return value; Mailcheck does not
+replace the input automatically.
 
 Mailcheck will offer up suggestions for second and top level domains too. For example, when a user types in "user@hotmail.cmo", "hotmail.com" will be suggested. Similarly, if only the second level domain is misspelled, it will be corrected independently of the top level domain.
 
@@ -276,14 +284,44 @@ With Node 20.19+:
 - `npm test`: run the existing vendored Jasmine core specs and the new correctness
   cases against both source and minified builds. No install is needed for these tests.
 - `npm run test:types`: check strict CommonJS, ESM, browser-global, and opt-in jQuery
-  type fixtures, including expected compile errors (requires dev dependencies).
+  type fixtures, including expected compile errors and the real jQuery declarations.
+- `npm run test:package`: pack Mailcheck, install the tarball into an isolated
+  temporary consumer outside the checkout, and compile/run CommonJS and ESM
+  imports. Also check direct/minified imports, browser-global declarations, and
+  opt-in jQuery types through normal package resolution, without symlinks or path
+  aliases. The install is offline and uses locked type dependencies cached by
+  `npm ci`; its temporary files are removed afterward.
+- `npm run test:e2e`: run real Chromium, Firefox, and WebKit tests against both
+  source and minified builds. Exercise a plain-JavaScript fixture, the actual
+  example with jQuery 1.12.4 and 3.7.1, and the original Jasmine browser suite.
+  Check blur callbacks, unchanged inputs, stale-suggestion clearing, and safe
+  rendering of encoded local parts. Chromium's native internationalized-domain
+  normalization is distinguished from changes made by Mailcheck.
 - `npm run build`: regenerate `src/mailcheck.min.js` with the pinned esbuild version.
 - `npm run build:check`: fail if the checked-in browser build is stale.
+- `npm run test:ci`: run all of the above checks except build regeneration.
 
-Install dev dependencies with `npm install` before building or checking types.
-The original `spec/spec_runner.html` remains available for browser Jasmine tests.
-The Node tests exercise the browser/AMD/jQuery adapter in an isolated JavaScript
-context, not a real browser.
+For a reproducible local setup:
+
+```sh
+npm ci --ignore-scripts --no-audit --no-fund
+npx --no-install playwright install chromium firefox webkit
+npm run test:ci
+```
+
+Dependency lifecycle scripts are deliberately disabled, including the legacy Git
+hook installer. On Linux, Playwright may need system dependencies; GitHub Actions
+uses `playwright install --with-deps`. Browser tests bind only to loopback on
+allocated ports, use synthetic addresses, and serve jQuery locally in place of
+the example's CDN request. Unexpected external requests and uncaught browser
+errors fail the test. There are no retries; failures retain screenshots and traces
+under `test-results/`.
+
+[GitHub Actions](.github/workflows/ci.yml) runs on pushes and pull requests, with
+package/API checks on Node 22 and 24 and separate Chromium, Firefox, and WebKit
+jobs. It uses read-only repository permissions, no secrets, and uploads browser
+failure evidence for seven days. The original `spec/spec_runner.html` can also
+still be opened manually; Internet Explorer is not covered by the automated suite.
 
 Contributing
 ------------
@@ -292,8 +330,9 @@ Let's make Mailcheck awesome. We're on the lookout for maintainers and [contribu
 
 And do send in those pull requests! To get them accepted, please:
 
-- Test your code. Add test cases to `spec/mailcheckSpec.js`, and run it across browsers (yes, including IE).
-- Run `npm run build`, `npm test`, and `npm run test:types`. Commit the regenerated
+- Add focused cases to the core specs, package-consumer fixtures, or browser tests
+  as appropriate. Preserve the original caller API.
+- Run `npm run build` and `npm run test:ci`. Commit the regenerated
   minified file with source changes. Keep legitimate-address fixtures alongside
   typo fixtures; never improve typo recall by silently accepting false suggestions.
 
