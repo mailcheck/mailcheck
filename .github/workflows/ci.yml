@@ -67,8 +67,8 @@ jobs:
   notify-agenthook:
     name: Report result to agenthook
     needs: [compatibility, browser]
-    # This fork's pushes can use its secrets; upstream and PR jobs remain secret-free.
-    if: ${{ always() && github.repository == 'skyfallsin/mailcheck' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+    # Only configured repositories send callbacks; PR jobs remain secret-free.
+    if: ${{ always() && (github.repository == 'mailcheck/mailcheck' || github.repository == 'skyfallsin/mailcheck') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:

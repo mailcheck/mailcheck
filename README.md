@@ -320,10 +320,11 @@ under `test-results/`.
 [GitHub Actions](.github/workflows/ci.yml) runs on pushes and pull requests, with
 package/API checks on Node 22 and 24 and separate Chromium, Firefox, and WebKit
 jobs. Test jobs use read-only repository permissions and no secrets, and upload
-browser failure evidence for seven days. On this fork's pushes and manual runs,
-a final agenthook callback reports the result after both job groups finish.
-It uses repository Actions secrets `AGENTHOOK_URL`, `AGENTHOOK_TOKEN`, and
-`AGENTHOOK_TOPIC`; upstream and pull-request runs skip the callback. A failed
+browser failure evidence for seven days. On pushes and manual runs in
+`mailcheck/mailcheck` and `skyfallsin/mailcheck`, a final agenthook callback reports
+the result after both job groups finish. It uses repository Actions secrets
+`AGENTHOOK_URL`, `AGENTHOOK_TOKEN`, and `AGENTHOOK_TOPIC`; pull-request runs and
+other forks skip the callback. A failed
 callback fails its own job rather than hiding a delivery failure.
 The original `spec/spec_runner.html` can also still be opened manually;
 Internet Explorer is not covered by the automated suite.
