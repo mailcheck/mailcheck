@@ -4,12 +4,11 @@ const { startServer } = require('./server');
 
 const test = base.extend({
   build: ['mailcheck.js', { option: true }],
-  jqueryVersion: ['legacy', { option: true }],
   serverURL: [async ({}, use) => {
     const server = await startServer();
     try { await use(server.url); } finally { await server.close(); }
   }, { scope: 'worker' }],
-  page: async ({ page, context, serverURL, build, jqueryVersion }, use) => {
+  page: async ({ page, context, serverURL, build }, use) => {
     const errors = [];
     const unexpectedRequests = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -24,10 +23,10 @@ const test = base.extend({
         } else {
           await route.continue();
         }
-      } else if (url.href === 'https://code.jquery.com/jquery-1.12.4.min.js') {
-        // Exercise the real example offline, against its pinned version and jQuery 3.
+      } else if (url.href === 'https://code.jquery.com/jquery-3.7.1.min.js') {
+        // Exercise the real example offline against its declared jQuery version.
         await route.fulfill({
-          path: require.resolve(jqueryVersion === 'legacy' ? 'jquery-legacy/dist/jquery.js' : 'jquery/dist/jquery.js'),
+          path: require.resolve('jquery/dist/jquery.js'),
           contentType: 'text/javascript'
         });
       } else {

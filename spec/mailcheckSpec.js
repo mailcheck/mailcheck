@@ -86,6 +86,11 @@ describe("mailcheck", function() {
         var result = mailcheck.encodeEmail( " g1!#$%&'*+-/=?^_`{|}@gmai.com")
         expect(result).toEqual(" g1!#$%&'*+-/=?^_`{|}@gmai.com");
       });
+
+      it("preserves every literal percent sign", function() {
+        var result = mailcheck.encodeEmail('synthetic$%$^%%@gmaill.com');
+        expect(result).toEqual('synthetic$%$^%%@gmaill.com');
+      });
     });
 
     describe("return value", function () {

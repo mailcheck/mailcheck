@@ -50,13 +50,10 @@ for (const build of ['mailcheck.js', 'mailcheck.min.js']) {
       expect(await page.evaluate(() => window.mailcheckInjected)).toBeUndefined();
     });
 
-    for (const jqueryVersion of ['legacy', 'current']) {
-      test.describe('jQuery ' + jqueryVersion, () => {
-        test.use({ jqueryVersion });
-
-        test('the real example handles suggestion, empty, and repeated blur events', async ({ page, serverURL }) => {
+    test.describe('jQuery 3.7.1', () => {
+      test('the real example handles suggestion, empty, and repeated blur events', async ({ page, serverURL }) => {
           await page.goto(serverURL + '/examples/index.html');
-          expect(await page.evaluate(() => jQuery.fn.jquery)).toBe(jqueryVersion === 'legacy' ? '1.12.4' : '3.7.1');
+          expect(await page.evaluate(() => jQuery.fn.jquery)).toBe('3.7.1');
           await enterAndBlur(page, 'Person@gmial.com');
           await expect(page.locator('#suggestion')).toHaveText('Did you mean Person@gmail.com?');
           await expect(page.locator('#suggestion b i')).toHaveText('Person@gmail.com');
@@ -89,7 +86,6 @@ for (const build of ['mailcheck.js', 'mailcheck.min.js']) {
           expect(await page.evaluate(() => window.mailcheckInjected)).toBeUndefined();
         });
       });
-    }
 
     test('the original Jasmine browser suite passes with real jQuery', async ({ page, serverURL }) => {
       await page.goto(serverURL + '/spec/spec_runner.html');

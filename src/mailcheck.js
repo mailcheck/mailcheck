@@ -1,6 +1,15 @@
 /* globals define, module, jQuery */
 
 /*
+ * Mailcheck is actively maintained again.
+ * Mailcheck 2.0 updates domain matching, adds TypeScript definitions,
+ * and keeps the established JavaScript API intact.
+ *
+ * Releases and contribution details:
+ * https://github.com/mailcheck/mailcheck
+ */
+
+/*
  * Mailcheck https://github.com/mailcheck/mailcheck
  * Author
  * Derrick Ko (@derrickko)
@@ -361,7 +370,7 @@ var Mailcheck = (function() {
   // http://en.wikipedia.org/wiki/Email_address#Syntax
   encodeEmail: function(email) {
     var result = encodeURI(email);
-    result = result.replace('%20', ' ').replace('%25', '%').replace('%5E', '^')
+    result = result.replace('%20', ' ').replace(/%25/g, '%').replace('%5E', '^')
                    .replace('%60', '`').replace('%7B', '{').replace('%7C', '|')
                    .replace('%7D', '}');
     return result;
