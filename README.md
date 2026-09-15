@@ -1,5 +1,14 @@
 # Mailcheck 2.0
 
+<p align="center">
+  <img src="doc/mailcheck-logo.png" width="200" alt="Mailcheck logo: a turquoise envelope with a checkmark">
+</p>
+
+<p align="center">
+  <a href="https://github.com/mailcheck/mailcheck/actions/workflows/ci.yml"><img src="https://github.com/mailcheck/mailcheck/actions/workflows/ci.yml/badge.svg" alt="Build status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
+</p>
+
 Mailcheck suggests a likely email domain when someone makes a typo. It is a small JavaScript library with an optional jQuery plugin. Mailcheck originated at Kicksend.
 
 ```text
